@@ -1,7 +1,6 @@
 class Planet {
   float masse, xPos, yPos, radius, afstand, kraft;
-  PVector speed;
-  PVector pavirkning;
+  PVector speed, saveSpeed, pavirkning;
   PShape globe;
   PImage planet;
   
@@ -15,11 +14,18 @@ class Planet {
     globe = createShape(SPHERE, radius);
     globe.setTexture(planet);
     println(xPos);
-    speed = new PVector(0,0,0);
+    saveSpeed = new PVector(0,0,0);
   }
   
   //opdaterer planetens position
   void update() {
+    speed = saveSpeed;
+    xPos+=speed.x;
+    yPos+=speed.y;
+  }
+  
+  //beregning af tyngdekraft
+  void tyngdekraft() {
     pushMatrix();
     for (Planet planet : planets) {
       
@@ -31,15 +37,11 @@ class Planet {
         
         kraft = 6.674*pow(10, -11) * masse * planet.getMasse()/pow(afstand, 2);
         pavirkning = new PVector(kraftFordelingX(xPos, planet.getX(), yPos, planet.getY(), kraft)/masse*0.16666*4 , kraftFordelingY(xPos, planet.getX(), yPos, planet.getY(), kraft)/masse*0.16666*4,0);
-        speed.add(pavirkning);
+        saveSpeed.add(pavirkning);
       }
     }
-    //println(afstand+ "  "+kraft+"   "+pavirkning);
     
     println(xPos);
-    
-    xPos+=speed.x;
-    yPos+=speed.y;
     
     translate(xPos, yPos, 0);
     shape(globe);
@@ -62,6 +64,6 @@ class Planet {
   }
   
   void setSpeed(PVector s) {
-    speed = s;
+    saveSpeed = s;
   }
 }

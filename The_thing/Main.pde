@@ -22,6 +22,7 @@ void setup() {
   planets.add(new Planet(5000000000000L,0,0,20));
   planets.add(new Planet(25000000000L,200,0,10));
   
+  
   planets.get(1).setSpeed(s);
 }
 
@@ -33,9 +34,14 @@ void draw() {
   shape(universe); //laver en globusformet baggrund med stjerner
   popMatrix();
   
-  //opdaterer planeternes position
+  //opdaterer objektet "planet"
   for (Planet planet : planets) {
-    planet.update(); //opdaterer objektet "planet"
+    planet.update();
+  }
+  
+  // beregner tyngdekraftens påvirkning
+  for (Planet planet : planets) {
+    planet.tyngdekraft();
   }
   
 }
