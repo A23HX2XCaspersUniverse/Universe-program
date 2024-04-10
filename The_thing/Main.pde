@@ -17,7 +17,7 @@ void setup() {
   universe.setTexture(stars);  //https://forum.processing.org/two/discussion/22593/how-to-fill-the-sphere-with-the-earth-image.html
   
   planets.add(new Planet(100,0,0,20));
-  planets.add(new Planet(100,200,0,10));
+  planets.add(new Planet(50,200,10,10));
   
 }
 
@@ -27,4 +27,12 @@ void draw() {
   for (Planet planet : planets) {
     planet.update(); //opdaterer objektet "planet"
   }
+}
+
+float kraftFordelingX(float x1, float x2, float y1, float y2, float kraft){
+  return (kraft * (x2-x1)/( abs(x2-x1)+abs(y2-y1)));
+}
+
+float kraftFordelingY(float x1, float x2, float y1, float y2, float kraft){
+  return (kraft * (y2-y1)/( abs(x2-x1)+abs(y2-y1)));
 }
