@@ -5,6 +5,7 @@ PShape universe; //https://forum.processing.org/two/discussion/22593/how-to-fill
 PImage stars;
 
 ArrayList<Planet> planets = new ArrayList<>();
+ArrayList<Stjerne> stjernes = new ArrayList<>();
 
 PVector s1 = new PVector(0, -0.5);
 
@@ -27,11 +28,11 @@ void setup() {
   universe = createShape(SPHERE, 2000);  //https://forum.processing.org/two/discussion/22593/how-to-fill-the-sphere-with-the-earth-image.html
   universe.setTexture(stars);  //https://forum.processing.org/two/discussion/22593/how-to-fill-the-sphere-with-the-earth-image.html
   
-  planets.add(new Planet(5000000000000L,0,0,20));
+  stjernes.add(new Stjerne(5000000000000L,0,0,20));
   planets.add(new Planet(25000000000L,200,0,10));
   
   
-  planets.get(1).setSpeed(s1);
+  planets.get(0).setSpeed(s1);
 }
 
 void draw() {
@@ -46,10 +47,16 @@ void draw() {
   for (Planet planet : planets) {
     planet.update();
   }
+  for (Stjerne stjerne : stjernes) {
+    stjerne.update();
+  }
   
   // beregner tyngdekraftens påvirkning
   for (Planet planet : planets) {
     planet.tyngdekraft();
+  }
+  for (Stjerne stjerne : stjernes) {
+    stjerne.tyngdekraft();
   }
   
   
@@ -68,6 +75,9 @@ void draw() {
   
   hint(ENABLE_DEPTH_TEST); //https://stackoverflow.com/questions/66303006/drawing-2d-text-over-3d-objects-in-processing-3
   */ 
+  
+  if (key == 'n') {
+  }
   
 }
 

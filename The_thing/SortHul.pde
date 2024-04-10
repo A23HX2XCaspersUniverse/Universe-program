@@ -1,4 +1,4 @@
-class SortHul {
+class SortHul{
   float masse, xPos, yPos, radius;
   PVector speed;
   
