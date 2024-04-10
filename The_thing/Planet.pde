@@ -6,10 +6,9 @@ class Planet extends Objekt{
     xPos = x;
     yPos = y;
     radius = r;
-    planet = loadImage("Planet"+int(random(1,6))+".jpg");
+    planet = loadImage("Planet"+int(random(1,5))+".jpg");
     globe = createShape(SPHERE, radius);
     globe.setTexture(planet);
-    println(xPos);
     saveSpeed = new PVector(0,0,0);
   }
 }

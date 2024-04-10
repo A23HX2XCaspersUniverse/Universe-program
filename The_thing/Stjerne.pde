@@ -6,10 +6,9 @@ class Stjerne extends Objekt{
     xPos = x;
     yPos = y;
     radius = r;
-    stjerne = loadImage("Stjerne"+int(random(1,6))+".jpg");
+    stjerne = loadImage("Stjerne"+int(random(1,5))+".jpg");
     globe = createShape(SPHERE, radius);
     globe.setTexture(stjerne);
-    println(xPos);
     saveSpeed = new PVector(0,0,0);
   }
 }

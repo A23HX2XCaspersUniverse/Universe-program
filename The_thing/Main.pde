@@ -1,4 +1,5 @@
-import peasy.*; 
+import peasy.*;
+import javax.swing.JFrame;
 
 PeasyCam cam; 
 PShape universe; //https://forum.processing.org/two/discussion/22593/how-to-fill-the-sphere-with-the-earth-image.html
@@ -6,10 +7,12 @@ PImage stars;
 
 ArrayList<Planet> planets = new ArrayList<>();
 ArrayList<Stjerne> stjernes = new ArrayList<>();
+ArrayList<SortHul> sorthuls = new ArrayList<>();
 
 PVector s1 = new PVector(0, -0.5);
 
 boolean openMenu = false;
+boolean nIsPressed = false;
 
 float saveMouseX = 0;
 float saveMouseY = 0;
@@ -21,15 +24,17 @@ void setup() {
   
   //initiering af kameraet
   cam = new PeasyCam(this, 100); //http://wiki.bk.tudelft.nl/toi-pedia/Processing_3D_Navigation
-  cam.setMinimumDistance(50);    //http://wiki.bk.tudelft.nl/toi-pedia/Processing_3D_Navigation
+  cam.setMinimumDistance(160);    //http://wiki.bk.tudelft.nl/toi-pedia/Processing_3D_Navigation
   cam.setMaximumDistance(2000);  //http://wiki.bk.tudelft.nl/toi-pedia/Processing_3D_Navigation
+  cam.setDistance(200);
   
   stars = loadImage("space.jpg");
   universe = createShape(SPHERE, 2000);  //https://forum.processing.org/two/discussion/22593/how-to-fill-the-sphere-with-the-earth-image.html
   universe.setTexture(stars);  //https://forum.processing.org/two/discussion/22593/how-to-fill-the-sphere-with-the-earth-image.html
   
-  stjernes.add(new Stjerne(5000000000000L,0,0,20));
-  planets.add(new Planet(25000000000L,200,0,10));
+  stjernes.add(new Stjerne(5*pow(10,24),0,0,20));
+  planets.add(new Planet(2*pow(10,30),200,0,10));
+  //sorthuls.add(new SortHul(2*pow(10,30),-200,0));
   
   
   planets.get(0).setSpeed(s1);
@@ -50,6 +55,9 @@ void draw() {
   for (Stjerne stjerne : stjernes) {
     stjerne.update();
   }
+  for (SortHul sorthul : sorthuls) {
+    sorthul.update();
+  }
   
   // beregner tyngdekraftens påvirkning
   for (Planet planet : planets) {
@@ -57,6 +65,9 @@ void draw() {
   }
   for (Stjerne stjerne : stjernes) {
     stjerne.tyngdekraft();
+  }
+  for (SortHul sorthul : sorthuls) {
+    sorthul.tyngdekraft();
   }
   
   
@@ -76,8 +87,6 @@ void draw() {
   hint(ENABLE_DEPTH_TEST); //https://stackoverflow.com/questions/66303006/drawing-2d-text-over-3d-objects-in-processing-3
   */ 
   
-  if (key == 'n') {
-  }
   
 }
 
@@ -87,6 +96,13 @@ void mousePressed() {
     saveMouseX = mouseX;
     saveMouseY = mouseY;
   }
+}
+
+void keyPressed() {
+  if (key == 'n') {
+    JFrame window = new JFrame();
+    window.setVisible(true);
+    }
 }
 
 //funktion for kraftfordelingen i x-retningen

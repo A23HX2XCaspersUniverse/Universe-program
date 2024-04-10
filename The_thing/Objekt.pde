@@ -21,9 +21,11 @@ class Objekt {
       //hvis afstanden er 0, betyder det at den har tjekket afstanden til den selv
       if (afstand != 0) {
         
+        afstand *= 149900000/200;
         kraft = 6.674*pow(10, -11) * masse * planet.getMasse()/pow(afstand, 2);
         pavirkning = new PVector(kraftFordelingX(xPos, planet.getX(), yPos, planet.getY(), kraft)/masse*0.16666*4 , kraftFordelingY(xPos, planet.getX(), yPos, planet.getY(), kraft)/masse*0.16666*4,0);
         saveSpeed.add(pavirkning);
+        print(afstand+"   "+kraft);
       }
     }
     for (Stjerne stjerne : stjernes) {
@@ -34,13 +36,27 @@ class Objekt {
       //hvis afstanden er 0, betyder det at den har tjekket afstanden til den selv
       if (afstand != 0) {
         
+        afstand *= 149900000/200;        
         kraft = 6.674*pow(10, -11) * masse * stjerne.getMasse()/pow(afstand, 2);
         pavirkning = new PVector(kraftFordelingX(xPos, stjerne.getX(), yPos, stjerne.getY(), kraft)/masse*0.16666*4 , kraftFordelingY(xPos, stjerne.getX(), yPos, stjerne.getY(), kraft)/masse*0.16666*4,0);
         saveSpeed.add(pavirkning);
       }
     }
+    for (SortHul sorthul : sorthuls) {
+      
+      //Tjek afstanden til den valgte stjerne i ArrayListen
+      afstand = sqrt(pow(sorthul.getX()-xPos, 2)+pow(sorthul.getY()-yPos, 2));
+      
+      //hvis afstanden er 0, betyder det at den har tjekket afstanden til den selv
+      if (afstand != 0) {
+        
+        afstand *= 149900000/200;
+        kraft = 6.674*pow(10, -11) * masse * sorthul.getMasse()/pow(afstand, 2);
+        pavirkning = new PVector(kraftFordelingX(xPos, sorthul.getX(), yPos, sorthul.getY(), kraft)/masse*0.16666*4 , kraftFordelingY(xPos, sorthul.getX(), yPos, sorthul.getY(), kraft)/masse*0.16666*4,0);
+        saveSpeed.add(pavirkning);
+      }
+    }
     
-    println(xPos);
     
     translate(xPos, yPos, 0);
     shape(globe);
