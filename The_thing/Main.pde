@@ -3,8 +3,16 @@ import peasy.*;
 PeasyCam cam; 
 PShape universe; //https://forum.processing.org/two/discussion/22593/how-to-fill-the-sphere-with-the-earth-image.html
 PImage stars;
+
 ArrayList<Planet> planets = new ArrayList<>();
-PVector s = new PVector(0, -0.5);
+
+PVector s1 = new PVector(0, -0.5);
+
+boolean openMenu = false;
+
+float saveMouseX = 0;
+float saveMouseY = 0;
+float[] cameraPos = new float[0];
 
 void setup() {
   fullScreen(P3D);
@@ -23,7 +31,7 @@ void setup() {
   planets.add(new Planet(25000000000L,200,0,10));
   
   
-  planets.get(1).setSpeed(s);
+  planets.get(1).setSpeed(s1);
 }
 
 void draw() {
@@ -44,6 +52,31 @@ void draw() {
     planet.tyngdekraft();
   }
   
+  
+  /* DOESNT WORK!
+  hint(DISABLE_DEPTH_TEST); //https://stackoverflow.com/questions/66303006/drawing-2d-text-over-3d-objects-in-processing-3
+  
+  cameraPos = new float[0];
+  cameraPos = cam.getPosition();
+  if (openMenu) {
+    fill(0);
+    pushMatrix();
+    rect(cameraPos[0],cameraPos[1],cameraPos[2]-2,100,200);
+    popMatrix();
+  }
+  println("Distance: "+cam.getDistance()+"   cameraPosX: "+cameraPos[0]+"   cameraPosY: "+cameraPos[1]+"   cameraPosZ: "+cameraPos[2]);
+  
+  hint(ENABLE_DEPTH_TEST); //https://stackoverflow.com/questions/66303006/drawing-2d-text-over-3d-objects-in-processing-3
+  */ 
+  
+}
+
+void mousePressed() {
+  if (mouseButton == RIGHT) {
+    openMenu = true;
+    saveMouseX = mouseX;
+    saveMouseY = mouseY;
+  }
 }
 
 //funktion for kraftfordelingen i x-retningen
