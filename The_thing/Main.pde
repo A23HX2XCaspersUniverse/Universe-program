@@ -4,6 +4,7 @@ PeasyCam cam;
 PShape universe; //https://forum.processing.org/two/discussion/22593/how-to-fill-the-sphere-with-the-earth-image.html
 PImage stars;
 ArrayList<Planet> planets = new ArrayList<>();
+PVector s = new PVector(0, -0.5);
 
 void setup() {
   fullScreen(P3D);
@@ -18,8 +19,10 @@ void setup() {
   universe = createShape(SPHERE, 2000);  //https://forum.processing.org/two/discussion/22593/how-to-fill-the-sphere-with-the-earth-image.html
   universe.setTexture(stars);  //https://forum.processing.org/two/discussion/22593/how-to-fill-the-sphere-with-the-earth-image.html
   
-  planets.add(new Planet(100,0,0,20));
-  planets.add(new Planet(50,200,0,10));
+  planets.add(new Planet(5000000000000L,0,0,20));
+  planets.add(new Planet(25000000000L,200,0,10));
+  
+  planets.get(1).setSpeed(s);
 }
 
 void draw() {
