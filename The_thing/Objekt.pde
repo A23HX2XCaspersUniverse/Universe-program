@@ -23,9 +23,9 @@ class Objekt {
         
         afstand *= 149900000/200;
         kraft = 6.674*pow(10, -11) * masse * planet.getMasse()/pow(afstand, 2);
-        pavirkning = new PVector(kraftFordelingX(xPos, planet.getX(), yPos, planet.getY(), kraft)/masse*0.16666*4 , kraftFordelingY(xPos, planet.getX(), yPos, planet.getY(), kraft)/masse*0.16666*4,0);
+        pavirkning = new PVector(kraftFordelingX(xPos, planet.getX(), yPos, planet.getY(), kraft)/masse*0.16666*200/149900000 , kraftFordelingY(xPos, planet.getX(), yPos, planet.getY(), kraft)/masse*0.16666*200/149900000,0);
         saveSpeed.add(pavirkning);
-        print(afstand+"   "+kraft);
+        println(pavirkning);
       }
     }
     for (Stjerne stjerne : stjernes) {
@@ -38,7 +38,7 @@ class Objekt {
         
         afstand *= 149900000/200;        
         kraft = 6.674*pow(10, -11) * masse * stjerne.getMasse()/pow(afstand, 2);
-        pavirkning = new PVector(kraftFordelingX(xPos, stjerne.getX(), yPos, stjerne.getY(), kraft)/masse*0.16666*4 , kraftFordelingY(xPos, stjerne.getX(), yPos, stjerne.getY(), kraft)/masse*0.16666*4,0);
+        pavirkning = new PVector(kraftFordelingX(xPos, stjerne.getX(), yPos, stjerne.getY(), kraft)/masse*0.16666*200/149900000 , kraftFordelingY(xPos, stjerne.getX(), yPos, stjerne.getY(), kraft)/masse*0.16666,0*200/149900000);
         saveSpeed.add(pavirkning);
       }
     }
@@ -52,7 +52,7 @@ class Objekt {
         
         afstand *= 149900000/200;
         kraft = 6.674*pow(10, -11) * masse * sorthul.getMasse()/pow(afstand, 2);
-        pavirkning = new PVector(kraftFordelingX(xPos, sorthul.getX(), yPos, sorthul.getY(), kraft)/masse*0.16666*4 , kraftFordelingY(xPos, sorthul.getX(), yPos, sorthul.getY(), kraft)/masse*0.16666*4,0);
+        pavirkning = new PVector(kraftFordelingX(xPos, sorthul.getX(), yPos, sorthul.getY(), kraft)/masse*0.16666*200/149900000 , kraftFordelingY(xPos, sorthul.getX(), yPos, sorthul.getY(), kraft)/masse*0.16666,0*200/149900000);
         saveSpeed.add(pavirkning);
       }
     }

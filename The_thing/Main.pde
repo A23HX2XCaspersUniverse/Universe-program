@@ -37,7 +37,7 @@ void setup() {
   //sorthuls.add(new SortHul(2*pow(10,30),-200,0));
   
   
-  planets.get(0).setSpeed(s1);
+  //planets.get(0).setSpeed(s1);
 }
 
 void draw() {
@@ -107,10 +107,10 @@ void keyPressed() {
 
 //funktion for kraftfordelingen i x-retningen
 float kraftFordelingX(float x1, float x2, float y1, float y2, float kraft){
-  return (kraft * (x2-x1)/( abs(x2-x1)+abs(y2-y1)));
+  return (kraft * ((x2-x1)*149900000/200)/( (abs(x2-x1)+abs(y2-y1))*149900000/200));
 }
 
 //funktion for kraftfordelingen i y-retningen
 float kraftFordelingY(float x1, float x2, float y1, float y2, float kraft){
-  return (kraft * (y2-y1)/( abs(x2-x1)+abs(y2-y1)));
+  return (kraft * ((y2-y1)*149900000/200)/( (abs(x2-x1)+abs(y2-y1))*149900000/200));
 }
