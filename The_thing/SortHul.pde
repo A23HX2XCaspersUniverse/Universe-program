@@ -1,11 +1,10 @@
 class SortHul extends Objekt{
   PImage stjerne;
   
-  SortHul(float m, float x, float y, float z, float r) {
+  SortHul(float m, float x, float y, float r) {
     masse = m;
     xPos = x;
     yPos = y;
-    zPos = z;
     radius = 2*6.674*pow(10, -11)*m/pow(300000000,2);
     println(radius);
     stjerne = loadImage("black.jpg");

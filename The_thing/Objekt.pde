@@ -1,5 +1,5 @@
 class Objekt {
-  float masse, xPos, yPos, zPos, radius, afstand, kraft, masseBeregning, nr;
+  float masse, xPos, yPos, radius, afstand, kraft, masseBeregning, nr;
   PVector speed, saveSpeed, pavirkning;
   PShape globe;
   
@@ -8,7 +8,6 @@ class Objekt {
     speed = saveSpeed;
     xPos+=speed.x;
     yPos+=speed.y;
-    zPos+=speed.z;
   }
   
   //beregning af tyngdekraft
@@ -17,7 +16,7 @@ class Objekt {
     for (Planet planet : planets) {
       
       //Tjek afstanden til den valgte planet i ArrayListen
-      afstand = sqrt(pow(planet.getX()-xPos, 2)+pow(planet.getY()-yPos, 2)+pow(planet.getZ()-zPos, 2));
+      afstand = sqrt(pow(planet.getX()-xPos, 2)+pow(planet.getY()-yPos, 2));
       
       //hvis afstanden er 0, betyder det at den har tjekket afstanden til den selv
       if (afstand != 0) {
@@ -27,9 +26,8 @@ class Objekt {
         kraft = masseBeregning/pow(afstand, 2);
         kraft *= planet.getMasse();
         
-        pavirkning = new PVector(kraftFordelingX(xPos, planet.getX(), yPos, planet.getY(), zPos, planet.getZ(), kraft)/masse*0.016666*interval , 
-        kraftFordelingY(xPos, planet.getX(), yPos, planet.getY(), zPos, planet.getZ(), kraft)/masse*0.016666*interval,
-        kraftFordelingZ(xPos, planet.getX(), yPos, planet.getY(), zPos, planet.getZ(), kraft)/masse*0.016666*interval);
+        pavirkning = new PVector(kraftFordelingX(xPos, planet.getX(), yPos, planet.getY(), kraft)/masse*0.016666*interval , 
+        kraftFordelingY(xPos, planet.getX(), yPos, planet.getY(), kraft)/masse*0.016666*interval, 0);
         
         saveSpeed.add(pavirkning);
         
@@ -41,7 +39,7 @@ class Objekt {
     for (Stjerne stjerne : stjernes) {
       
       //Tjek afstanden til den valgte planet i ArrayListen
-      afstand = sqrt(pow(stjerne.getX()-xPos, 2)+pow(stjerne.getY()-yPos, 2)+pow(stjerne.getZ()-zPos, 2));
+      afstand = sqrt(pow(stjerne.getX()-xPos, 2)+pow(stjerne.getY()-yPos, 2));
       
       //hvis afstanden er 0, betyder det at den har tjekket afstanden til den selv
       if (afstand != 0) {
@@ -51,9 +49,8 @@ class Objekt {
         kraft = masseBeregning/pow(afstand, 2);
         kraft *= stjerne.getMasse();
         
-        pavirkning = new PVector(kraftFordelingX(xPos, stjerne.getX(), yPos, stjerne.getY(), zPos, stjerne.getZ(), kraft)/masse*0.016666*interval , 
-        kraftFordelingY(xPos, stjerne.getX(), yPos, stjerne.getY(), zPos, stjerne.getZ(), kraft)/masse*0.016666*interval,
-        kraftFordelingZ(xPos, stjerne.getX(), yPos, stjerne.getY(), zPos, stjerne.getZ(), kraft)/masse*0.016666*interval);
+        pavirkning = new PVector(kraftFordelingX(xPos, stjerne.getX(), yPos, stjerne.getY(), kraft)/masse*0.016666*interval , 
+        kraftFordelingY(xPos, stjerne.getX(), yPos, stjerne.getY(), kraft)/masse*0.016666*interval, 0);
         
         saveSpeed.add(pavirkning);
         
@@ -62,7 +59,7 @@ class Objekt {
     for (SortHul sorthul : sorthuls) {
       
       //Tjek afstanden til den valgte planet i ArrayListen
-      afstand = sqrt(pow(sorthul.getX()-xPos, 2)+pow(sorthul.getY()-yPos, 2)+pow(sorthul.getZ()-zPos, 2));
+      afstand = sqrt(pow(sorthul.getX()-xPos, 2)+pow(sorthul.getY()-yPos, 2));
       
       //hvis afstanden er 0, betyder det at den har tjekket afstanden til den selv
       if (afstand != 0) {
@@ -72,9 +69,8 @@ class Objekt {
         kraft = masseBeregning/pow(afstand, 2);
         kraft *= sorthul.getMasse();
         
-        pavirkning = new PVector(kraftFordelingX(xPos, sorthul.getX(), yPos, sorthul.getY(), zPos, sorthul.getZ(), kraft)/masse*0.016666*interval , 
-        kraftFordelingY(xPos, sorthul.getX(), yPos, sorthul.getY(), zPos, sorthul.getZ(), kraft)/masse*0.016666*interval, 
-        kraftFordelingZ(xPos, sorthul.getX(), yPos, sorthul.getY(), zPos, sorthul.getZ(), kraft)/masse*0.016666*interval);
+        pavirkning = new PVector(kraftFordelingX(xPos, sorthul.getX(), yPos, sorthul.getY(), kraft)/masse*0.016666*interval , 
+        kraftFordelingY(xPos, sorthul.getX(), yPos, sorthul.getY(), kraft)/masse*0.016666*interval, 0);
         
         saveSpeed.add(pavirkning);
         
@@ -82,7 +78,7 @@ class Objekt {
     }
     
     
-    translate(xPos, yPos, zPos);
+    translate(xPos, yPos, 0);
     shape(globe);
     popMatrix();
   }
@@ -97,9 +93,6 @@ class Objekt {
     return yPos;
   }
   
-  float getZ() {
-    return zPos;
-  }
   
   //retunerer massen
   float getMasse() {

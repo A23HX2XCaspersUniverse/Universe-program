@@ -20,12 +20,12 @@ float interval = 20;
 float objektNr = 1;
 float[] cameraPos = new float[0];
 
-PVector s1 = new PVector(0, 0,(-0.03)*interval);
-PVector s2 = new PVector((0.03)*interval, 0,0);
+PVector s1 = new PVector(0, (-0.03)*interval);
 
 void setup() {
   fullScreen(P3D);
   noStroke();
+  frameRate(100);
   
   //initiering af kameraet
   cam = new PeasyCam(this, 100); //http://wiki.bk.tudelft.nl/toi-pedia/Processing_3D_Navigation
@@ -37,12 +37,10 @@ void setup() {
   universe = createShape(SPHERE, 2000);  //https://forum.processing.org/two/discussion/22593/how-to-fill-the-sphere-with-the-earth-image.html
   universe.setTexture(stars);  //https://forum.processing.org/two/discussion/22593/how-to-fill-the-sphere-with-the-earth-image.html
   
-  planets.add(new Planet(2*pow(10, 30),0,0,0,20));
-  planets.add(new Planet(5*pow(10,24),200,0,0,10));
-  planets.add(new Planet(5*pow(10,24),0,0,200,10));
+  planets.add(new Planet(2*pow(10, 30),0,0,20));
+  planets.add(new Planet(5*pow(10,24),200,0,10));
   
   planets.get(1).setSpeed(s1);
-  planets.get(2).setSpeed(s2);
 }
 
 void draw() {
@@ -111,18 +109,15 @@ void keyPressed() {
 }
 
 //funktion for kraftfordelingen i x-retningen
-float kraftFordelingX(float x1, float x2, float y1, float y2, float z1, float z2, float kraft){
-  return (kraft * ((x2-x1)*149900000/200)/( (abs(x2-x1)+abs(y2-y1)+abs(z2-z1))*149900000/200));
+float kraftFordelingX(float x1, float x2, float y1, float y2, float kraft){
+  return (kraft * ((x2-x1)*149900000/200)/( (abs(x2-x1)+abs(y2-y1))*149900000/200));
 }
 
 //funktion for kraftfordelingen i y-retningen
-float kraftFordelingY(float x1, float x2, float y1, float y2, float z1, float z2, float kraft){
-  return (kraft * ((y2-y1)*149900000/200)/( (abs(x2-x1)+abs(y2-y1)+abs(z2-z1))*149900000/200));
+float kraftFordelingY(float x1, float x2, float y1, float y2, float kraft){
+  return (kraft * ((y2-y1)*149900000/200)/( (abs(x2-x1)+abs(y2-y1))*149900000/200));
 }
 
-float kraftFordelingZ(float x1, float x2, float y1, float y2, float z1, float z2, float kraft){
-  return (kraft * ((z2-z1)*149900000/200)/( (abs(x2-x1)+abs(y2-y1)+abs(z2-z1))*149900000/200));
-}
 
 float mTilPixel(float distance) {
   return distance*200/(1499*pow(10,8));
