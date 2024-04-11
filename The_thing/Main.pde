@@ -15,11 +15,16 @@ boolean openMenu = false;
 boolean spaceIsPressed = false;
 boolean rightIsPressed = false;
 
+int menuWidth = 120;
+int menuHeight = 200;
+
 double cameraDistance = 0;
+
 float saveMouseX = 0;
 float saveMouseY = 0;
-float interval = 20;
+float interval = 10;
 float objektNr = 1;
+
 float [] cameraPos = new float[0];
 float [] cameraRotation = new float[0];
 float [] cameraLookAt = new float[0];
@@ -37,21 +42,22 @@ void setup() {
   cam = new PeasyCam(this, 100); //http://wiki.bk.tudelft.nl/toi-pedia/Processing_3D_Navigation
   cam.setMinimumDistance(160);    //http://wiki.bk.tudelft.nl/toi-pedia/Processing_3D_Navigation
   cam.setMaximumDistance(2000);  //http://wiki.bk.tudelft.nl/toi-pedia/Processing_3D_Navigation
-  cam.setDistance(400);
+  cam.setDistance(200);
 
   //Loader baggrunden
   stars = loadImage("space.jpg");
   universe = createShape(SPHERE, 2000);  //https://forum.processing.org/two/discussion/22593/how-to-fill-the-sphere-with-the-earth-image.html
   universe.setTexture(stars);  //https://forum.processing.org/two/discussion/22593/how-to-fill-the-sphere-with-the-earth-image.html
 
-  //Tilføjer Planeter
-  planets.add(new Planet(2*pow(10, 30), 0, 0, 20));
-  planets.add(new Planet(5*pow(10, 24), 200, 0, 10));
+  //Tilføjer Planet og stjerne
+  stjernes.add(new Stjerne(2*pow(10, 30), 0, 0, 10));
+  planets.add(new Planet(5*pow(10, 24), 100, 0, 5));
+  planets.add(new Planet(5*pow(10, 29), -100, -200, 9));
 
   //Giver planet nr.2 en starthastighed
-  planets.get(1).setSpeed(s1);
+  planets.get(0).setSpeed(s1);
 
-  ui = createGraphics(100, 200, P2D);
+  ui = createGraphics(menuWidth, menuHeight, P2D);
 }
 
 void draw() {
@@ -92,6 +98,18 @@ void draw() {
     cam.beginHUD();
     ui.beginDraw();
     ui.background(60);
+    
+    ui.noFill();
+    ui.strokeWeight(5);
+    ui.stroke(40);
+    ui.rect(0,0,menuWidth,menuHeight);
+    ui.strokeWeight(1);
+    ui.line(0,38,menuWidth,38);
+    
+    ui.fill(255);
+    ui.textSize(20);
+    ui.text("Nyt Objekt", 10, 30);
+    
     ui.endDraw();
     image(ui, saveMouseX, saveMouseY);
     cam.endHUD();
@@ -112,7 +130,7 @@ void mousePressed() {
     }
   } else {
     if (openMenu) {
-      if (mouseX < saveMouseX || mouseX > saveMouseX+100 || mouseY < saveMouseY || mouseY > saveMouseY+200) {
+      if (mouseX < saveMouseX || mouseX > saveMouseX+menuWidth || mouseY < saveMouseY || mouseY > saveMouseY+menuHeight) {
       cam.setMouseControlled(true);
       rightIsPressed = false;
       openMenu = false;
@@ -143,12 +161,12 @@ float kraftFordelingY(float x1, float x2, float y1, float y2, float kraft) {
 
 //omsætter meter til pixels
 float mTilPixel(float distance) {
-  return distance*200/(1499*pow(10, 8));
+  return distance*100/(1499*pow(10, 8));
 }
 
 //omsætter pixels til meter
 float pixelTilM(float distance) {
-  return distance*(1499*pow(10, 8))/200;
+  return distance*(1499*pow(10, 8))/100;
 }
 
 //kamerahåndtagning
