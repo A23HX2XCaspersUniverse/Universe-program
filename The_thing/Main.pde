@@ -9,7 +9,7 @@ ArrayList<Planet> planets = new ArrayList<>();
 ArrayList<Stjerne> stjernes = new ArrayList<>();
 ArrayList<SortHul> sorthuls = new ArrayList<>();
 
-PVector s1 = new PVector(0, -0.5);
+PVector s1 = new PVector(0, (-0.03)*20);
 
 boolean openMenu = false;
 boolean nIsPressed = false;
@@ -32,12 +32,11 @@ void setup() {
   universe = createShape(SPHERE, 2000);  //https://forum.processing.org/two/discussion/22593/how-to-fill-the-sphere-with-the-earth-image.html
   universe.setTexture(stars);  //https://forum.processing.org/two/discussion/22593/how-to-fill-the-sphere-with-the-earth-image.html
   
-  stjernes.add(new Stjerne(5*pow(10,24),0,0,20));
-  planets.add(new Planet(2*pow(10,30),200,0,10));
+  planets.add(new Planet(2*pow(10,30),0,0,20));
+  planets.add(new Planet(5*pow(10,24),200,0,10));
   //sorthuls.add(new SortHul(2*pow(10,30),-200,0));
   
-  
-  //planets.get(0).setSpeed(s1);
+  planets.get(1).setSpeed(s1);
 }
 
 void draw() {
@@ -113,4 +112,12 @@ float kraftFordelingX(float x1, float x2, float y1, float y2, float kraft){
 //funktion for kraftfordelingen i y-retningen
 float kraftFordelingY(float x1, float x2, float y1, float y2, float kraft){
   return (kraft * ((y2-y1)*149900000/200)/( (abs(x2-x1)+abs(y2-y1))*149900000/200));
+}
+
+float mTilPixel(float distance) {
+  return distance*200/(1499*pow(10,8));
+}
+
+float pixelTilM(float distance) {
+  return distance*(1499*pow(10,8))/200;
 }

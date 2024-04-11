@@ -2,7 +2,7 @@ class Stjerne extends Objekt{
   PImage stjerne;
   
   Stjerne(float m, float x, float y, float r) {
-    masse = m;
+    masse = m*pow(10,-24);
     xPos = x;
     yPos = y;
     radius = r;
