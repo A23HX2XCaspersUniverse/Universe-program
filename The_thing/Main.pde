@@ -16,7 +16,7 @@ boolean spaceIsPressed = false;
 boolean rightIsPressed = false;
 
 int menuWidth = 120;
-int menuHeight = 200;
+int menuHeight = 139;
 
 double cameraDistance = 0;
 
@@ -92,48 +92,42 @@ void draw() {
 
 
 
+
   hint(DISABLE_DEPTH_TEST); //https://stackoverflow.com/questions/66303006/drawing-2d-text-over-3d-objects-in-processing-3
 
   if (openMenu) {
-    cam.beginHUD();
-    ui.beginDraw();
-    ui.background(60);
-    
-    ui.noFill();
-    ui.strokeWeight(5);
-    ui.stroke(40);
-    ui.rect(0,0,menuWidth,menuHeight);
-    ui.strokeWeight(1);
-    ui.line(0,38,menuWidth,38);
-    
-    ui.fill(255);
-    ui.textSize(20);
-    ui.text("Nyt Objekt", 10, 30);
-    
-    ui.endDraw();
-    image(ui, saveMouseX, saveMouseY);
-    cam.endHUD();
- }
+    createMenu();
+  }
 
   hint(ENABLE_DEPTH_TEST); //https://stackoverflow.com/questions/66303006/drawing-2d-text-over-3d-objects-in-processing-3
 }
 
 void mousePressed() {
   if (mouseButton == RIGHT) {
-    if (!rightIsPressed) {
+
+    if (mouseX < width-menuWidth && mouseY < height -menuHeight) {
+      saveMouseX = mouseX;
+      saveMouseY = mouseY;
+    } else if (mouseX < width-menuWidth) {
+      saveMouseX = mouseX;
+      saveMouseY = height-menuHeight;
+    } else if (mouseY < height-menuHeight) {
+      saveMouseX = width-menuWidth;
+      saveMouseY = mouseY;
+    } else {
+      saveMouseX = width-menuWidth;
+      saveMouseY = height-menuHeight;
+    }
+
     openMenu = true;
-    saveMouseX = mouseX;
-    saveMouseY = mouseY;
     cam.setMouseControlled(false);
     rightIsPressed = true;
-    } else {
-    }
   } else {
     if (openMenu) {
       if (mouseX < saveMouseX || mouseX > saveMouseX+menuWidth || mouseY < saveMouseY || mouseY > saveMouseY+menuHeight) {
-      cam.setMouseControlled(true);
-      rightIsPressed = false;
-      openMenu = false;
+        cam.setMouseControlled(true);
+        rightIsPressed = false;
+        openMenu = false;
       }
     }
   }
@@ -195,4 +189,8 @@ void cameraFreeze(boolean ind) {
     cam.setMouseControlled(true);
     spaceIsPressed = false;
   }
+}
+
+boolean knap(float x, float y, float l, float h) {
+  return (mouseX > x && mouseX < x+l && mouseY > y && mouseY < y+h);
 }

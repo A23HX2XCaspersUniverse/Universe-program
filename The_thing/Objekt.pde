@@ -31,8 +31,6 @@ class Objekt {
         
         saveSpeed.add(pavirkning);
         
-        println(nr+" : "+pavirkning+"  :  "+saveSpeed);
-        
         
       }
     }
