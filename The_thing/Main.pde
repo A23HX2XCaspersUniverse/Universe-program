@@ -11,14 +11,14 @@ ArrayList<SortHul> sorthuls = new ArrayList<>();
 
 
 
-boolean openCreateMenu = false;
+boolean objektMenu = false;
 boolean spaceIsPressed = false;
 boolean create = false;
 boolean freezeMovement = false;
 boolean quit = false;
 
-int menuWidth = 120;
-int menuHeight = 139;
+int menuWidth = 125;
+int menuHeight = 189;
 
 double cameraDistance = 0;
 
@@ -33,10 +33,10 @@ float [] cameraLookAt = new float[0];
 
 PVector s1 = new PVector(0, (-0.03)*interval);
 
-PGraphics ui;
+PGraphics cui;
 PGraphics qui;
 
-PFont font;
+PFont font, font2;
 
 void setup() {
   fullScreen(P3D);
@@ -62,12 +62,11 @@ void setup() {
   //Giver planet nr.2 en starthastighed
   planets.get(0).setSpeed(s1);
 
-  ui = createGraphics(menuWidth, menuHeight, P2D);
+  cui = createGraphics(menuWidth, menuHeight, P2D);
   qui = createGraphics(width, height, P2D);
-  
-  font = createFont("Spaceboardsdemo-8MyRB.otf", 32);
-  qui.textFont(font);
-  
+
+  font = createFont("MotionControl-BoldItalic.otf", 100);
+  font2 = createFont("Roboto-Bold.ttf", 100);
 }
 
 void draw() {
@@ -77,9 +76,9 @@ void draw() {
   translate(0, 0, 0);
   shape(universe); //laver en globusformet baggrund med stjerner
   popMatrix();
-    
-    if (!freezeMovement) {
-      
+
+  if (!freezeMovement) {
+
     //opdaterer objektet "planet"
     for (Planet planet : planets) {
       planet.update();
@@ -90,8 +89,8 @@ void draw() {
     for (SortHul sorthul : sorthuls) {
       sorthul.update();
     }
-    
-      
+
+
     // beregner tyngdekraftens påvirkning
     for (Planet planet : planets) {
       planet.tyngdekraft();
@@ -102,31 +101,29 @@ void draw() {
     for (SortHul sorthul : sorthuls) {
       sorthul.tyngdekraft();
     }
-    
   }
-  
+
   //tegner objekter
   for (Planet planet : planets) {
-      planet.objektDraw();
-    }
-    for (Stjerne stjerne : stjernes) {
-      stjerne.objektDraw();
-    }
-    for (SortHul sorthul : sorthuls) {
-      sorthul.objektDraw();
-    }
+    planet.objektDraw();
+  }
+  for (Stjerne stjerne : stjernes) {
+    stjerne.objektDraw();
+  }
+  for (SortHul sorthul : sorthuls) {
+    sorthul.objektDraw();
+  }
 
 
 
-  if (openCreateMenu) {
+  if (objektMenu) {
     createMenu();
   }
-  
-  
+
+
   if (quit) {
     quitMenu();
   }
-  
 }
 
 void mousePressed() {
@@ -146,19 +143,40 @@ void mousePressed() {
         saveMouseY = height-menuHeight;
       }
 
-      openCreateMenu = true;
+      objektMenu = true;
       cam.setMouseControlled(false);
     }
-  } else { /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  } else {             /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    if (openCreateMenu) {
+    if (objektMenu) {
+
       if (mouseX < saveMouseX || mouseX > saveMouseX+menuWidth || mouseY < saveMouseY || mouseY > saveMouseY+menuHeight) {
         cam.setMouseControlled(true);
-        openCreateMenu = false;
+        objektMenu = false;
       } else if (knap(saveMouseX, saveMouseY+39, menuWidth, 50)) {
-        openCreateMenu = false;
+        objektMenu = false;
         create = true;
         cameraFreeze(true);
+      }
+      
+      if (knap(saveMouseX, saveMouseY+39, menuWidth, 50)) {
+        objektMenu = false;
+      }
+      if (knap(saveMouseX, saveMouseY+89, menuWidth, 50)) {
+        objektMenu = false;
+      }
+      if (knap(saveMouseX, saveMouseY+139, menuWidth, 50)) {
+        objektMenu = false;
+      }
+      
+    } else if (quit) {
+
+      if (knap(width/2-400, height/2+100, 200, 100)) {
+        exit();
+      } else if (knap(width/2+200, height/2+100, 200, 100)) {
+        freezeMovement = false;
+        quit = false;
+        cam.setMouseControlled(true);
       }
     }
   }
@@ -177,6 +195,7 @@ void keyPressed() {
     if (!freezeMovement) {
       freezeMovement = true;
       quit = true;
+      objektMenu = false;
       cam.setMouseControlled(false);
     } else {
       freezeMovement = false;
