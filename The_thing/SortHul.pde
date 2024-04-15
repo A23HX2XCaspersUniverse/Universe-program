@@ -1,15 +1,15 @@
-class SortHul extends Objekt{
-  PImage stjerne;
+class BlackHole extends Object{
+  PImage blackhole;
   
-  SortHul(float m, float x, float y, float r) {
-    masse = m;
+  BlackHole(float m, float x, float y, float r) {
+    mass = m;
     xPos = x;
     yPos = y;
     radius = 2*6.674*pow(10, -11)*m/pow(300000000,2);
     println(radius);
-    stjerne = loadImage("black.jpg");
+    blackhole = loadImage("black.jpg");
     globe = createShape(SPHERE, radius);
-    globe.setTexture(stjerne);
+    globe.setTexture(blackhole);
     saveSpeed = new PVector(0,0,0);
     nr = objektNr;
     

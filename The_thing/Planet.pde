@@ -1,8 +1,8 @@
-class Planet extends Objekt{
+class Planet extends Object{
   PImage planet;
   
   Planet(float m, float x, float y, float r) {
-    masse = m;
+    mass = m;
     xPos = x;
     yPos = y;
     radius = r;

@@ -1,6 +1,6 @@
 float quitTextWidth;
 
-void objektMenu() {
+void objectMenu() {
   
   hint(DISABLE_DEPTH_TEST); //https://stackoverflow.com/questions/66303006/drawing-2d-text-over-3d-objects-in-processing-3
   
@@ -26,15 +26,15 @@ void objektMenu() {
   oui.rect(5/2, 89, objektMenuWidth-5, 50);
   oui.rect(5/2, 139, objektMenuWidth-5, 50);
   
-  if (knap(saveMouseX, saveMouseY+39, objektMenuWidth, 50)) {
+  if (button(saveMouseX, saveMouseY+39, objektMenuWidth, 50)) {
     oui.fill(70);
     oui.rect(5/2, 39, objektMenuWidth-5, 50);
   }
-  if (knap(saveMouseX, saveMouseY+89, objektMenuWidth, 50)) {
+  if (button(saveMouseX, saveMouseY+89, objektMenuWidth, 50)) {
     oui.fill(70);
     oui.rect(5/2, 89, objektMenuWidth-5, 50);
   }
-  if (knap(saveMouseX, saveMouseY+139, objektMenuWidth, 50)) {
+  if (button(saveMouseX, saveMouseY+139, objektMenuWidth, 50)) {
     oui.fill(70);
     oui.rect(5/2, 139, objektMenuWidth-5, 50);
   }
@@ -83,14 +83,14 @@ void quitMenu() {
   
   qui.stroke(200,90);
   
-  if (knap(width/2-400, height/2+100, 200, 100)) {
+  if (button(width/2-400, height/2+100, 200, 100)) {
     qui.fill(255,150);
     qui.rect(width/2-400, height/2+100, 200, 100);
     
     qui.fill(100,90);
     qui.text("Yes", width/2-390, height/2+185);
     
-  } else if (knap(width/2+200, height/2+100, 200, 100)) {
+  } else if (button(width/2+200, height/2+100, 200, 100)) {
     qui.fill(255,150);
     qui.rect(width/2+200, height/2+100, 200, 100);
     

@@ -1,6 +1,6 @@
-class Objekt {
-  float masse, xPos, yPos, radius, afstand, kraft, masseBeregning, nr;
-  PVector speed, saveSpeed, pavirkning;
+class Object {
+  float mass, xPos, yPos, radius, distance, force, massCalculation, nr;
+  PVector speed, saveSpeed, changes;
   PShape globe;
   
   //opdaterer planetens position
@@ -11,71 +11,71 @@ class Objekt {
   }
   
   //beregning af tyngdekraft
-  void tyngdekraft() {
+  void gravity() {
     for (Planet planet : planets) {
       
       //Tjek afstanden til den valgte planet i ArrayListen
-      afstand = sqrt(pow(planet.getX()-xPos, 2)+pow(planet.getY()-yPos, 2));
+      distance = sqrt(pow(planet.getX()-xPos, 2)+pow(planet.getY()-yPos, 2));
       
       //hvis afstanden er 0, betyder det at den har tjekket afstanden til den selv
-      if (afstand != 0) {
+      if (distance != 0) {
         
-        afstand = pixelTilM(afstand);
-        masseBeregning = 0.00000000006674 * masse;
-        kraft = masseBeregning/pow(afstand, 2);
-        kraft *= planet.getMasse();
+        distance = pixelToM(distance);
+        massCalculation = 0.00000000006674 * mass;
+        force = massCalculation/pow(distance, 2);
+        force *= planet.getMass();
         
-        pavirkning = new PVector(kraftFordelingX(xPos, planet.getX(), yPos, planet.getY(), kraft)/masse*0.016666*interval , 
-        kraftFordelingY(xPos, planet.getX(), yPos, planet.getY(), kraft)/masse*0.016666*interval, 0);
+        changes = new PVector(forceDistributionX(xPos, planet.getX(), yPos, planet.getY(), force)/mass*0.016666*interval , 
+        forceDistributionY(xPos, planet.getX(), yPos, planet.getY(), force)/mass*0.016666*interval, 0);
         
-        saveSpeed.add(pavirkning);
+        saveSpeed.add(changes);
         
         
       }
     }
-    for (Stjerne stjerne : stjernes) {
+    for (Star star : stars) {
       
       //Tjek afstanden til den valgte planet i ArrayListen
-      afstand = sqrt(pow(stjerne.getX()-xPos, 2)+pow(stjerne.getY()-yPos, 2));
+      distance = sqrt(pow(star.getX()-xPos, 2)+pow(star.getY()-yPos, 2));
       
       //hvis afstanden er 0, betyder det at den har tjekket afstanden til den selv
-      if (afstand != 0) {
+      if (distance != 0) {
         
-        afstand = pixelTilM(afstand);
-        masseBeregning = 0.00000000006674 * masse;
-        kraft = masseBeregning/pow(afstand, 2);
-        kraft *= stjerne.getMasse();
+        distance = pixelToM(distance);
+        massCalculation = 0.00000000006674 * mass;
+        force = massCalculation/pow(distance, 2);
+        force *= star.getMass();
         
-        pavirkning = new PVector(kraftFordelingX(xPos, stjerne.getX(), yPos, stjerne.getY(), kraft)/masse*0.016666*interval , 
-        kraftFordelingY(xPos, stjerne.getX(), yPos, stjerne.getY(), kraft)/masse*0.016666*interval, 0);
+        changes = new PVector(forceDistributionX(xPos, star.getX(), yPos, star.getY(), force)/mass*0.016666*interval , 
+        forceDistributionY(xPos, star.getX(), yPos, star.getY(), force)/mass*0.016666*interval, 0);
         
-        saveSpeed.add(pavirkning);
+        saveSpeed.add(changes);
         
       }
     }
-    for (SortHul sorthul : sorthuls) {
+    for (BlackHole blackhole : blackholes) {
       
       //Tjek afstanden til den valgte planet i ArrayListen
-      afstand = sqrt(pow(sorthul.getX()-xPos, 2)+pow(sorthul.getY()-yPos, 2));
+      distance = sqrt(pow(blackhole.getX()-xPos, 2)+pow(blackhole.getY()-yPos, 2));
       
       //hvis afstanden er 0, betyder det at den har tjekket afstanden til den selv
-      if (afstand != 0) {
+      if (distance != 0) {
         
-        afstand = pixelTilM(afstand);
-        masseBeregning = 0.00000000006674 * masse;
-        kraft = masseBeregning/pow(afstand, 2);
-        kraft *= sorthul.getMasse();
+        distance = pixelToM(distance);
+        massCalculation = 0.00000000006674 * mass;
+        force = massCalculation/pow(distance, 2);
+        force *= blackhole.getMass();
         
-        pavirkning = new PVector(kraftFordelingX(xPos, sorthul.getX(), yPos, sorthul.getY(), kraft)/masse*0.016666*interval , 
-        kraftFordelingY(xPos, sorthul.getX(), yPos, sorthul.getY(), kraft)/masse*0.016666*interval, 0);
+        changes = new PVector(forceDistributionX(xPos, blackhole.getX(), yPos, blackhole.getY(), force)/mass*0.016666*interval , 
+        forceDistributionY(xPos, blackhole.getX(), yPos, blackhole.getY(), force)/mass*0.016666*interval, 0);
         
-        saveSpeed.add(pavirkning);
+        saveSpeed.add(changes);
         
       }
     }
   }
   
-  void objektDraw() {
+  void objectDraw() {
     pushMatrix();
     translate(xPos, yPos, 0);
     shape(globe);
@@ -94,8 +94,8 @@ class Objekt {
   
   
   //retunerer massen
-  float getMasse() {
-    return masse;
+  float getMass() {
+    return mass;
   }
   
   void setSpeed(PVector s) {

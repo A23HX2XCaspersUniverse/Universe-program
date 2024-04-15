@@ -3,15 +3,15 @@ import javax.swing.JFrame;
 
 PeasyCam cam;
 PShape universe; //https://forum.processing.org/two/discussion/22593/how-to-fill-the-sphere-with-the-earth-image.html
-PImage stars;
+PImage milkyWay;
 
 ArrayList<Planet> planets = new ArrayList<>();
-ArrayList<Stjerne> stjernes = new ArrayList<>();
-ArrayList<SortHul> sorthuls = new ArrayList<>();
+ArrayList<Star> stars = new ArrayList<>();
+ArrayList<BlackHole> blackholes = new ArrayList<>();
 
 
 
-boolean objektMenu = false;
+boolean objectMenu = false;
 boolean spaceIsPressed = false;
 boolean create = false;
 boolean freezeMovement = false;
@@ -54,12 +54,12 @@ void setup() {
   cam.setDistance(200);
 
   //Loader baggrunden
-  stars = loadImage("space1.jpg");
+  milkyWay = loadImage("space1.jpg");
   universe = createShape(SPHERE, 6000);  //https://forum.processing.org/two/discussion/22593/how-to-fill-the-sphere-with-the-earth-image.html
-  universe.setTexture(stars);  //https://forum.processing.org/two/discussion/22593/how-to-fill-the-sphere-with-the-earth-image.html
+  universe.setTexture(milkyWay);  //https://forum.processing.org/two/discussion/22593/how-to-fill-the-sphere-with-the-earth-image.html
 
   //Tilføjer Planet og stjerne
-  stjernes.add(new Stjerne(2*pow(10, 30), 0, -2000, 10));
+  stars.add(new Star(2*pow(10, 30), 0, -2000, 10));
   //planets.add(new Planet(5*pow(10, 24), 100, 0, 5));
   //planets.add(new Planet(5*pow(10, 29), -100, -200, 9));
 
@@ -88,41 +88,41 @@ void draw() {
     for (Planet planet : planets) {
       planet.update();
     }
-    for (Stjerne stjerne : stjernes) {
-      stjerne.update();
+    for (Star star : stars) {
+      star.update();
     }
-    for (SortHul sorthul : sorthuls) {
-      sorthul.update();
+    for (BlackHole blackhole : blackholes) {
+      blackhole.update();
     }
 
 
     // beregner tyngdekraftens påvirkning
     for (Planet planet : planets) {
-      planet.tyngdekraft();
+      planet.gravity();
     }
-    for (Stjerne stjerne : stjernes) {
-      stjerne.tyngdekraft();
+    for (Star star : stars) {
+      star.gravity();
     }
-    for (SortHul sorthul : sorthuls) {
-      sorthul.tyngdekraft();
+    for (BlackHole blackhole : blackholes) {
+      blackhole.gravity();
     }
   }
 
   //tegner objekter
   for (Planet planet : planets) {
-    planet.objektDraw();
+    planet.objectDraw();
   }
-  for (Stjerne stjerne : stjernes) {
-    stjerne.objektDraw();
+  for (Star star : stars) {
+    star.objectDraw();
   }
-  for (SortHul sorthul : sorthuls) {
-    sorthul.objektDraw();
+  for (BlackHole blackhole : blackholes) {
+    blackhole.objectDraw();
   }
 
 
 
-  if (objektMenu) {
-    objektMenu();
+  if (objectMenu) {
+    objectMenu();
   } else if (quit) {
     quitMenu();
   } else if (create) {
@@ -157,28 +157,28 @@ void mousePressed() {
         saveMouseY = height-objektMenuHeight;
       }
 
-      objektMenu = true;
+      objectMenu = true;
       cam.setMouseControlled(false);
     }
   } else {             /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    if (objektMenu) {
+    if (objectMenu) {
 
       if (mouseX < saveMouseX || mouseX > saveMouseX+objektMenuWidth || mouseY < saveMouseY || mouseY > saveMouseY+objektMenuHeight) {
         cam.setMouseControlled(true);
-        objektMenu = false;
-      } else if (knap(saveMouseX, saveMouseY+39, objektMenuWidth, 50)) {
+        objectMenu = false;
+      } else if (button(saveMouseX, saveMouseY+39, objektMenuWidth, 50)) {
         createMenuSetup(1);
-      } else if (knap(saveMouseX, saveMouseY+89, objektMenuWidth, 50)) {
+      } else if (button(saveMouseX, saveMouseY+89, objektMenuWidth, 50)) {
         createMenuSetup(2);
-      } else if (knap(saveMouseX, saveMouseY+139, objektMenuWidth, 50)) {
+      } else if (button(saveMouseX, saveMouseY+139, objektMenuWidth, 50)) {
         createMenuSetup(3);
       }
     } else if (quit) {
 
-      if (knap(width/2-400, height/2+100, 200, 100)) {
+      if (button(width/2-400, height/2+100, 200, 100)) {
         exit();
-      } else if (knap(width/2+200, height/2+100, 200, 100)) {
+      } else if (button(width/2+200, height/2+100, 200, 100)) {
         freezeMovement = false;
         quit = false;
         cam.setMouseControlled(true);
@@ -206,7 +206,7 @@ void keyPressed() {
       if (!quit) {
         freezeMovement = true;
         quit = true;
-        objektMenu = false;
+        objectMenu = false;
         cam.setMouseControlled(false);
       } else {
         freezeMovement = false;
@@ -229,22 +229,22 @@ void keyPressed() {
 }
 
 //funktion for kraftfordelingen i x-retningen
-float kraftFordelingX(float x1, float x2, float y1, float y2, float kraft) {
+float forceDistributionX(float x1, float x2, float y1, float y2, float kraft) {
   return (kraft * ((x2-x1)*149900000/200)/( (abs(x2-x1)+abs(y2-y1))*149900000/200));
 }
 
 //funktion for kraftfordelingen i y-retningen
-float kraftFordelingY(float x1, float x2, float y1, float y2, float kraft) {
+float forceDistributionY(float x1, float x2, float y1, float y2, float kraft) {
   return (kraft * ((y2-y1)*149900000/200)/( (abs(x2-x1)+abs(y2-y1))*149900000/200));
 }
 
 //omsætter meter til pixels
-float mTilPixel(float distance) {
+float mToPixel(float distance) {
   return distance*100/(1499*pow(10, 8));
 }
 
 //omsætter pixels til meter
-float pixelTilM(float distance) {
+float pixelToM(float distance) {
   return distance*(1499*pow(10, 8))/100;
 }
 
@@ -277,12 +277,12 @@ void cameraFreeze(boolean ind) {
 }
 
 //funktion for knap
-boolean knap(float x, float y, float l, float h) {
+boolean button(float x, float y, float l, float h) {
   return (mouseX > x && mouseX < x+l && mouseY > y && mouseY < y+h);
 }
 
 void createMenuSetup(int objekt) {
-  objektMenu = false;
+  objectMenu = false;
   create = true;
   cameraFreeze(true);
   freezeMovement = true;

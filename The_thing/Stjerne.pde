@@ -1,14 +1,14 @@
-class Stjerne extends Objekt{
-  PImage stjerne;
+class Star extends Object{
+  PImage star;
   
-  Stjerne(float m, float x, float y, float r) {
-    masse = m;
+  Star(float m, float x, float y, float r) {
+    mass = m;
     xPos = x;
     yPos = y;
     radius = r;
-    stjerne = loadImage("Stjerne"+int(random(1,5))+".jpg");
+    star = loadImage("Stjerne"+int(random(1,5))+".jpg");
     globe = createShape(SPHERE, radius);
-    globe.setTexture(stjerne);
+    globe.setTexture(star);
     saveSpeed = new PVector(0,0,0);
     nr = objektNr;
     
