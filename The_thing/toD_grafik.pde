@@ -1,5 +1,9 @@
-void createMenu() {
+float quitTextWidth;
 
+void createMenu() {
+  
+  hint(DISABLE_DEPTH_TEST); //https://stackoverflow.com/questions/66303006/drawing-2d-text-over-3d-objects-in-processing-3
+  
   cam.beginHUD();
   ui.beginDraw();
   ui.background(60);
@@ -31,4 +35,27 @@ void createMenu() {
   ui.endDraw();
   image(ui, saveMouseX, saveMouseY);
   cam.endHUD();
+  
+  hint(ENABLE_DEPTH_TEST); //https://stackoverflow.com/questions/66303006/drawing-2d-text-over-3d-objects-in-processing-3
+}
+
+void quitMenu() {
+  
+  hint(DISABLE_DEPTH_TEST); //https://stackoverflow.com/questions/66303006/drawing-2d-text-over-3d-objects-in-processing-3
+  
+  cam.beginHUD();
+  qui.beginDraw();
+  qui.background(60,90);
+  
+  qui.textSize(100);
+  textSize(100);
+  qui.fill(255,100);
+  quitTextWidth = textWidth("QUIT?");
+  qui.text("QUIT?", width/2-quitTextWidth/2, 200);
+  
+  qui.endDraw();
+  image(qui, 0, 0);
+  cam.endHUD();
+  
+  hint(ENABLE_DEPTH_TEST); //https://stackoverflow.com/questions/66303006/drawing-2d-text-over-3d-objects-in-processing-3
 }

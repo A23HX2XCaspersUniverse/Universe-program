@@ -12,7 +12,6 @@ class Objekt {
   
   //beregning af tyngdekraft
   void tyngdekraft() {
-    pushMatrix();
     for (Planet planet : planets) {
       
       //Tjek afstanden til den valgte planet i ArrayListen
@@ -74,8 +73,10 @@ class Objekt {
         
       }
     }
-    
-    
+  }
+  
+  void objektDraw() {
+    pushMatrix();
     translate(xPos, yPos, 0);
     shape(globe);
     popMatrix();

@@ -11,9 +11,11 @@ ArrayList<SortHul> sorthuls = new ArrayList<>();
 
 
 
-boolean openMenu = false;
+boolean openCreateMenu = false;
 boolean spaceIsPressed = false;
-boolean rightIsPressed = false;
+boolean create = false;
+boolean freezeMovement = false;
+boolean quit = false;
 
 int menuWidth = 120;
 int menuHeight = 139;
@@ -32,6 +34,9 @@ float [] cameraLookAt = new float[0];
 PVector s1 = new PVector(0, (-0.03)*interval);
 
 PGraphics ui;
+PGraphics qui;
+
+PFont font;
 
 void setup() {
   fullScreen(P3D);
@@ -58,6 +63,11 @@ void setup() {
   planets.get(0).setSpeed(s1);
 
   ui = createGraphics(menuWidth, menuHeight, P2D);
+  qui = createGraphics(width, height, P2D);
+  
+  font = createFont("Spaceboardsdemo-8MyRB.otf", 32);
+  qui.textFont(font);
+  
 }
 
 void draw() {
@@ -67,79 +77,119 @@ void draw() {
   translate(0, 0, 0);
   shape(universe); //laver en globusformet baggrund med stjerner
   popMatrix();
-
-  //opdaterer objektet "planet"
+    
+    if (!freezeMovement) {
+      
+    //opdaterer objektet "planet"
+    for (Planet planet : planets) {
+      planet.update();
+    }
+    for (Stjerne stjerne : stjernes) {
+      stjerne.update();
+    }
+    for (SortHul sorthul : sorthuls) {
+      sorthul.update();
+    }
+    
+      
+    // beregner tyngdekraftens påvirkning
+    for (Planet planet : planets) {
+      planet.tyngdekraft();
+    }
+    for (Stjerne stjerne : stjernes) {
+      stjerne.tyngdekraft();
+    }
+    for (SortHul sorthul : sorthuls) {
+      sorthul.tyngdekraft();
+    }
+    
+  }
+  
+  //tegner objekter
   for (Planet planet : planets) {
-    planet.update();
-  }
-  for (Stjerne stjerne : stjernes) {
-    stjerne.update();
-  }
-  for (SortHul sorthul : sorthuls) {
-    sorthul.update();
-  }
-
-  // beregner tyngdekraftens påvirkning
-  for (Planet planet : planets) {
-    planet.tyngdekraft();
-  }
-  for (Stjerne stjerne : stjernes) {
-    stjerne.tyngdekraft();
-  }
-  for (SortHul sorthul : sorthuls) {
-    sorthul.tyngdekraft();
-  }
+      planet.objektDraw();
+    }
+    for (Stjerne stjerne : stjernes) {
+      stjerne.objektDraw();
+    }
+    for (SortHul sorthul : sorthuls) {
+      sorthul.objektDraw();
+    }
 
 
 
-
-  hint(DISABLE_DEPTH_TEST); //https://stackoverflow.com/questions/66303006/drawing-2d-text-over-3d-objects-in-processing-3
-
-  if (openMenu) {
+  if (openCreateMenu) {
     createMenu();
   }
-
-  hint(ENABLE_DEPTH_TEST); //https://stackoverflow.com/questions/66303006/drawing-2d-text-over-3d-objects-in-processing-3
+  
+  
+  if (quit) {
+    quitMenu();
+  }
+  
 }
 
 void mousePressed() {
   if (mouseButton == RIGHT) {
+    if (!create && !quit) {
+      if (mouseX < width-menuWidth && mouseY < height -menuHeight) {
+        saveMouseX = mouseX;
+        saveMouseY = mouseY;
+      } else if (mouseX < width-menuWidth) {
+        saveMouseX = mouseX;
+        saveMouseY = height-menuHeight;
+      } else if (mouseY < height-menuHeight) {
+        saveMouseX = width-menuWidth;
+        saveMouseY = mouseY;
+      } else {
+        saveMouseX = width-menuWidth;
+        saveMouseY = height-menuHeight;
+      }
 
-    if (mouseX < width-menuWidth && mouseY < height -menuHeight) {
-      saveMouseX = mouseX;
-      saveMouseY = mouseY;
-    } else if (mouseX < width-menuWidth) {
-      saveMouseX = mouseX;
-      saveMouseY = height-menuHeight;
-    } else if (mouseY < height-menuHeight) {
-      saveMouseX = width-menuWidth;
-      saveMouseY = mouseY;
-    } else {
-      saveMouseX = width-menuWidth;
-      saveMouseY = height-menuHeight;
+      openCreateMenu = true;
+      cam.setMouseControlled(false);
     }
+  } else { /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    openMenu = true;
-    cam.setMouseControlled(false);
-    rightIsPressed = true;
-  } else {
-    if (openMenu) {
+    if (openCreateMenu) {
       if (mouseX < saveMouseX || mouseX > saveMouseX+menuWidth || mouseY < saveMouseY || mouseY > saveMouseY+menuHeight) {
         cam.setMouseControlled(true);
-        rightIsPressed = false;
-        openMenu = false;
+        openCreateMenu = false;
+      } else if (knap(saveMouseX, saveMouseY+39, menuWidth, 50)) {
+        openCreateMenu = false;
+        create = true;
+        cameraFreeze(true);
       }
     }
   }
 }
 
 void keyPressed() {
-  if (key == ' ') {
+  if (key == ' ' && !create && !quit) {
     if (!spaceIsPressed) {
-      cameraFreeze(false);
-    } else {
       cameraFreeze(true);
+    } else {
+      cameraFreeze(false);
     }
+  } else if (key == DELETE) {
+    exit();
+  } else if (key == ESC) {
+    if (!freezeMovement) {
+      freezeMovement = true;
+      quit = true;
+      cam.setMouseControlled(false);
+    } else {
+      freezeMovement = false;
+      quit = false;
+      cam.setMouseControlled(true);
+    }
+  }
+
+  //https://forum.processing.org/two/discussion/575/stop-escape-key-from-closing-app-in-new-window-g4p.html
+  switch(key) {
+  case ESC:
+    key = 0;
+    break;
   }
 }
 
@@ -165,7 +215,7 @@ float pixelTilM(float distance) {
 
 //kamerahåndtagning
 void cameraFreeze(boolean ind) {
-  if (!ind) {
+  if (ind) {
     //gemmer info, om kamera
     cameraRotation = cam.getRotations();
     cameraDistance = cam.getDistance();
@@ -191,6 +241,7 @@ void cameraFreeze(boolean ind) {
   }
 }
 
+//funktion for knap
 boolean knap(float x, float y, float l, float h) {
   return (mouseX > x && mouseX < x+l && mouseY > y && mouseY < y+h);
 }
