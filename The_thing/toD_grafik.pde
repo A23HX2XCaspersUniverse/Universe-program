@@ -1,57 +1,59 @@
 float quitTextWidth;
 
-void createMenu() {
+void objektMenu() {
   
   hint(DISABLE_DEPTH_TEST); //https://stackoverflow.com/questions/66303006/drawing-2d-text-over-3d-objects-in-processing-3
   
   cam.beginHUD();
-  cui.beginDraw();
-  cui.textFont(font);
-  cui.background(60);
+  oui.beginDraw();
+  oui.textFont(font);
+  oui.background(60);
 
-  cui.noFill();
-  cui.strokeWeight(5);
-  cui.stroke(50);
-  cui.rect(0, 0, menuWidth, menuHeight);
-  cui.strokeWeight(1);
-  cui.line(0, 38, menuWidth, 38);
+  oui.noFill();
+  oui.strokeWeight(5);
+  oui.stroke(50);
+  oui.rect(0, 0, objektMenuWidth, objektMenuHeight);
+  oui.strokeWeight(1);
+  oui.line(0, 38, objektMenuWidth, 38);
 
-  cui.fill(255);
-  cui.textSize(29);
-  cui.text("Nyt Objekt", 10, 28);
+  oui.fill(255);
+  oui.textSize(29);
+  oui.text("Nyt Objekt", 10, 28);
 
-  cui.strokeWeight(5);
-  cui.fill(60);
-  cui.rect(5/2, 39, menuWidth-5, 50);
-  cui.rect(5/2, 89, menuWidth-5, 50);
-  cui.rect(5/2, 139, menuWidth-5, 50);
+  oui.strokeWeight(5);
+  oui.fill(60);
+  oui.rect(5/2, 39, objektMenuWidth-5, 50);
+  oui.rect(5/2, 89, objektMenuWidth-5, 50);
+  oui.rect(5/2, 139, objektMenuWidth-5, 50);
   
-  if (knap(saveMouseX, saveMouseY+39, menuWidth, 50)) {
-    cui.fill(70);
-    cui.rect(5/2, 39, menuWidth-5, 50);
+  if (knap(saveMouseX, saveMouseY+39, objektMenuWidth, 50)) {
+    oui.fill(70);
+    oui.rect(5/2, 39, objektMenuWidth-5, 50);
   }
-  if (knap(saveMouseX, saveMouseY+89, menuWidth, 50)) {
-    cui.fill(70);
-    cui.rect(5/2, 89, menuWidth-5, 50);
+  if (knap(saveMouseX, saveMouseY+89, objektMenuWidth, 50)) {
+    oui.fill(70);
+    oui.rect(5/2, 89, objektMenuWidth-5, 50);
   }
-  if (knap(saveMouseX, saveMouseY+139, menuWidth, 50)) {
-    cui.fill(70);
-    cui.rect(5/2, 139, menuWidth-5, 50);
+  if (knap(saveMouseX, saveMouseY+139, objektMenuWidth, 50)) {
+    oui.fill(70);
+    oui.rect(5/2, 139, objektMenuWidth-5, 50);
   }
   
-  cui.fill(255);
-  cui.textFont(font2);
-  cui.textSize(18);
-  cui.text("Planet", 18, 70);
-  cui.text("Star", 18, 120);
-  cui.text("Black Hole", 18, 170);
+  oui.fill(255);
+  oui.textFont(font2);
+  oui.textSize(18);
+  oui.text("Planet", 18, 70);
+  oui.text("Star", 18, 120);
+  oui.text("Black Hole", 18, 170);
 
-  cui.endDraw();
-  image(cui, saveMouseX, saveMouseY);
+  oui.endDraw();
+  image(oui, saveMouseX, saveMouseY);
   cam.endHUD();
   
   hint(ENABLE_DEPTH_TEST); //https://stackoverflow.com/questions/66303006/drawing-2d-text-over-3d-objects-in-processing-3
 }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void quitMenu() {
   
@@ -68,6 +70,8 @@ void quitMenu() {
   quitTextWidth = textWidth("QUIT?");
   qui.text("QUIT?", width/2-quitTextWidth/2, 200);
   
+  qui.stroke(100,90);
+  qui.strokeWeight(4);
   qui.fill(150,90);
   qui.rect(width/2-400, height/2+100, 200, 100);
   qui.rect(width/2+200, height/2+100, 200, 100);
@@ -76,6 +80,8 @@ void quitMenu() {
   qui.fill(200,90);
   qui.text("Yes", width/2-390, height/2+185);
   qui.text("No", width/2+240, height/2+185);
+  
+  qui.stroke(200,90);
   
   if (knap(width/2-400, height/2+100, 200, 100)) {
     qui.fill(255,150);
@@ -94,6 +100,22 @@ void quitMenu() {
   
   qui.endDraw();
   image(qui, 0, 0);
+  cam.endHUD();
+  
+  hint(ENABLE_DEPTH_TEST); //https://stackoverflow.com/questions/66303006/drawing-2d-text-over-3d-objects-in-processing-3
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void createMenu() {
+  hint(DISABLE_DEPTH_TEST); //https://stackoverflow.com/questions/66303006/drawing-2d-text-over-3d-objects-in-processing-3
+  
+  cam.beginHUD();
+  cui.beginDraw();
+  cui.background(60);
+  
+  cui.endDraw();
+  image(cui, width/2-createMenuWidth/2, height/2-createMenuHeight/2);
   cam.endHUD();
   
   hint(ENABLE_DEPTH_TEST); //https://stackoverflow.com/questions/66303006/drawing-2d-text-over-3d-objects-in-processing-3

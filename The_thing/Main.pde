@@ -16,9 +16,12 @@ boolean spaceIsPressed = false;
 boolean create = false;
 boolean freezeMovement = false;
 boolean quit = false;
+boolean isPlaced = false;
 
-int menuWidth = 125;
-int menuHeight = 189;
+int objektMenuWidth = 125;
+int objektMenuHeight = 189;
+int createMenuWidth = 800;
+int createMenuHeight = 600;
 
 double cameraDistance = 0;
 
@@ -33,8 +36,9 @@ float [] cameraLookAt = new float[0];
 
 PVector s1 = new PVector(0, (-0.03)*interval);
 
-PGraphics cui;
+PGraphics oui;
 PGraphics qui;
+PGraphics cui;
 
 PFont font, font2;
 
@@ -46,24 +50,25 @@ void setup() {
   //initiering af kameraet
   cam = new PeasyCam(this, 100); //http://wiki.bk.tudelft.nl/toi-pedia/Processing_3D_Navigation
   cam.setMinimumDistance(160);    //http://wiki.bk.tudelft.nl/toi-pedia/Processing_3D_Navigation
-  cam.setMaximumDistance(2000);  //http://wiki.bk.tudelft.nl/toi-pedia/Processing_3D_Navigation
+  cam.setMaximumDistance(30000);  //http://wiki.bk.tudelft.nl/toi-pedia/Processing_3D_Navigation
   cam.setDistance(200);
 
   //Loader baggrunden
-  stars = loadImage("space.jpg");
-  universe = createShape(SPHERE, 2000);  //https://forum.processing.org/two/discussion/22593/how-to-fill-the-sphere-with-the-earth-image.html
+  stars = loadImage("space1.jpg");
+  universe = createShape(SPHERE, 6000);  //https://forum.processing.org/two/discussion/22593/how-to-fill-the-sphere-with-the-earth-image.html
   universe.setTexture(stars);  //https://forum.processing.org/two/discussion/22593/how-to-fill-the-sphere-with-the-earth-image.html
 
   //Tilføjer Planet og stjerne
-  stjernes.add(new Stjerne(2*pow(10, 30), 0, 0, 10));
-  planets.add(new Planet(5*pow(10, 24), 100, 0, 5));
-  planets.add(new Planet(5*pow(10, 29), -100, -200, 9));
+  stjernes.add(new Stjerne(2*pow(10, 30), 0, -2000, 10));
+  //planets.add(new Planet(5*pow(10, 24), 100, 0, 5));
+  //planets.add(new Planet(5*pow(10, 29), -100, -200, 9));
 
   //Giver planet nr.2 en starthastighed
-  planets.get(0).setSpeed(s1);
+  //planets.get(0).setSpeed(s1);
 
-  cui = createGraphics(menuWidth, menuHeight, P2D);
+  oui = createGraphics(objektMenuWidth, objektMenuHeight, P2D);
   qui = createGraphics(width, height, P2D);
+  cui = createGraphics(createMenuWidth, createMenuHeight, P2D);
 
   font = createFont("MotionControl-BoldItalic.otf", 100);
   font2 = createFont("Roboto-Bold.ttf", 100);
@@ -117,30 +122,39 @@ void draw() {
 
 
   if (objektMenu) {
-    createMenu();
-  }
-
-
-  if (quit) {
+    objektMenu();
+  } else if (quit) {
     quitMenu();
+  } else if (create) {
+    if (isPlaced) {
+      createMenu();
+    } else {
+      pushMatrix();
+      translate((mouseX-width/2)*3.20987654, (mouseY-height/2)*3.20987654, 0);
+      fill(255);
+      sphere(20);
+      popMatrix();
+    }
   }
+
 }
 
 void mousePressed() {
   if (mouseButton == RIGHT) {
+
     if (!create && !quit) {
-      if (mouseX < width-menuWidth && mouseY < height -menuHeight) {
+      if (mouseX < width-objektMenuWidth && mouseY < height -objektMenuHeight) {
         saveMouseX = mouseX;
         saveMouseY = mouseY;
-      } else if (mouseX < width-menuWidth) {
+      } else if (mouseX < width-objektMenuWidth) {
         saveMouseX = mouseX;
-        saveMouseY = height-menuHeight;
-      } else if (mouseY < height-menuHeight) {
-        saveMouseX = width-menuWidth;
+        saveMouseY = height-objektMenuHeight;
+      } else if (mouseY < height-objektMenuHeight) {
+        saveMouseX = width-objektMenuWidth;
         saveMouseY = mouseY;
       } else {
-        saveMouseX = width-menuWidth;
-        saveMouseY = height-menuHeight;
+        saveMouseX = width-objektMenuWidth;
+        saveMouseY = height-objektMenuHeight;
       }
 
       objektMenu = true;
@@ -150,25 +164,16 @@ void mousePressed() {
 
     if (objektMenu) {
 
-      if (mouseX < saveMouseX || mouseX > saveMouseX+menuWidth || mouseY < saveMouseY || mouseY > saveMouseY+menuHeight) {
+      if (mouseX < saveMouseX || mouseX > saveMouseX+objektMenuWidth || mouseY < saveMouseY || mouseY > saveMouseY+objektMenuHeight) {
         cam.setMouseControlled(true);
         objektMenu = false;
-      } else if (knap(saveMouseX, saveMouseY+39, menuWidth, 50)) {
-        objektMenu = false;
-        create = true;
-        cameraFreeze(true);
+      } else if (knap(saveMouseX, saveMouseY+39, objektMenuWidth, 50)) {
+        createMenuSetup(1);
+      } else if (knap(saveMouseX, saveMouseY+89, objektMenuWidth, 50)) {
+        createMenuSetup(2);
+      } else if (knap(saveMouseX, saveMouseY+139, objektMenuWidth, 50)) {
+        createMenuSetup(3);
       }
-      
-      if (knap(saveMouseX, saveMouseY+39, menuWidth, 50)) {
-        objektMenu = false;
-      }
-      if (knap(saveMouseX, saveMouseY+89, menuWidth, 50)) {
-        objektMenu = false;
-      }
-      if (knap(saveMouseX, saveMouseY+139, menuWidth, 50)) {
-        objektMenu = false;
-      }
-      
     } else if (quit) {
 
       if (knap(width/2-400, height/2+100, 200, 100)) {
@@ -178,6 +183,10 @@ void mousePressed() {
         quit = false;
         cam.setMouseControlled(true);
       }
+    } else if (create && !isPlaced) {
+      saveMouseX = mouseX;
+      saveMouseY = mouseY;
+      isPlaced = true;
     }
   }
 }
@@ -191,16 +200,23 @@ void keyPressed() {
     }
   } else if (key == DELETE) {
     exit();
-  } else if (key == ESC) {
-    if (!freezeMovement) {
-      freezeMovement = true;
-      quit = true;
-      objektMenu = false;
-      cam.setMouseControlled(false);
+  }else if (key == ESC) {
+
+    if (!create) {
+      if (!quit) {
+        freezeMovement = true;
+        quit = true;
+        objektMenu = false;
+        cam.setMouseControlled(false);
+      } else {
+        freezeMovement = false;
+        quit = false;
+        cam.setMouseControlled(true);
+      }
     } else {
+      create = false;
+      cameraFreeze(false);
       freezeMovement = false;
-      quit = false;
-      cam.setMouseControlled(true);
     }
   }
 
@@ -242,7 +258,7 @@ void cameraFreeze(boolean ind) {
 
     //zoomer ud
     cam.setRotations(0, 0, 0);
-    cam.setDistance(2000);
+    cam.setDistance(3000);
     cam.lookAt(0, 0, 0);
 
     //fryser kameraet
@@ -263,4 +279,11 @@ void cameraFreeze(boolean ind) {
 //funktion for knap
 boolean knap(float x, float y, float l, float h) {
   return (mouseX > x && mouseX < x+l && mouseY > y && mouseY < y+h);
+}
+
+void createMenuSetup(int objekt) {
+  objektMenu = false;
+  create = true;
+  cameraFreeze(true);
+  freezeMovement = true;
 }
