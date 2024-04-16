@@ -31,6 +31,8 @@ float saveMouseY = 0;
 float interval = 10;
 float objektNr = 1;
 
+String objectType = "";
+
 float [] cameraPos = new float[0];
 float [] cameraRotation = new float[0];
 float [] cameraLookAt = new float[0];
@@ -51,7 +53,7 @@ void setup() {
   //initiering af kameraet
   cam = new PeasyCam(this, 100); //http://wiki.bk.tudelft.nl/toi-pedia/Processing_3D_Navigation
   cam.setMinimumDistance(160);    //http://wiki.bk.tudelft.nl/toi-pedia/Processing_3D_Navigation
-  cam.setMaximumDistance(30000);  //http://wiki.bk.tudelft.nl/toi-pedia/Processing_3D_Navigation
+  cam.setMaximumDistance(3000);  //http://wiki.bk.tudelft.nl/toi-pedia/Processing_3D_Navigation
   cam.setDistance(200);
 
   //Loader baggrunden
@@ -63,8 +65,9 @@ void setup() {
   stars.add(new Star(2*pow(10, 30), 0, -2000, 10));
 
   textboxes.add(new Textbox(50, 180, 200, 30));
-  textboxes.add(new Textbox(50, 230, 200, 30));
-  textboxes.add(new Textbox(createMenuWidth-250, 180, 200, 30));
+  textboxes.add(new Textbox(50, 330, 200, 30));
+  textboxes.add(new Textbox(createMenuWidth-280, 180, 200, 30));
+  textboxes.add(new Textbox(255+64, 180, 50, 30));
 
   for (Textbox textbox : textboxes) {
     textbox.setToNumbersOnly(true);
@@ -218,6 +221,7 @@ void keyPressed() {
       create = false;
       cameraFreeze(false);
       freezeMovement = false;
+      isPlaced = false;
       cursor(ARROW);
       for (Textbox textbox : textboxes) {
         textbox.setText("");
@@ -311,9 +315,16 @@ boolean button(float x, float y, float l, float h) {
   return (mouseX > x && mouseX < x+l && mouseY > y && mouseY < y+h);
 }
 
-void createMenuSetup(int objekt) {
+void createMenuSetup(int object) {
   objectMenu = false;
   create = true;
   cameraFreeze(true);
   freezeMovement = true;
+  if (object == 1) {
+    objectType = "planet";
+  } else if (object == 2) {
+    objectType = "star";
+  } else if (object == 3) {
+    objectType = "black hole";
+  }
 }
