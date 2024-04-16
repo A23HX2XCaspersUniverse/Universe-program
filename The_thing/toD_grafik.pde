@@ -116,14 +116,13 @@ void createMenu() {
   cui.fill(60);
   cui.strokeWeight(5);
   cui.stroke(55);
-  cui.rect(0,0,createMenuWidth, createMenuHeight);
+  cui.rect(0, 0, createMenuWidth, createMenuHeight);
 
   for (Textbox textbox : textboxes) {
 
     if (!textbox.getCursorOnBox(mouseX-(width/2-createMenuWidth/2), mouseY-(height/2-createMenuHeight/2))) {
       countTextbox++;
     } else {
-      println("FGHJ");
       cursor(TEXT);
     }
 
@@ -154,9 +153,40 @@ void createMenu() {
   if (!objectType.equals("black hole")) {
     cui.text("Size of "+objectType+":", 53, 320);
   }
-  cui.text("Speed of "+objectType+":", createMenuWidth-277, 170); 
-  cui.text("x 10^", 255, 180+30-30/10*2);
+  cui.text("Speed of "+objectType+":", createMenuWidth-277, 170);
+  cui.text("x 10^", 155, 180+30-30/10*2);
+
+  if (button(width/2-createMenuWidth/2+createMenuWidth-260, height/2-createMenuHeight/2+240, 160, 50)) {
+    cui.fill(80);
+  } else {
+    cui.fill(64);
+  }
+  cui.rect(createMenuWidth-260, 240, 160, 50);
+
+  cui.fill(255);
+  cui.textSize(15);
+  cui.text("Set the direction", createMenuWidth-260+80-cui.textWidth("Set the direction")/2, 240+25+7);
   
+  cui.line(0, 70, createMenuWidth, 70);
+  
+  if (button(width/2-createMenuWidth/2+createMenuWidth-150, height/2-createMenuHeight/2+createMenuHeight-70, 100, 30)) {
+    cui.fill(80);
+  } else {
+    cui.fill(64);
+  }
+  cui.rect(createMenuWidth-150, createMenuHeight-70, 100, 30);
+  cui.fill(255);
+  cui.text("Cancel", createMenuWidth-150+80-cui.textWidth("Set the direction")/2, createMenuHeight-70+20);
+  
+  if (button(width/2-createMenuWidth/2+createMenuWidth-300, height/2-createMenuHeight/2+createMenuHeight-70, 100, 30)) {
+    cui.fill(80);
+  } else {
+    cui.fill(64);
+  }
+  cui.rect(createMenuWidth-300, createMenuHeight-70, 100, 30);
+  cui.fill(255);
+  cui.text("Apply", createMenuWidth-300+50-cui.textWidth("Apply")/2, createMenuHeight-70+20);
+
   cui.endDraw();
   image(cui, width/2-createMenuWidth/2, height/2-createMenuHeight/2);
   cam.endHUD();

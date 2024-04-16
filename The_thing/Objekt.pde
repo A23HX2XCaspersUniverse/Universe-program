@@ -1,5 +1,5 @@
 class Object {
-  float mass, xPos, yPos, radius, distance, force, massCalculation, nr;
+  float mass, xPos, yPos, radius, distance, force, massCalculation, nr, pickColor;
   PVector speed, saveSpeed, changes;
   PShape globe;
   

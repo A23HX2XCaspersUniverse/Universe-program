@@ -10,7 +10,7 @@ ArrayList<Star> stars = new ArrayList<>();
 ArrayList<BlackHole> blackholes = new ArrayList<>();
 ArrayList<Textbox> textboxes = new ArrayList<>();
 
-
+PVector direction = new PVector();
 
 boolean objectMenu = false;
 boolean spaceIsPressed = false;
@@ -18,11 +18,12 @@ boolean create = false;
 boolean freezeMovement = false;
 boolean quit = false;
 boolean isPlaced = false;
+boolean chooseDirection = false;
 
 int objektMenuWidth = 125;
 int objektMenuHeight = 189;
 int createMenuWidth = 800;
-int createMenuHeight = 600;
+int createMenuHeight = 530;
 
 double cameraDistance = 0;
 
@@ -62,12 +63,12 @@ void setup() {
   universe.setTexture(milkyWay);  //https://forum.processing.org/two/discussion/22593/how-to-fill-the-sphere-with-the-earth-image.html
 
   //Tilføjer Planet og stjerne
-  stars.add(new Star(2*pow(10, 30), 0, -2000, 10));
+  stars.add(new Star(2*pow(10, 30), 0, 0, 10));
 
-  textboxes.add(new Textbox(50, 180, 200, 30));
+  textboxes.add(new Textbox(50, 180, 100, 30));
   textboxes.add(new Textbox(50, 330, 200, 30));
   textboxes.add(new Textbox(createMenuWidth-280, 180, 200, 30));
-  textboxes.add(new Textbox(255+64, 180, 50, 30));
+  textboxes.add(new Textbox(155+64, 180, 50, 30));
 
   for (Textbox textbox : textboxes) {
     textbox.setToNumbersOnly(true);
@@ -134,13 +135,31 @@ void draw() {
     quitMenu();
   } else if (create) {
     if (isPlaced) {
-      createMenu();
+      if (!chooseDirection) {
+        createMenu();
+      } else {
+        direction.x = (mouseX-saveMouseX)/( abs(mouseX-saveMouseX)+abs(mouseY-saveMouseY));
+        direction.y = (mouseY-saveMouseY)/( abs(mouseX-saveMouseX)+abs(mouseY-saveMouseY));
+
+        pushMatrix();
+        translate(saveMouseX, saveMouseY, 0);
+        fill(#964B00);
+        sphere(20);
+        popMatrix();
+        
+        strokeWeight(2);
+        stroke(255);
+        line (saveMouseX, saveMouseY, 20, (mouseX-width/2)*3.20987654, (mouseY-height/2)*3.20987654, 20);
+        noStroke();
+      }
     } else {
-      pushMatrix();
-      translate((mouseX-width/2)*3.20987654, (mouseY-height/2)*3.20987654, 0);
-      fill(255);
-      sphere(20);
-      popMatrix();
+      if (!chooseDirection) {
+        pushMatrix();
+        translate((mouseX-width/2)*3.20987654, (mouseY-height/2)*3.20987654, 0);
+        fill(#964B00);
+        sphere(20);
+        popMatrix();
+      }
     }
   }
 }
@@ -191,140 +210,144 @@ void mousePressed() {
       }
     } else if (create) {
       if (!isPlaced) {
-        saveMouseX = mouseX;
-        saveMouseY = mouseY;
+        saveMouseX = (mouseX-width/2)*3.20987654;
+        saveMouseY = (mouseY-height/2)*3.20987654;
         isPlaced = true;
       } else {
+        if (!chooseDirection) {
+          for (Textbox textbox : textboxes) {
+            if (button(textbox.getX()+width/2-createMenuWidth/2, textbox.getY()+height/2-createMenuHeight/2, textbox.getWidth(), textbox.getHeight())) {
+              textbox.setSelected(true);
+            } else {
+              textbox.setSelected(false);
+            }
+          }
+          if (button(width/2-createMenuWidth/2+createMenuWidth-260, height/2-createMenuHeight/2+240, 160, 50)) {
+            chooseDirection = true;
+          }
+        } else {
+          chooseDirection = false;
+          cameraFreeze(true);
+        }
+      }
+    } else if (key == DELETE) {
+      exit();
+    } else if (create) {
+      if (key == ESC) {
+        create = false;
+        cameraFreeze(false);
+        freezeMovement = false;
+        isPlaced = false;
+        cursor(ARROW);
         for (Textbox textbox : textboxes) {
-          if (button(textbox.getX()+width/2-createMenuWidth/2, textbox.getY()+height/2-createMenuHeight/2, textbox.getWidth(), textbox.getHeight())) {
-            textbox.setSelected(true);
-          } else {
-            textbox.setSelected(false);
+          textbox.setText("");
+        }
+      } else {
+        for (Textbox textbox : textboxes) {
+          if (textbox.getSelected()) {
+            if (key == ENTER) {
+              textbox.setSelected(false);
+            } else if (key == BACKSPACE) {
+              textbox.deleteChracter();
+            } else {
+              textbox.addToText(key);
+            }
           }
         }
       }
+    } else if (quit) {
+      if (key == ESC) {
+        freezeMovement = false;
+        quit = false;
+        cam.setMouseControlled(true);
+      }
+    } else {
+      if (key == ESC) {
+        freezeMovement = true;
+        quit = true;
+        objectMenu = false;
+        cam.setMouseControlled(false);
+      } else if (key == 'p') {
+        if (!freezeMovement) {
+          freezeMovement = true;
+        } else {
+          freezeMovement = false;
+        }
+      }
+    }
+
+    //https://forum.processing.org/two/discussion/575/stop-escape-key-from-closing-app-in-new-window-g4p.html
+    switch(key) {
+    case ESC:
+      key = 0;
+      break;
     }
   }
 }
 
-void keyPressed() {
-  if (key == ' ' && !create && !quit) {
-    if (!spaceIsPressed) {
-      cameraFreeze(true);
-    } else {
-      cameraFreeze(false);
-    }
-  } else if (key == DELETE) {
-    exit();
-  } else if (create) {
-    if (key == ESC) {
-      create = false;
-      cameraFreeze(false);
-      freezeMovement = false;
-      isPlaced = false;
-      cursor(ARROW);
-      for (Textbox textbox : textboxes) {
-        textbox.setText("");
-      }
-    } else {
-      for (Textbox textbox : textboxes) {
-        if (textbox.getSelected()) {
-          if (key == ENTER) {
-            textbox.setSelected(false);
-          } else if (key == BACKSPACE) {
-            textbox.deleteChracter();
-          } else {
-            textbox.addToText(key);
-          }
-        }
-      }
-    }
-  } else if (quit) {
-    if (key == ESC) {
-      freezeMovement = false;
-      quit = false;
-      cam.setMouseControlled(true);
-    }
-  } else {
-    if (key == ESC) {
-      freezeMovement = true;
-      quit = true;
-      objectMenu = false;
+  //funktion for kraftfordelingen i x-retningen
+  float forceDistributionX(float x1, float x2, float y1, float y2, float kraft) {
+    return (kraft * ((x2-x1)*149900000/200)/( (abs(x2-x1)+abs(y2-y1))*149900000/200));
+  }
+
+  //funktion for kraftfordelingen i y-retningen
+  float forceDistributionY(float x1, float x2, float y1, float y2, float kraft) {
+    return (kraft * ((y2-y1)*149900000/200)/( (abs(x2-x1)+abs(y2-y1))*149900000/200));
+  }
+
+  //omsætter meter til pixels
+  float mToPixel(float distance) {
+    return distance*100/(1499*pow(10, 8));
+  }
+
+  //omsætter pixels til meter
+  float pixelToM(float distance) {
+    return distance*(1499*pow(10, 8))/100;
+  }
+
+  //kamerahåndtagning
+  void cameraFreeze(boolean ind) {
+    if (ind) {
+      //gemmer info, om kamera
+      cameraRotation = cam.getRotations();
+      cameraDistance = cam.getDistance();
+      cameraLookAt = cam.getLookAt();
+
+      //zoomer ud
+      cam.setRotations(0, 0, 0);
+      cam.setDistance(3000);
+      cam.lookAt(0, 0, 0);
+
+      //fryser kameraet
       cam.setMouseControlled(false);
+      spaceIsPressed = true;
+    } else {
+      //restter info om kamera
+      cam.setRotations(cameraRotation[0], cameraRotation[1], cameraRotation[2]);
+      cam.setDistance(cameraDistance);
+      cam.lookAt(cameraLookAt[0], cameraLookAt[1], cameraLookAt[2]);
+
+      //resetter kamera-funktioner
+      cam.setMouseControlled(true);
+      spaceIsPressed = false;
     }
   }
 
-  //https://forum.processing.org/two/discussion/575/stop-escape-key-from-closing-app-in-new-window-g4p.html
-  switch(key) {
-  case ESC:
-    key = 0;
-    break;
+  //funktion for knap
+  boolean button(float x, float y, float l, float h) {
+    return (mouseX > x && mouseX < x+l && mouseY > y && mouseY < y+h);
   }
-}
 
-//funktion for kraftfordelingen i x-retningen
-float forceDistributionX(float x1, float x2, float y1, float y2, float kraft) {
-  return (kraft * ((x2-x1)*149900000/200)/( (abs(x2-x1)+abs(y2-y1))*149900000/200));
-}
-
-//funktion for kraftfordelingen i y-retningen
-float forceDistributionY(float x1, float x2, float y1, float y2, float kraft) {
-  return (kraft * ((y2-y1)*149900000/200)/( (abs(x2-x1)+abs(y2-y1))*149900000/200));
-}
-
-//omsætter meter til pixels
-float mToPixel(float distance) {
-  return distance*100/(1499*pow(10, 8));
-}
-
-//omsætter pixels til meter
-float pixelToM(float distance) {
-  return distance*(1499*pow(10, 8))/100;
-}
-
-//kamerahåndtagning
-void cameraFreeze(boolean ind) {
-  if (ind) {
-    //gemmer info, om kamera
-    cameraRotation = cam.getRotations();
-    cameraDistance = cam.getDistance();
-    cameraLookAt = cam.getLookAt();
-
-    //zoomer ud
-    cam.setRotations(0, 0, 0);
-    cam.setDistance(3000);
-    cam.lookAt(0, 0, 0);
-
-    //fryser kameraet
-    cam.setMouseControlled(false);
-    spaceIsPressed = true;
-  } else {
-    //restter info om kamera
-    cam.setRotations(cameraRotation[0], cameraRotation[1], cameraRotation[2]);
-    cam.setDistance(cameraDistance);
-    cam.lookAt(cameraLookAt[0], cameraLookAt[1], cameraLookAt[2]);
-
-    //resetter kamera-funktioner
-    cam.setMouseControlled(true);
-    spaceIsPressed = false;
+  void createMenuSetup(int object) {
+    objectMenu = false;
+    create = true;
+    cameraFreeze(true);
+    freezeMovement = true;
+    if (object == 1) {
+      objectType = "planet";
+    } else if (object == 2) {
+      objectType = "star";
+    } else if (object == 3) {
+      objectType = "black hole";
+    }
   }
-}
-
-//funktion for knap
-boolean button(float x, float y, float l, float h) {
-  return (mouseX > x && mouseX < x+l && mouseY > y && mouseY < y+h);
-}
-
-void createMenuSetup(int object) {
-  objectMenu = false;
-  create = true;
-  cameraFreeze(true);
-  freezeMovement = true;
-  if (object == 1) {
-    objectType = "planet";
-  } else if (object == 2) {
-    objectType = "star";
-  } else if (object == 3) {
-    objectType = "black hole";
-  }
-}
