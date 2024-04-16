@@ -1,4 +1,5 @@
 float quitTextWidth;
+int countTextbox = 0;
 
 void objectMenu() {
   
@@ -18,7 +19,7 @@ void objectMenu() {
 
   oui.fill(255);
   oui.textSize(29);
-  oui.text("Nyt Objekt", 10, 28);
+  oui.text("New Object", 10, 28);
 
   oui.strokeWeight(5);
   oui.fill(60);
@@ -62,7 +63,7 @@ void quitMenu() {
   cam.beginHUD();
   qui.beginDraw();
   qui.textFont(font);
-  qui.background(60,90);
+  qui.background(0,90);
   
   qui.textSize(130);
   textSize(100);
@@ -105,7 +106,7 @@ void quitMenu() {
   hint(ENABLE_DEPTH_TEST); //https://stackoverflow.com/questions/66303006/drawing-2d-text-over-3d-objects-in-processing-3
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void createMenu() {
   hint(DISABLE_DEPTH_TEST); //https://stackoverflow.com/questions/66303006/drawing-2d-text-over-3d-objects-in-processing-3
@@ -113,6 +114,30 @@ void createMenu() {
   cam.beginHUD();
   cui.beginDraw();
   cui.background(60);
+  
+  for (Textbox textbox : textboxes) {
+    
+    if (!textbox.getCursorOnBox(mouseX-(width/2-createMenuWidth/2), mouseY-(height/2-createMenuHeight/2))) {
+      countTextbox++;
+    } else {
+      println("FGHJ");
+      cursor(TEXT);
+    }
+    
+    cui.textFont(font2);
+    textbox.update(cui);
+  }
+  
+  if (countTextbox < textboxes.size()) {
+    cursor(TEXT);
+  } else {
+    cursor(ARROW);
+  }
+  countTextbox = 0;
+  
+  cui.textFont(font);
+  cui.textSize(50);
+  cui.text("CREATE OBJECT", createMenuWidth/2-cui.textWidth("CREATE OBJECT")/2, 50);
   
   cui.endDraw();
   image(cui, width/2-createMenuWidth/2, height/2-createMenuHeight/2);

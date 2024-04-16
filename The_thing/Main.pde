@@ -8,6 +8,7 @@ PImage milkyWay;
 ArrayList<Planet> planets = new ArrayList<>();
 ArrayList<Star> stars = new ArrayList<>();
 ArrayList<BlackHole> blackholes = new ArrayList<>();
+ArrayList<Textbox> textboxes = new ArrayList<>();
 
 
 
@@ -60,11 +61,14 @@ void setup() {
 
   //Tilføjer Planet og stjerne
   stars.add(new Star(2*pow(10, 30), 0, -2000, 10));
-  //planets.add(new Planet(5*pow(10, 24), 100, 0, 5));
-  //planets.add(new Planet(5*pow(10, 29), -100, -200, 9));
 
-  //Giver planet nr.2 en starthastighed
-  //planets.get(0).setSpeed(s1);
+  textboxes.add(new Textbox(50, 180, 200, 30));
+  textboxes.add(new Textbox(50, 230, 200, 30));
+  textboxes.add(new Textbox(createMenuWidth-250, 180, 200, 30));
+
+  for (Textbox textbox : textboxes) {
+    textbox.setToNumbersOnly(true);
+  }
 
   oui = createGraphics(objektMenuWidth, objektMenuHeight, P2D);
   qui = createGraphics(width, height, P2D);
@@ -136,7 +140,6 @@ void draw() {
       popMatrix();
     }
   }
-
 }
 
 void mousePressed() {
@@ -183,10 +186,20 @@ void mousePressed() {
         quit = false;
         cam.setMouseControlled(true);
       }
-    } else if (create && !isPlaced) {
-      saveMouseX = mouseX;
-      saveMouseY = mouseY;
-      isPlaced = true;
+    } else if (create) {
+      if (!isPlaced) {
+        saveMouseX = mouseX;
+        saveMouseY = mouseY;
+        isPlaced = true;
+      } else {
+        for (Textbox textbox : textboxes) {
+          if (button(textbox.getX()+width/2-createMenuWidth/2, textbox.getY()+height/2-createMenuHeight/2, textbox.getWidth(), textbox.getHeight())) {
+            textbox.setSelected(true);
+          } else {
+            textbox.setSelected(false);
+          }
+        }
+      }
     }
   }
 }
@@ -200,23 +213,40 @@ void keyPressed() {
     }
   } else if (key == DELETE) {
     exit();
-  }else if (key == ESC) {
-
-    if (!create) {
-      if (!quit) {
-        freezeMovement = true;
-        quit = true;
-        objectMenu = false;
-        cam.setMouseControlled(false);
-      } else {
-        freezeMovement = false;
-        quit = false;
-        cam.setMouseControlled(true);
-      }
-    } else {
+  } else if (create) {
+    if (key == ESC) {
       create = false;
       cameraFreeze(false);
       freezeMovement = false;
+      cursor(ARROW);
+      for (Textbox textbox : textboxes) {
+        textbox.setText("");
+      }
+    } else {
+      for (Textbox textbox : textboxes) {
+        if (textbox.getSelected()) {
+          if (key == ENTER) {
+            textbox.setSelected(false);
+          } else if (key == BACKSPACE) {
+            textbox.deleteChracter();
+          } else {
+            textbox.addToText(key);
+          }
+        }
+      }
+    }
+  } else if (quit) {
+    if (key == ESC) {
+      freezeMovement = false;
+      quit = false;
+      cam.setMouseControlled(true);
+    }
+  } else {
+    if (key == ESC) {
+      freezeMovement = true;
+      quit = true;
+      objectMenu = false;
+      cam.setMouseControlled(false);
     }
   }
 
