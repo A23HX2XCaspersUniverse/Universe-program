@@ -152,9 +152,13 @@ void createMenu() {
   cui.text("Mass of "+objectType+":", 53, 170);
   if (!objectType.equals("black hole")) {
     cui.text("Size of "+objectType+":", 53, 320);
+    cui.text("km",255 ,330+30-30/10*2);
   }
   cui.text("Speed of "+objectType+":", createMenuWidth-277, 170);
+  cui.text("m/s", createMenuWidth-75, 180+30-30/10*2);
+  
   cui.text("x 10^", 155, 180+30-30/10*2);
+  cui.text("kg", 160+64+50, 180+30-30/10*2);
 
   if (button(width/2-createMenuWidth/2+createMenuWidth-260, height/2-createMenuHeight/2+240, 160, 50)) {
     cui.fill(80);

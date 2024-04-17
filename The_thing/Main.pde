@@ -277,6 +277,8 @@ void keyPressed() {
       freezeMovement = false;
       quit = false;
       cam.setMouseControlled(true);
+    } else if (key == ENTER) {
+      exit();
     }
   } else {
     if (key == ESC) {
