@@ -25,6 +25,7 @@ int objektMenuWidth = 125;
 int objektMenuHeight = 189;
 int createMenuWidth = 800;
 int createMenuHeight = 530;
+int count = 0;
 
 double cameraDistance = 0;
 
@@ -92,6 +93,24 @@ void draw() {
   popMatrix();
 
   if (!freezeMovement) {
+    
+    //tjekker objekters distance fra midten. Hvis den er større end universet slettes objektet
+    for (Planet planet : planets) {
+      if (planet.getDistance()>6000) {
+        planets.remove(count);
+      }
+      count++;
+    }
+    count = 0;
+    for (Star star : stars) {
+      star.getDistance();
+    }
+    count = 0;
+    for (BlackHole blackhole : blackholes) {
+      blackhole.getDistance();
+    }
+    count = 0;
+
 
     //opdaterer objektet "planet"
     for (Planet planet : planets) {
@@ -232,6 +251,14 @@ void mousePressed() {
               !textboxes.get(3).getText().equals("")) {
                 if (objectType.equals("planet")){
                   planets.add(new Planet(float(textboxes.get(0).getText())*pow(10,float(textboxes.get(3).getText())), saveMouseX, saveMouseY, mToPixel(1000*float(textboxes.get(1).getText()))));
+                  closeCreateMenu();
+                }
+                if (objectType.equals("star")){
+                  stars.add(new Star(float(textboxes.get(0).getText())*pow(10,float(textboxes.get(3).getText())), saveMouseX, saveMouseY, mToPixel(1000*float(textboxes.get(1).getText()))));
+                  closeCreateMenu();
+                }
+                if (objectType.equals("black hole")){
+                  blackholes.add(new BlackHole(float(textboxes.get(0).getText())*pow(10,float(textboxes.get(3).getText())), saveMouseX, saveMouseY));
                   closeCreateMenu();
                 }
             } else {

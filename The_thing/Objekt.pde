@@ -92,6 +92,9 @@ class Object {
     return yPos;
   }
   
+  float getDistance() {
+    return sqrt(pow(xPos,2)+pow(yPos,2));
+  }
   
   //retunerer massen
   float getMass() {

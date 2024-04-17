@@ -1,7 +1,7 @@
 class BlackHole extends Object{
   PImage blackhole;
   
-  BlackHole(float m, float x, float y, float r) {
+  BlackHole(float m, float x, float y) {
     mass = m;
     xPos = x;
     yPos = y;
