@@ -101,7 +101,19 @@ class Object {
     return mass;
   }
   
+  float getRadius() {
+    return radius;
+  }
+  
   void setSpeed(PVector s) {
     saveSpeed = s;
+  }
+  
+  void setNr(int n) {
+    nr = n;
+  }
+  
+  void setMass(float m) {
+    mass = m;
   }
 }

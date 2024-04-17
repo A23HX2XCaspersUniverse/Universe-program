@@ -93,7 +93,7 @@ void draw() {
   popMatrix();
 
   if (!freezeMovement) {
-    
+
     //tjekker objekters distance fra midten. Hvis den er større end universet slettes objektet
     for (Planet planet : planets) {
       if (planet.getDistance()>6000) {
@@ -249,18 +249,17 @@ void mousePressed() {
           } else if (button(width/2-createMenuWidth/2+createMenuWidth-300, height/2-createMenuHeight/2+createMenuHeight-70, 100, 30)) {
             if (!textboxes.get(0).getText().equals("") && !textboxes.get(1).getText().equals("") &&
               !textboxes.get(3).getText().equals("")) {
-                if (objectType.equals("planet")){
-                  planets.add(new Planet(float(textboxes.get(0).getText())*pow(10,float(textboxes.get(3).getText())), saveMouseX, saveMouseY, mToPixel(1000*float(textboxes.get(1).getText()))));
-                  closeCreateMenu();
-                }
-                if (objectType.equals("star")){
-                  stars.add(new Star(float(textboxes.get(0).getText())*pow(10,float(textboxes.get(3).getText())), saveMouseX, saveMouseY, mToPixel(1000*float(textboxes.get(1).getText()))));
-                  closeCreateMenu();
-                }
-                if (objectType.equals("black hole")){
-                  blackholes.add(new BlackHole(float(textboxes.get(0).getText())*pow(10,float(textboxes.get(3).getText())), saveMouseX, saveMouseY));
-                  closeCreateMenu();
-                }
+              if (objectType.equals("planet")) {
+                planets.add(new Planet(float(textboxes.get(0).getText())*pow(10, float(textboxes.get(3).getText())), saveMouseX, saveMouseY, mToPixel(1000*float(textboxes.get(1).getText()))));
+                closeCreateMenu();
+              }
+              if (objectType.equals("star")) {
+                stars.add(new Star(float(textboxes.get(0).getText())*pow(10, float(textboxes.get(3).getText())), saveMouseX, saveMouseY, mToPixel(1000*float(textboxes.get(1).getText()))));
+                closeCreateMenu();
+              }
+            } else  if (objectType.equals("black hole") && !textboxes.get(0).getText().equals("") && !textboxes.get(3).getText().equals("")) {
+              blackholes.add(new BlackHole(float(textboxes.get(0).getText())*pow(10, float(textboxes.get(3).getText())), saveMouseX, saveMouseY));
+              closeCreateMenu();
             } else {
               infoNeeded = true;
             }

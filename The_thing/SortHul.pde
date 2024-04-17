@@ -5,7 +5,7 @@ class BlackHole extends Object{
     mass = m;
     xPos = x;
     yPos = y;
-    radius = 2*6.674*pow(10, -11)*m/pow(300000000,2);
+    radius = mToPixel(2*6.674*pow(10, -11)*m/pow(300000000,2))*107290;
     println(radius);
     blackhole = loadImage("black.jpg");
     globe = createShape(SPHERE, radius);
