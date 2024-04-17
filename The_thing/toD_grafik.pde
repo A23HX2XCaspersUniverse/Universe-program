@@ -186,6 +186,10 @@ void createMenu() {
   cui.rect(createMenuWidth-300, createMenuHeight-70, 100, 30);
   cui.fill(255);
   cui.text("Apply", createMenuWidth-300+50-cui.textWidth("Apply")/2, createMenuHeight-70+20);
+  
+  if (infoNeeded) {
+    cui.text("Missing information!", createMenuWidth-315-cui.textWidth("Missing information!"), createMenuHeight-70+20); 
+  }
 
   cui.endDraw();
   image(cui, width/2-createMenuWidth/2, height/2-createMenuHeight/2);

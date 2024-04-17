@@ -19,6 +19,7 @@ boolean freezeMovement = false;
 boolean quit = false;
 boolean isPlaced = false;
 boolean chooseDirection = false;
+boolean infoNeeded = false;
 
 int objektMenuWidth = 125;
 int objektMenuHeight = 189;
@@ -224,15 +225,17 @@ void mousePressed() {
           }
           if (button(width/2-createMenuWidth/2+createMenuWidth-260, height/2-createMenuHeight/2+240, 160, 50)) {
             chooseDirection = true;
-          }
-          if (button(width/2-createMenuWidth/2+createMenuWidth-150, height/2-createMenuHeight/2+createMenuHeight-70, 100, 30)) {
-            create = false;
-            cameraFreeze(false);
-            freezeMovement = false;
-            isPlaced = false;
-            cursor(ARROW);
-            for (Textbox textbox : textboxes) {
-              textbox.setText("");
+          } else if (button(width/2-createMenuWidth/2+createMenuWidth-150, height/2-createMenuHeight/2+createMenuHeight-70, 100, 30)) {
+            closeCreateMenu();
+          } else if (button(width/2-createMenuWidth/2+createMenuWidth-300, height/2-createMenuHeight/2+createMenuHeight-70, 100, 30)) {
+            if (!textboxes.get(0).getText().equals("") && !textboxes.get(1).getText().equals("") &&
+              !textboxes.get(3).getText().equals("")) {
+                if (objectType.equals("planet")){
+                  planets.add(new Planet(float(textboxes.get(0).getText())*pow(10,float(textboxes.get(3).getText())), saveMouseX, saveMouseY, mToPixel(1000*float(textboxes.get(1).getText()))));
+                  closeCreateMenu();
+                }
+            } else {
+              infoNeeded = true;
             }
           }
         } else {
@@ -255,14 +258,7 @@ void keyPressed() {
     exit();
   } else if (create) {
     if (key == ESC) {
-      create = false;
-      cameraFreeze(false);
-      freezeMovement = false;
-      isPlaced = false;
-      cursor(ARROW);
-      for (Textbox textbox : textboxes) {
-        textbox.setText("");
-      }
+      closeCreateMenu();
     } else {
       for (Textbox textbox : textboxes) {
         if (textbox.getSelected()) {
@@ -371,4 +367,16 @@ void createMenuSetup(int object) {
   } else if (object == 3) {
     objectType = "black hole";
   }
+}
+
+void closeCreateMenu() {
+  create = false;
+  cameraFreeze(false);
+  freezeMovement = false;
+  isPlaced = false;
+  cursor(ARROW);
+  for (Textbox textbox : textboxes) {
+    textbox.setText("");
+  }
+  infoNeeded = false;
 }
