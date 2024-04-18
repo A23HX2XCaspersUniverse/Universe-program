@@ -40,7 +40,7 @@ float [] cameraPos = new float[0];
 float [] cameraRotation = new float[0];
 float [] cameraLookAt = new float[0];
 
-PVector s1 = new PVector(0, (-0.03)*interval);
+PVector s1 = new PVector(0, 0);
 
 PGraphics oui;
 PGraphics qui;
@@ -65,7 +65,8 @@ void setup() {
   universe.setTexture(milkyWay);  //https://forum.processing.org/two/discussion/22593/how-to-fill-the-sphere-with-the-earth-image.html
 
   //Tilføjer Planet og stjerne
-  stars.add(new Star(2*pow(10, 30), 0, 0, 10));
+  stars.add(new Star(2*pow(10, 30), 0, 0, 30, s1));
+  stars.add(new Star(2*pow(10, 30), 500, 500, 30, s1));
 
   textboxes.add(new Textbox(50, 180, 100, 30));
   textboxes.add(new Textbox(50, 330, 200, 30));
@@ -158,8 +159,8 @@ void draw() {
       if (!chooseDirection) {
         createMenu();
       } else {
-        direction.x = (mouseX-saveMouseX)/( abs(mouseX-saveMouseX)+abs(mouseY-saveMouseY));
-        direction.y = (mouseY-saveMouseY)/( abs(mouseX-saveMouseX)+abs(mouseY-saveMouseY));
+        direction.x = ((mouseX-width/2)*3.20987654-saveMouseX)/( abs((mouseX-width/2)*3.20987654-saveMouseX)+abs((mouseY-height/2)*3.20987654-saveMouseY));
+        direction.y = ((mouseY-height/2)*3.20987654-saveMouseY)/( abs((mouseX-width/2)*3.20987654-saveMouseX)+abs((mouseY-height/2)*3.20987654-saveMouseY));
 
         pushMatrix();
         translate(saveMouseX, saveMouseY, 0);
@@ -250,15 +251,15 @@ void mousePressed() {
             if (!textboxes.get(0).getText().equals("") && !textboxes.get(1).getText().equals("") &&
               !textboxes.get(3).getText().equals("")) {
               if (objectType.equals("planet")) {
-                planets.add(new Planet(float(textboxes.get(0).getText())*pow(10, float(textboxes.get(3).getText())), saveMouseX, saveMouseY, mToPixel(1000*float(textboxes.get(1).getText()))));
+                planets.add(new Planet(float(textboxes.get(0).getText())*pow(10, float(textboxes.get(3).getText())), saveMouseX, saveMouseY, mToPixel(1000*float(textboxes.get(1).getText())), direction));
                 closeCreateMenu();
               }
               if (objectType.equals("star")) {
-                stars.add(new Star(float(textboxes.get(0).getText())*pow(10, float(textboxes.get(3).getText())), saveMouseX, saveMouseY, mToPixel(1000*float(textboxes.get(1).getText()))));
+                stars.add(new Star(float(textboxes.get(0).getText())*pow(10, float(textboxes.get(3).getText())), saveMouseX, saveMouseY, mToPixel(1000*float(textboxes.get(1).getText())), direction));
                 closeCreateMenu();
               }
             } else  if (objectType.equals("black hole") && !textboxes.get(0).getText().equals("") && !textboxes.get(3).getText().equals("")) {
-              blackholes.add(new BlackHole(float(textboxes.get(0).getText())*pow(10, float(textboxes.get(3).getText())), saveMouseX, saveMouseY));
+              blackholes.add(new BlackHole(float(textboxes.get(0).getText())*pow(10, float(textboxes.get(3).getText())), saveMouseX, saveMouseY, direction));
               closeCreateMenu();
             } else {
               infoNeeded = true;
@@ -342,12 +343,12 @@ float forceDistributionY(float x1, float x2, float y1, float y2, float kraft) {
 
 //omsætter meter til pixels
 float mToPixel(float distance) {
-  return distance*100/(1499*pow(10, 8));
+  return distance*300/(1499*pow(10, 8));
 }
 
 //omsætter pixels til meter
 float pixelToM(float distance) {
-  return distance*(1499*pow(10, 8))/100;
+  return distance*(1499*pow(10, 8))/300;
 }
 
 //kamerahåndtagning
