@@ -65,8 +65,7 @@ void setup() {
   universe.setTexture(milkyWay);  //https://forum.processing.org/two/discussion/22593/how-to-fill-the-sphere-with-the-earth-image.html
 
   //Tilføjer Planet og stjerne
-  stars.add(new Star(2*pow(10, 30), 0, 0, 30, s1));
-  stars.add(new Star(2*pow(10, 30), 500, 500, 30, s1));
+  stars.add(new Star(2*pow(10, 30), 0, 0, mToPixel(14000000000L), s1));
 
   textboxes.add(new Textbox(50, 180, 100, 30));
   textboxes.add(new Textbox(50, 330, 200, 30));
