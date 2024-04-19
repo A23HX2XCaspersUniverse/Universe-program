@@ -95,10 +95,10 @@ void draw() {
   if (!freezeMovement) {
 
     //tjekker objekters distance fra midten. Hvis den er større end universet slettes objektet
-    for (Planet planet : planets) {
+    for (Planet planet : planets) { /*
       if (planet.getDistance()>6000) {
         planets.remove(count);
-      }
+      }*/
       count++;
     }
     count = 0;
@@ -247,6 +247,14 @@ void mousePressed() {
           } else if (button(width/2-createMenuWidth/2+createMenuWidth-150, height/2-createMenuHeight/2+createMenuHeight-70, 100, 30)) {
             closeCreateMenu();
           } else if (button(width/2-createMenuWidth/2+createMenuWidth-300, height/2-createMenuHeight/2+createMenuHeight-70, 100, 30)) {
+            if (!textboxes.get(2).getText().equals("")) {
+              println(direction+ "   "+textboxes.get(2).getText());
+              direction.x *= float(textboxes.get(2).getText());
+              direction.y *= float(textboxes.get(2).getText());
+            } else {
+              //direction.x = 0;
+              //direction.y = 0;
+            }
             if (!textboxes.get(0).getText().equals("") && !textboxes.get(1).getText().equals("") &&
               !textboxes.get(3).getText().equals("")) {
               if (objectType.equals("planet")) {

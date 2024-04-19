@@ -10,7 +10,7 @@ class Star extends Object{
     star = loadImage("Stjerne"+int(random(1,5))+".jpg");
     globe = createShape(SPHERE, radius);
     globe.setTexture(star);
-    saveSpeed = new PVector(0,0,0);
+    speed = new PVector(0,0,0);
     nr = objektNr;
     pickColor = random(80,180);
     

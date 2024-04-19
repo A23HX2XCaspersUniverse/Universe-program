@@ -11,7 +11,7 @@ class BlackHole extends Object{
     blackhole = loadImage("black.jpg");
     globe = createShape(SPHERE, radius);
     globe.setTexture(blackhole);
-    saveSpeed = new PVector(0,0,0);
+    speed = new PVector(0,0,0);
     nr = objektNr;
     pickColor = random(80,180);
     
