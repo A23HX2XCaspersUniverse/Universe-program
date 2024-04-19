@@ -91,6 +91,8 @@ void draw() {
   background(0); //resetter canvassen
 
   pushMatrix();
+  
+  //sørger for at universet følger med kamerateret, så man ikke lige pludselige kommer ud af universet.
   cameraLookAtUpdater = cam.getLookAt();
   lookAt.x = cameraLookAtUpdater[0];
   lookAt.y = cameraLookAtUpdater[1];
