@@ -10,8 +10,6 @@ ArrayList<Star> stars = new ArrayList<>();
 ArrayList<BlackHole> blackholes = new ArrayList<>();
 ArrayList<Textbox> textboxes = new ArrayList<>();
 
-PVector direction = new PVector();
-
 boolean objectMenu = false;
 boolean spaceIsPressed = false;
 boolean create = false;
@@ -32,15 +30,17 @@ double cameraDistance = 0;
 float saveMouseX = 0;
 float saveMouseY = 0;
 float interval = 10;
-float objektNr = 1;
 
 String objectType = "";
 
 float [] cameraPos = new float[0];
 float [] cameraRotation = new float[0];
 float [] cameraLookAt = new float[0];
+float [] cameraLookAtUpdater = new float[0];
 
 PVector s1 = new PVector(0, 0);
+PVector lookAt = new PVector(0,0,0);
+PVector direction = new PVector();
 
 PGraphics oui;
 PGraphics qui;
@@ -66,6 +66,9 @@ void setup() {
 
   //Tilføjer Planet og stjerne
   stars.add(new Star(2*pow(10, 30), 0, 0, mToPixel(14000000000L), s1));
+  planets.add(new Planet(5*pow(10, 24), -100, -200, mToPixel(7000000000L), s1));
+  blackholes.add(new BlackHole(200*pow(10, 30), -900, 0, s1));
+  blackholes.add(new BlackHole(100*pow(10, 30), -900, 500, s1));
 
   textboxes.add(new Textbox(50, 180, 100, 30));
   textboxes.add(new Textbox(50, 330, 200, 30));
@@ -88,26 +91,30 @@ void draw() {
   background(0); //resetter canvassen
 
   pushMatrix();
-  translate(0, 0, 0);
+  cameraLookAtUpdater = cam.getLookAt();
+  lookAt.x = cameraLookAtUpdater[0];
+  lookAt.y = cameraLookAtUpdater[1];
+  lookAt.z = cameraLookAtUpdater[2];
+  translate(lookAt.x, lookAt.y, lookAt.z);
   shape(universe); //laver en globusformet baggrund med stjerner
   popMatrix();
 
   if (!freezeMovement) {
 
-    //tjekker objekters distance fra midten. Hvis den er større end universet slettes objektet
-    for (Planet planet : planets) { /*
-      if (planet.getDistance()>6000) {
-        planets.remove(count);
-      }*/
+    //Opdaterer nummeret på objekter
+    for (Planet planet : planets) { 
+      planet.setNr(count);
       count++;
     }
     count = 0;
     for (Star star : stars) {
-      star.getDistance();
+      star.setNr(count);
+      count++;
     }
     count = 0;
     for (BlackHole blackhole : blackholes) {
-      blackhole.getDistance();
+      blackhole.setNr(count);
+      count++;
     }
     count = 0;
 
@@ -131,6 +138,7 @@ void draw() {
     for (Star star : stars) {
       star.gravity();
     }
+    
     for (BlackHole blackhole : blackholes) {
       blackhole.gravity();
     }
@@ -248,7 +256,6 @@ void mousePressed() {
             closeCreateMenu();
           } else if (button(width/2-createMenuWidth/2+createMenuWidth-300, height/2-createMenuHeight/2+createMenuHeight-70, 100, 30)) {
             if (!textboxes.get(2).getText().equals("")) {
-              println(direction+ "   "+textboxes.get(2).getText());
               direction.x *= float(textboxes.get(2).getText());
               direction.y *= float(textboxes.get(2).getText());
             } else {
@@ -340,12 +347,12 @@ void keyPressed() {
 
 //funktion for kraftfordelingen i x-retningen
 float forceDistributionX(float x1, float x2, float y1, float y2, float kraft) {
-  return (kraft * ((x2-x1)*149900000/200)/( (abs(x2-x1)+abs(y2-y1))*149900000/200));
+  return (kraft * ((x2-x1)/( (abs(x2-x1)+abs(y2-y1)))));
 }
 
 //funktion for kraftfordelingen i y-retningen
 float forceDistributionY(float x1, float x2, float y1, float y2, float kraft) {
-  return (kraft * ((y2-y1)*149900000/200)/( (abs(x2-x1)+abs(y2-y1))*149900000/200));
+  return (kraft * ((y2-y1)/( (abs(x2-x1)+abs(y2-y1)))));
 }
 
 //omsætter meter til pixels

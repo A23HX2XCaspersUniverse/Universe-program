@@ -11,9 +11,7 @@ class Star extends Object{
     globe = createShape(SPHERE, radius);
     globe.setTexture(star);
     speed = new PVector(0,0,0);
-    nr = objektNr;
     pickColor = random(80,180);
-    
-    objektNr++;
+    type = "star";
   }
 }
