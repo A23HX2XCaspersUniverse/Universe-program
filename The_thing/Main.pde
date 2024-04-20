@@ -23,6 +23,7 @@ int objektMenuWidth = 125;
 int objektMenuHeight = 189;
 int createMenuWidth = 800;
 int createMenuHeight = 530;
+int sideMenuWidth = 300;
 int count = 0;
 
 double cameraDistance = 0;
@@ -45,6 +46,7 @@ PVector direction = new PVector();
 PGraphics oui;
 PGraphics qui;
 PGraphics cui;
+PGraphics sui;
 
 PFont font, font2;
 
@@ -82,6 +84,7 @@ void setup() {
   oui = createGraphics(objektMenuWidth, objektMenuHeight, P2D);
   qui = createGraphics(width, height, P2D);
   cui = createGraphics(createMenuWidth, createMenuHeight, P2D);
+  sui = createGraphics(sideMenuWidth, height, P2D);
 
   font = createFont("MotionControl-BoldItalic.otf", 100);
   font2 = createFont("Roboto-Bold.ttf", 100);
@@ -194,6 +197,10 @@ void draw() {
   }
 }
 
+
+
+/////////////////////////////////////////////////////////////////// Funktioner //////////////////////////////////////////////////////////////////
+
 void mousePressed() {
   if (mouseButton == RIGHT) {
 
@@ -222,18 +229,18 @@ void mousePressed() {
       if (mouseX < saveMouseX || mouseX > saveMouseX+objektMenuWidth || mouseY < saveMouseY || mouseY > saveMouseY+objektMenuHeight) {
         cam.setMouseControlled(true);
         objectMenu = false;
-      } else if (button(saveMouseX, saveMouseY+39, objektMenuWidth, 50)) {
+      } else if (hoverOver(saveMouseX, saveMouseY+39, objektMenuWidth, 50)) {
         createMenuSetup(1);
-      } else if (button(saveMouseX, saveMouseY+89, objektMenuWidth, 50)) {
+      } else if (hoverOver(saveMouseX, saveMouseY+89, objektMenuWidth, 50)) {
         createMenuSetup(2);
-      } else if (button(saveMouseX, saveMouseY+139, objektMenuWidth, 50)) {
+      } else if (hoverOver(saveMouseX, saveMouseY+139, objektMenuWidth, 50)) {
         createMenuSetup(3);
       }
     } else if (quit) {
 
-      if (button(width/2-400, height/2+100, 200, 100)) {
+      if (hoverOver(width/2-400, height/2+100, 200, 100)) {
         exit();
-      } else if (button(width/2+200, height/2+100, 200, 100)) {
+      } else if (hoverOver(width/2+200, height/2+100, 200, 100)) {
         freezeMovement = false;
         quit = false;
         cam.setMouseControlled(true);
@@ -246,17 +253,17 @@ void mousePressed() {
       } else {
         if (!chooseDirection) {
           for (Textbox textbox : textboxes) {
-            if (button(textbox.getX()+width/2-createMenuWidth/2, textbox.getY()+height/2-createMenuHeight/2, textbox.getWidth(), textbox.getHeight())) {
+            if (hoverOver(textbox.getX()+width/2-createMenuWidth/2, textbox.getY()+height/2-createMenuHeight/2, textbox.getWidth(), textbox.getHeight())) {
               textbox.setSelected(true);
             } else {
               textbox.setSelected(false);
             }
           }
-          if (button(width/2-createMenuWidth/2+createMenuWidth-260, height/2-createMenuHeight/2+240, 160, 50)) {
+          if (hoverOver(width/2-createMenuWidth/2+createMenuWidth-260, height/2-createMenuHeight/2+240, 160, 50)) {
             chooseDirection = true;
-          } else if (button(width/2-createMenuWidth/2+createMenuWidth-150, height/2-createMenuHeight/2+createMenuHeight-70, 100, 30)) {
+          } else if (hoverOver(width/2-createMenuWidth/2+createMenuWidth-150, height/2-createMenuHeight/2+createMenuHeight-70, 100, 30)) {
             closeCreateMenu();
-          } else if (button(width/2-createMenuWidth/2+createMenuWidth-300, height/2-createMenuHeight/2+createMenuHeight-70, 100, 30)) {
+          } else if (hoverOver(width/2-createMenuWidth/2+createMenuWidth-300, height/2-createMenuHeight/2+createMenuHeight-70, 100, 30)) {
             if (!textboxes.get(2).getText().equals("")) {
               direction.x *= float(textboxes.get(2).getText());
               direction.y *= float(textboxes.get(2).getText());
@@ -396,7 +403,7 @@ void cameraFreeze(boolean ind) {
 }
 
 //funktion for knap
-boolean button(float x, float y, float l, float h) {
+boolean hoverOver(float x, float y, float l, float h) {
   return (mouseX > x && mouseX < x+l && mouseY > y && mouseY < y+h);
 }
 

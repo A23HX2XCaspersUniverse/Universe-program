@@ -28,15 +28,15 @@ void objectMenu() {
   oui.rect(5/2, 89, objektMenuWidth-5, 50);
   oui.rect(5/2, 139, objektMenuWidth-5, 50);
 
-  if (button(saveMouseX, saveMouseY+39, objektMenuWidth, 50)) {
+  if (hoverOver(saveMouseX, saveMouseY+39, objektMenuWidth, 50)) {
     oui.fill(70);
     oui.rect(5/2, 39, objektMenuWidth-5, 50);
   }
-  if (button(saveMouseX, saveMouseY+89, objektMenuWidth, 50)) {
+  if (hoverOver(saveMouseX, saveMouseY+89, objektMenuWidth, 50)) {
     oui.fill(70);
     oui.rect(5/2, 89, objektMenuWidth-5, 50);
   }
-  if (button(saveMouseX, saveMouseY+139, objektMenuWidth, 50)) {
+  if (hoverOver(saveMouseX, saveMouseY+139, objektMenuWidth, 50)) {
     oui.fill(70);
     oui.rect(5/2, 139, objektMenuWidth-5, 50);
   }
@@ -85,13 +85,13 @@ void quitMenu() {
 
   qui.stroke(200, 90);
 
-  if (button(width/2-400, height/2+100, 200, 100)) {
+  if (hoverOver(width/2-400, height/2+100, 200, 100)) {
     qui.fill(255, 150);
     qui.rect(width/2-400, height/2+100, 200, 100);
 
     qui.fill(100, 90);
     qui.text("Yes", width/2-390, height/2+185);
-  } else if (button(width/2+200, height/2+100, 200, 100)) {
+  } else if (hoverOver(width/2+200, height/2+100, 200, 100)) {
     qui.fill(255, 150);
     qui.rect(width/2+200, height/2+100, 200, 100);
 
@@ -160,7 +160,7 @@ void createMenu() {
   cui.text("x 10^", 155, 180+30-30/10*2);
   cui.text("kg", 160+64+50, 180+30-30/10*2);
 
-  if (button(width/2-createMenuWidth/2+createMenuWidth-260, height/2-createMenuHeight/2+240, 160, 50)) {
+  if (hoverOver(width/2-createMenuWidth/2+createMenuWidth-260, height/2-createMenuHeight/2+240, 160, 50)) {
     cui.fill(80);
   } else {
     cui.fill(64);
@@ -173,7 +173,7 @@ void createMenu() {
   
   cui.line(0, 70, createMenuWidth, 70);
   
-  if (button(width/2-createMenuWidth/2+createMenuWidth-150, height/2-createMenuHeight/2+createMenuHeight-70, 100, 30)) {
+  if (hoverOver(width/2-createMenuWidth/2+createMenuWidth-150, height/2-createMenuHeight/2+createMenuHeight-70, 100, 30)) {
     cui.fill(80);
   } else {
     cui.fill(64);
@@ -182,7 +182,7 @@ void createMenu() {
   cui.fill(255);
   cui.text("Cancel", createMenuWidth-150+80-cui.textWidth("Set the direction")/2, createMenuHeight-70+20);
   
-  if (button(width/2-createMenuWidth/2+createMenuWidth-300, height/2-createMenuHeight/2+createMenuHeight-70, 100, 30)) {
+  if (hoverOver(width/2-createMenuWidth/2+createMenuWidth-300, height/2-createMenuHeight/2+createMenuHeight-70, 100, 30)) {
     cui.fill(80);
   } else {
     cui.fill(64);
@@ -200,4 +200,21 @@ void createMenu() {
   cam.endHUD();
 
   hint(ENABLE_DEPTH_TEST); //https://stackoverflow.com/questions/66303006/drawing-2d-text-over-3d-objects-in-processing-3
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void sideMenu() {
+  hint(DISABLE_DEPTH_TEST); //https://stackoverflow.com/questions/66303006/drawing-2d-text-over-3d-objects-in-processing-3
+  cam.beginHUD();
+  sui.beginDraw();
+  sui.background(60);
+  
+  
+  
+  sui.endDraw();
+  image(sui, 0, 0);
+  
+  cam.endHUD();
+  hint(DISABLE_DEPTH_TEST); //https://stackoverflow.com/questions/66303006/drawing-2d-text-over-3d-objects-in-processing-3
 }
