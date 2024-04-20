@@ -12,12 +12,14 @@ ArrayList<Textbox> textboxes = new ArrayList<>();
 
 boolean objectMenu = false;
 boolean spaceIsPressed = false;
+boolean tabIsPressed = false;
 boolean create = false;
 boolean freezeMovement = false;
 boolean quit = false;
 boolean isPlaced = false;
 boolean chooseDirection = false;
 boolean infoNeeded = false;
+boolean sideMenu = true;
 
 int objektMenuWidth = 125;
 int objektMenuHeight = 189;
@@ -40,7 +42,7 @@ float [] cameraLookAt = new float[0];
 float [] cameraLookAtUpdater = new float[0];
 
 PVector s1 = new PVector(0, 0);
-PVector lookAt = new PVector(0,0,0);
+PVector lookAt = new PVector(0, 0, 0);
 PVector direction = new PVector();
 
 PGraphics oui;
@@ -51,9 +53,10 @@ PGraphics sui;
 PFont font, font2;
 
 void setup() {
+  //
   fullScreen(P3D);
   noStroke();
-  frameRate(100);
+  frameRate(60);
 
   //initiering af kameraet
   cam = new PeasyCam(this, 100); //http://wiki.bk.tudelft.nl/toi-pedia/Processing_3D_Navigation
@@ -70,22 +73,25 @@ void setup() {
   stars.add(new Star(2*pow(10, 30), 0, 0, mToPixel(14000000000L), s1));
   planets.add(new Planet(5*pow(10, 24), -100, -200, mToPixel(7000000000L), s1));
   blackholes.add(new BlackHole(200*pow(10, 30), -900, 0, s1));
-  blackholes.add(new BlackHole(100*pow(10, 30), -900, 500, s1));
 
+  //initierer og deklarerer tekstbokse som senere bruges
   textboxes.add(new Textbox(50, 180, 100, 30));
   textboxes.add(new Textbox(50, 330, 200, 30));
   textboxes.add(new Textbox(createMenuWidth-280, 180, 200, 30));
-  textboxes.add(new Textbox(155+64, 180, 50, 30));
+  textboxes.add(new Textbox(155+64, 180, 35, 30));
 
+  //sørger for at tekstboksene kun kan indeholde tal
   for (Textbox textbox : textboxes) {
     textbox.setToNumbersOnly(true);
   }
 
+  //Deklarerer alle grafiske flader (Menuerne)
   oui = createGraphics(objektMenuWidth, objektMenuHeight, P2D);
   qui = createGraphics(width, height, P2D);
   cui = createGraphics(createMenuWidth, createMenuHeight, P2D);
   sui = createGraphics(sideMenuWidth, height, P2D);
 
+  //deklarerer de to fonte der bliver brugt
   font = createFont("MotionControl-BoldItalic.otf", 100);
   font2 = createFont("Roboto-Bold.ttf", 100);
 }
@@ -94,20 +100,22 @@ void draw() {
   background(0); //resetter canvassen
 
   pushMatrix();
-  
   //sørger for at universet følger med kamerateret, så man ikke lige pludselige kommer ud af universet.
   cameraLookAtUpdater = cam.getLookAt();
   lookAt.x = cameraLookAtUpdater[0];
   lookAt.y = cameraLookAtUpdater[1];
   lookAt.z = cameraLookAtUpdater[2];
+
+  //tegner en globusformet baggrund med stjerner
   translate(lookAt.x, lookAt.y, lookAt.z);
-  shape(universe); //laver en globusformet baggrund med stjerner
+  shape(universe);
   popMatrix();
 
-  if (!freezeMovement) {
+
+  if (!freezeMovement) { //tjekker om planeternes bevægelse er stoppet
 
     //Opdaterer nummeret på objekter
-    for (Planet planet : planets) { 
+    for (Planet planet : planets) {
       planet.setNr(count);
       count++;
     }
@@ -124,7 +132,7 @@ void draw() {
     count = 0;
 
 
-    //opdaterer objektet "planet"
+    //opdaterer objekternes position
     for (Planet planet : planets) {
       planet.update();
     }
@@ -143,7 +151,7 @@ void draw() {
     for (Star star : stars) {
       star.gravity();
     }
-    
+
     for (BlackHole blackhole : blackholes) {
       blackhole.gravity();
     }
@@ -162,18 +170,25 @@ void draw() {
 
 
 
-  if (objectMenu) {
+  if (objectMenu) { //tjekker om objekt menuen skal åbnes
+
     objectMenu();
-  } else if (quit) {
+  } else if (quit) { //tjekker om brugeren er på vej ud af programmet
+
     quitMenu();
-  } else if (create) {
-    if (isPlaced) {
-      if (!chooseDirection) {
+  } else if (create) { //tjekker om brugeren er ved at lave et nyt objekt
+
+    if (isPlaced) { //tjekker om placering af det ønskede objekt er valgt
+      if (!chooseDirection) { //tjekker om brugeren er ved at vælge en direktion for startbevægelsen
+
         createMenu();
       } else {
+
+        //opdaterer parametrer for direktionen af startbevægelsen
         direction.x = ((mouseX-width/2)*3.20987654-saveMouseX)/( abs((mouseX-width/2)*3.20987654-saveMouseX)+abs((mouseY-height/2)*3.20987654-saveMouseY));
         direction.y = ((mouseY-height/2)*3.20987654-saveMouseY)/( abs((mouseX-width/2)*3.20987654-saveMouseX)+abs((mouseY-height/2)*3.20987654-saveMouseY));
 
+        //viser visuelt hvilken retning startbevægelsen har
         pushMatrix();
         translate(saveMouseX, saveMouseY, 0);
         fill(#964B00);
@@ -186,7 +201,10 @@ void draw() {
         noStroke();
       }
     } else {
-      if (!chooseDirection) {
+
+      if (!chooseDirection) { //tjekker om brugeren er ved at vælge en direktion for startbevægelsen
+
+        // visuelt viser placeringen af objektet, når brugeren vælger placeringen
         pushMatrix();
         translate((mouseX-width/2)*3.20987654, (mouseY-height/2)*3.20987654, 0);
         fill(#964B00);
@@ -195,6 +213,11 @@ void draw() {
       }
     }
   }
+
+
+  if (sideMenu) { //tjekker om sidemenuen er åben
+    sideMenu();
+  }
 }
 
 
@@ -202,58 +225,76 @@ void draw() {
 /////////////////////////////////////////////////////////////////// Funktioner //////////////////////////////////////////////////////////////////
 
 void mousePressed() {
-  if (mouseButton == RIGHT) {
+  if (mouseButton == RIGHT) { //tjekker om det er højreklik
 
-    if (!create && !quit) {
-      if (mouseX < width-objektMenuWidth && mouseY < height -objektMenuHeight) {
-        saveMouseX = mouseX;
-        saveMouseY = mouseY;
-      } else if (mouseX < width-objektMenuWidth) {
-        saveMouseX = mouseX;
-        saveMouseY = height-objektMenuHeight;
-      } else if (mouseY < height-objektMenuHeight) {
-        saveMouseX = width-objektMenuWidth;
-        saveMouseY = mouseY;
-      } else {
-        saveMouseX = width-objektMenuWidth;
-        saveMouseY = height-objektMenuHeight;
+    if (!create && !quit) { //tjekker om brugeren er på vej ud af programmet eller om brugeren er ved at skabe et nyt objekt
+      if (mouseX > sideMenuWidth) { //tjekker om musen er uden fra side menuen
+
+        //åbner objekt menuen ved musens placering. Men sørger for at uanset hvad kan menuen altid ses
+        if (mouseX < width-objektMenuWidth && mouseY < height -objektMenuHeight) { //tjekker om musens placering er længere oppe fra bunden end objektmenuens højde, samt længer til venstre end menuens bredde
+          saveMouseX = mouseX;
+          saveMouseY = mouseY;
+        } else if (mouseX < width-objektMenuWidth) { //tjekker om musen er længere til venstre end objekt menuens bredde
+          saveMouseX = mouseX;
+          saveMouseY = height-objektMenuHeight;
+        } else if (mouseY < height-objektMenuHeight) { //tjekker om musen er højere oppe fra bunden end objekt menuens højde
+          saveMouseX = width-objektMenuWidth;
+          saveMouseY = mouseY;
+        } else {
+          saveMouseX = width-objektMenuWidth;
+          saveMouseY = height-objektMenuHeight;
+        }
+
+        //åbner objekt menuen samt musens kontrol over det 3 dimensionelle univers
+        objectMenu = true;
+        cam.setMouseControlled(false);
       }
-
-      objectMenu = true;
-      cam.setMouseControlled(false);
     }
-  } else {             /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  } else if (mouseButton == LEFT) { //tjekker om der er fåretaget et venstreklik (unødvendig, men gør det nemmere for mig at spotte når jeg koder)
 
-    if (objectMenu) {
+    if (objectMenu) { //tjekker om objekt menuen er åben
+      if (mouseX < saveMouseX || mouseX > saveMouseX+objektMenuWidth || mouseY < saveMouseY || mouseY > saveMouseY+objektMenuHeight) { //tjekker om musen er uden for menuen
 
-      if (mouseX < saveMouseX || mouseX > saveMouseX+objektMenuWidth || mouseY < saveMouseY || mouseY > saveMouseY+objektMenuHeight) {
+        //lukker menuen
         cam.setMouseControlled(true);
         objectMenu = false;
-      } else if (hoverOver(saveMouseX, saveMouseY+39, objektMenuWidth, 50)) {
+      } else if (hoverOver(saveMouseX, saveMouseY+39, objektMenuWidth, 50)) { //tjekker om musen er over "planet" knappen
+        //åbner create menuen for planeter
         createMenuSetup(1);
-      } else if (hoverOver(saveMouseX, saveMouseY+89, objektMenuWidth, 50)) {
+        sideMenu = false;
+      } else if (hoverOver(saveMouseX, saveMouseY+89, objektMenuWidth, 50)) { //tjekker om musen er over "stjerne" knappen
+        //åbner create menuen for planeter
         createMenuSetup(2);
-      } else if (hoverOver(saveMouseX, saveMouseY+139, objektMenuWidth, 50)) {
+        sideMenu = false;
+      } else if (hoverOver(saveMouseX, saveMouseY+139, objektMenuWidth, 50)) { //tjekker om musen er over "sort hul" knappen
+        //åbner create menuen for planeter
         createMenuSetup(3);
+        sideMenu = false;
       }
-    } else if (quit) {
+    } else if (quit) { //tjekker om brugeren er på vej ud af programmet
 
-      if (hoverOver(width/2-400, height/2+100, 200, 100)) {
-        exit();
-      } else if (hoverOver(width/2+200, height/2+100, 200, 100)) {
+      if (hoverOver(width/2-400, height/2+100, 200, 100)) { //tjekker om musen er over knappen "Yes"
+        exit(); //luk programmet
+      } else if (hoverOver(width/2+200, height/2+100, 200, 100)) { //tjekker om musen er over knappen "No"
+        //luk quit menuen
         freezeMovement = false;
         quit = false;
         cam.setMouseControlled(true);
       }
-    } else if (create) {
-      if (!isPlaced) {
+    } else if (create) { //tjekker om brugeren er ved at skabe et nyt objekt
+      if (!isPlaced) { //tjekker om brugeren har valgt placeringen af objektet
+
+        //gemmer placeringen
         saveMouseX = (mouseX-width/2)*3.20987654;
         saveMouseY = (mouseY-height/2)*3.20987654;
         isPlaced = true;
       } else {
-        if (!chooseDirection) {
+
+        if (!chooseDirection) {//tjekker om brugeren er ved at bestemme retning for startbevægelsen
           for (Textbox textbox : textboxes) {
-            if (hoverOver(textbox.getX()+width/2-createMenuWidth/2, textbox.getY()+height/2-createMenuHeight/2, textbox.getWidth(), textbox.getHeight())) {
+            if (hoverOver(textbox.getX()+width/2-createMenuWidth/2, textbox.getY()+height/2-createMenuHeight/2,
+              textbox.getWidth(), textbox.getHeight())) { //tjekker om musen er over en tekstboks
+
               textbox.setSelected(true);
             } else {
               textbox.setSelected(false);
@@ -268,11 +309,19 @@ void mousePressed() {
               direction.x *= float(textboxes.get(2).getText());
               direction.y *= float(textboxes.get(2).getText());
             } else {
-              //direction.x = 0;
-              //direction.y = 0;
+              direction.x = 0;
+              direction.y = 0;
             }
             if (!textboxes.get(0).getText().equals("") && !textboxes.get(1).getText().equals("") &&
               !textboxes.get(3).getText().equals("")) {
+                
+              if (float(textboxes.get(0).getText()) > 200) {
+                textboxes.get(0).setText("200");
+              }
+              if (float(textboxes.get(3).getText()) > 30) {
+                textboxes.get(3).setText("30");
+              }
+              
               if (objectType.equals("planet")) {
                 planets.add(new Planet(float(textboxes.get(0).getText())*pow(10, float(textboxes.get(3).getText())), saveMouseX, saveMouseY, mToPixel(1000*float(textboxes.get(1).getText())), direction));
                 closeCreateMenu();
@@ -282,6 +331,14 @@ void mousePressed() {
                 closeCreateMenu();
               }
             } else  if (objectType.equals("black hole") && !textboxes.get(0).getText().equals("") && !textboxes.get(3).getText().equals("")) {
+              
+              if (float(textboxes.get(0).getText()) > 200) {
+                textboxes.get(0).setText("200");
+              }
+              if (float(textboxes.get(3).getText()) > 30) {
+                textboxes.get(3).setText("30");
+              }
+              
               blackholes.add(new BlackHole(float(textboxes.get(0).getText())*pow(10, float(textboxes.get(3).getText())), saveMouseX, saveMouseY, direction));
               closeCreateMenu();
             } else {
@@ -306,6 +363,14 @@ void keyPressed() {
     }
   } else if (key == DELETE) {
     exit();
+  } else if (key == TAB && !create && !quit) {
+    if (!tabIsPressed) {
+      freezeMovement = true;
+      tabIsPressed = true;
+    } else {
+      freezeMovement = false;
+      tabIsPressed = false;
+    }
   } else if (create) {
     if (key == ESC) {
       closeCreateMenu();
@@ -431,4 +496,5 @@ void closeCreateMenu() {
     textbox.setText("");
   }
   infoNeeded = false;
+  sideMenu = true;
 }

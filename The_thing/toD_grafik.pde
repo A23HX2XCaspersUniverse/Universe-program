@@ -1,6 +1,7 @@
 float quitTextWidth;
 int countTextbox = 0;
 int countNr = 0;
+boolean foundTextbox = false;
 
 void objectMenu() {
 
@@ -120,10 +121,8 @@ void createMenu() {
 
   for (Textbox textbox : textboxes) {
 
-    if (!textbox.getCursorOnBox(mouseX-(width/2-createMenuWidth/2), mouseY-(height/2-createMenuHeight/2))) {
-      countTextbox++;
-    } else {
-      cursor(TEXT);
+    if (textbox.getCursorOnBox(mouseX-(width/2-createMenuWidth/2), mouseY-(height/2-createMenuHeight/2))) {
+      foundTextbox = true;
     }
 
     cui.textFont(font2);
@@ -135,12 +134,12 @@ void createMenu() {
     }
   }
 
-  if (countTextbox < textboxes.size()) {
+  if (foundTextbox) {
     cursor(TEXT);
   } else {
     cursor(ARROW);
   }
-  countTextbox = 0;
+  foundTextbox = false;
   countNr = 0;
 
   cui.textFont(font);
@@ -152,13 +151,13 @@ void createMenu() {
   cui.text("Mass of "+objectType+":", 53, 170);
   if (!objectType.equals("black hole")) {
     cui.text("Size of "+objectType+":", 53, 320);
-    cui.text("km",255 ,330+30-30/10*2);
+    cui.text("km", 255, 330+30-30/10*2);
   }
   cui.text("Speed of "+objectType+":", createMenuWidth-277, 170);
   cui.text("m/s", createMenuWidth-75, 180+30-30/10*2);
-  
+
   cui.text("x 10^", 155, 180+30-30/10*2);
-  cui.text("kg", 160+64+50, 180+30-30/10*2);
+  cui.text("kg", 160+64+35, 180+30-30/10*2);
 
   if (hoverOver(width/2-createMenuWidth/2+createMenuWidth-260, height/2-createMenuHeight/2+240, 160, 50)) {
     cui.fill(80);
@@ -170,9 +169,9 @@ void createMenu() {
   cui.fill(255);
   cui.textSize(15);
   cui.text("Set the direction", createMenuWidth-260+80-cui.textWidth("Set the direction")/2, 240+25+7);
-  
+
   cui.line(0, 70, createMenuWidth, 70);
-  
+
   if (hoverOver(width/2-createMenuWidth/2+createMenuWidth-150, height/2-createMenuHeight/2+createMenuHeight-70, 100, 30)) {
     cui.fill(80);
   } else {
@@ -181,7 +180,7 @@ void createMenu() {
   cui.rect(createMenuWidth-150, createMenuHeight-70, 100, 30);
   cui.fill(255);
   cui.text("Cancel", createMenuWidth-150+80-cui.textWidth("Set the direction")/2, createMenuHeight-70+20);
-  
+
   if (hoverOver(width/2-createMenuWidth/2+createMenuWidth-300, height/2-createMenuHeight/2+createMenuHeight-70, 100, 30)) {
     cui.fill(80);
   } else {
@@ -190,9 +189,21 @@ void createMenu() {
   cui.rect(createMenuWidth-300, createMenuHeight-70, 100, 30);
   cui.fill(255);
   cui.text("Apply", createMenuWidth-300+50-cui.textWidth("Apply")/2, createMenuHeight-70+20);
-  
+
   if (infoNeeded) {
-    cui.text("Missing information!", createMenuWidth-315-cui.textWidth("Missing information!"), createMenuHeight-70+20); 
+    cui.text("Missing information!", createMenuWidth-315-cui.textWidth("Missing information!"), createMenuHeight-70+20);
+  }
+
+  if (!textboxes.get(0).getSelected()) {
+    if (float(textboxes.get(0).getText()) > 200) {
+      textboxes.get(0).setText("200");
+    }
+  }
+
+  if (!textboxes.get(3).getSelected()) {
+    if (float(textboxes.get(3).getText()) > 30) {
+      textboxes.get(3).setText("30");
+    }
   }
 
   cui.endDraw();
@@ -208,13 +219,25 @@ void sideMenu() {
   hint(DISABLE_DEPTH_TEST); //https://stackoverflow.com/questions/66303006/drawing-2d-text-over-3d-objects-in-processing-3
   cam.beginHUD();
   sui.beginDraw();
-  sui.background(60);
-  
-  
-  
+  sui.fill(60);
+  sui.strokeWeight(10);
+  sui.stroke(51);
+  sui.rect(0, 0, sideMenuWidth, height);
+
+  if (hoverOver(0, 0, sideMenuWidth, height)) {
+    cam.setMouseControlled(false);
+  } else {
+    cam.setMouseControlled(true);
+  }
+
+  sui.rect(0, 0, sideMenuWidth, 100);
+  sui.textFont(font);
+  sui.textSize(78);
+  sui.fill(255);
+  sui.text("OBJECTS", sideMenuWidth/2-sui.textWidth("OBJECTS")/2, 75);
   sui.endDraw();
   image(sui, 0, 0);
-  
+
   cam.endHUD();
   hint(DISABLE_DEPTH_TEST); //https://stackoverflow.com/questions/66303006/drawing-2d-text-over-3d-objects-in-processing-3
 }

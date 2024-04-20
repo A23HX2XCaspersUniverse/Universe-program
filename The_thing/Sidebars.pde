@@ -1,0 +1,5 @@
+class sideBar {
+  
+  sideBar() {
+  }
+}
