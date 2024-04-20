@@ -4,7 +4,8 @@ class Object {
   PShape globe;
   String type;
   boolean delete;
-  int deleteNr, nr;
+  int deleteNr, nr, ID;
+  PImage surface;
 
   //opdaterer planetens position
   void update() {
@@ -16,7 +17,7 @@ class Object {
 
   //beregning af tyngdekraft
   void gravity() {
-    for (Planet planet : planets) {
+    for (Object planet : objects) {
 
       //Tjek afstanden til den valgte planet i ArrayListen
       distance = sqrt(pow(planet.getX()-xPos, 2)+pow(planet.getY()-yPos, 2));
@@ -44,88 +45,21 @@ class Object {
 
         changes = new PVector(0, 0, 0);
       }
-    }
+    } 
     if (delete) {
-        speed = collisionSpeed(speed.x, planets.get(deleteNr).getSpeedX(), speed.y, planets.get(deleteNr).getSpeedY(), mass, planets.get(deleteNr).getMass() );
-        mass = planets.get(deleteNr).getMass()+mass;
-        planets.remove(deleteNr);
+        speed = collisionSpeed(speed.x, objects.get(deleteNr).getSpeedX(), speed.y, objects.get(deleteNr).getSpeedY(), mass, objects.get(deleteNr).getMass() );
+        mass = objects.get(deleteNr).getMass()+mass;
+        for (int i = 0; i < sidebars.size(); i++) {
+          if (objects.get(deleteNr).getID() == sidebars.get(i).getID()) {
+            sidebars.remove(i);
+            break;
+          }
+        }
+        objects.remove(deleteNr);
       }
       delete = false;
-      deleteNr = 0;
-    for (Star star : stars) {
-
-      //Tjek afstanden til den valgte planet i ArrayListen
-      distance = sqrt(pow(star.getX()-xPos, 2)+pow(star.getY()-yPos, 2));
-
-      //hvis afstanden er 0, betyder det at den har tjekket afstanden til den selv
-      if (distance != 0) {
-
-        if (type.equals("black hole")) {
-          if (abs(distance) <= star.getRadius()+radius-10) {
-            delete = true;
-            deleteNr = star.getNr();
-          }
-        }
-
-        distance = pixelToM(distance);
-        massCalculation = 0.00000000006674 * mass;
-        force = massCalculation/pow(distance, 2);
-        force *= star.getMass();
-
-        changes = new PVector(forceDistributionX(xPos, star.getX(), yPos, star.getY(), force)/mass*0.016666*interval,
-          forceDistributionY(xPos, star.getX(), yPos, star.getY(), force)/mass*0.016666*interval, 0);
-
-        saveSpeed.add(changes);
-
-        changes = new PVector(0, 0, 0);
-      }
-    }
-
-    if (delete) {
-      speed = collisionSpeed(speed.x, stars.get(deleteNr).getSpeedX(), speed.y, stars.get(deleteNr).getSpeedY(), mass, stars.get(deleteNr).getMass() );
-      mass = stars.get(deleteNr).getMass()+mass;
-      stars.remove(deleteNr);
-    }
-    delete = false;
-    deleteNr = 0;
-
-    for (BlackHole blackhole : blackholes) {
-
-      //Tjek afstanden til den valgte planet i ArrayListen
-      distance = sqrt(pow(blackhole.getX()-xPos, 2)+pow(blackhole.getY()-yPos, 2));
-
-      //hvis afstanden er 0, betyder det at den har tjekket afstanden til den selv
-      if (distance != 0) {
-
-        if (type.equals("black hole")) {
-          if (abs(distance) <= blackhole.getRadius()+radius-10) {
-            delete = true;
-            deleteNr = blackhole.getNr();
-          }
-        }
-
-        distance = pixelToM(distance);
-        massCalculation = 0.00000000006674 * mass;
-        force = massCalculation/pow(distance, 2);
-        force *= blackhole.getMass();
-
-        changes = new PVector(forceDistributionX(xPos, blackhole.getX(), yPos, blackhole.getY(), force)/mass*0.016666*interval,
-          forceDistributionY(xPos, blackhole.getX(), yPos, blackhole.getY(), force)/mass*0.016666*interval, 0);
-
-        saveSpeed.add(changes);
-
-
-        changes = new PVector(0, 0, 0);
-      }
-    }
-    if (delete) {
-      speed = collisionSpeed(speed.x, blackholes.get(deleteNr).getSpeedX(), speed.y, blackholes.get(deleteNr).getSpeedY(), mass, blackholes.get(deleteNr).getMass() );
-      mass = blackholes.get(deleteNr).getMass()+mass;
-      blackholes.remove(deleteNr);
-    }
-    delete = false;
-    deleteNr = 0;
-  }
+      deleteNr = 0; 
+  } 
 
 
   void objectDraw() {
@@ -168,6 +102,22 @@ class Object {
   
   float getSpeedY() {
     return speed.y;
+  }
+  
+  int getID() {
+    return ID;
+  }
+  
+  String getType() {
+    return type;
+  }
+  
+  PShape getShape() {
+    return globe;
+  }
+  
+  PImage getTexture() {
+    return surface;
   }
 
   void setSpeed(PVector s) {

@@ -1,5 +1,4 @@
 class Star extends Object{
-  PImage star;
   
   Star(float m, float x, float y, float r, PVector p) {
     mass = m;
@@ -7,11 +6,15 @@ class Star extends Object{
     yPos = y;
     radius = r;
     saveSpeed = p;
-    star = loadImage("Stjerne"+int(random(1,5))+".jpg");
+    ID = IDs;
+    surface = loadImage("Stjerne"+int(random(1,5))+".jpg");
     globe = createShape(SPHERE, radius);
-    globe.setTexture(star);
+    globe.setTexture(surface);
     speed = new PVector(0,0,0);
     pickColor = random(80,180);
     type = "star";
+    sidebars.add(new Sidebar(ID));
+    IDs++;
+    println(ID);
   }
 }

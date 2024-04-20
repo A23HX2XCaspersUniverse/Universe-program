@@ -1,5 +1,4 @@
 class Planet extends Object{
-  PImage planet;
   
   Planet(float m, float x, float y, float r, PVector p) {
     mass = m;
@@ -7,11 +6,15 @@ class Planet extends Object{
     yPos = y;
     radius = r;
     saveSpeed = p;
-    planet = loadImage("Planet"+int(random(1,5))+".jpg");
+    ID = IDs;
+    surface = loadImage("Planet"+int(random(1,5))+".jpg");
     globe = createShape(SPHERE, radius);
-    globe.setTexture(planet);
+    globe.setTexture(surface);
     speed = new PVector(0,0,0);
     pickColor = random(80,180);
     type = "planet";
+    sidebars.add(new Sidebar(ID));
+    IDs++;
+    println(ID);
   }
 }

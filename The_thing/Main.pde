@@ -5,10 +5,10 @@ PeasyCam cam;
 PShape universe; //https://forum.processing.org/two/discussion/22593/how-to-fill-the-sphere-with-the-earth-image.html
 PImage milkyWay;
 
-ArrayList<Planet> planets = new ArrayList<>();
-ArrayList<Star> stars = new ArrayList<>();
-ArrayList<BlackHole> blackholes = new ArrayList<>();
+
 ArrayList<Textbox> textboxes = new ArrayList<>();
+ArrayList<Object> objects = new ArrayList<>();
+ArrayList<Sidebar> sidebars = new ArrayList<>();
 
 boolean objectMenu = false;
 boolean spaceIsPressed = false;
@@ -20,13 +20,15 @@ boolean isPlaced = false;
 boolean chooseDirection = false;
 boolean infoNeeded = false;
 boolean sideMenu = true;
+boolean deleted = false;
 
 int objektMenuWidth = 125;
 int objektMenuHeight = 189;
 int createMenuWidth = 800;
 int createMenuHeight = 530;
-int sideMenuWidth = 300;
+int sideMenuWidth = 400;
 int count = 0;
+int IDs = 1;
 
 double cameraDistance = 0;
 
@@ -70,9 +72,7 @@ void setup() {
   universe.setTexture(milkyWay);  //https://forum.processing.org/two/discussion/22593/how-to-fill-the-sphere-with-the-earth-image.html
 
   //Tilføjer Planet og stjerne
-  stars.add(new Star(2*pow(10, 30), 0, 0, mToPixel(14000000000L), s1));
-  planets.add(new Planet(5*pow(10, 24), -100, -200, mToPixel(7000000000L), s1));
-  blackholes.add(new BlackHole(200*pow(10, 30), -900, 0, s1));
+  objects.add(new Star(2*pow(10, 30), 0, 0, mToPixel(14000000000L), s1));
 
   //initierer og deklarerer tekstbokse som senere bruges
   textboxes.add(new Textbox(50, 180, 100, 30));
@@ -115,67 +115,40 @@ void draw() {
   if (!freezeMovement) { //tjekker om planeternes bevægelse er stoppet
 
     //Opdaterer nummeret på objekter
-    for (Planet planet : planets) {
-      planet.setNr(count);
-      count++;
-    }
-    count = 0;
-    for (Star star : stars) {
-      star.setNr(count);
-      count++;
-    }
-    count = 0;
-    for (BlackHole blackhole : blackholes) {
-      blackhole.setNr(count);
+    for (Object object : objects) {
+      object.setNr(count);
       count++;
     }
     count = 0;
 
 
     //opdaterer objekternes position
-    for (Planet planet : planets) {
-      planet.update();
-    }
-    for (Star star : stars) {
-      star.update();
-    }
-    for (BlackHole blackhole : blackholes) {
-      blackhole.update();
+    for (Object object : objects) {
+      object.update();
     }
 
 
     // beregner tyngdekraftens påvirkning
-    for (Planet planet : planets) {
-      planet.gravity();
-    }
-    for (Star star : stars) {
-      star.gravity();
-    }
-
-    for (BlackHole blackhole : blackholes) {
-      blackhole.gravity();
+    for (int i = 0; i < objects.size(); i++) {
+      objects.get(i).gravity();
     }
   }
 
   //tegner objekter
-  for (Planet planet : planets) {
-    planet.objectDraw();
-  }
-  for (Star star : stars) {
-    star.objectDraw();
-  }
-  for (BlackHole blackhole : blackholes) {
-    blackhole.objectDraw();
+  for (Object object : objects) {
+    object.objectDraw();
   }
 
+  if (sideMenu) { //tjekker om sidemenuen er åben
+    sideMenu();
+  }
 
 
   if (objectMenu) { //tjekker om objekt menuen skal åbnes
-
     objectMenu();
   } else if (quit) { //tjekker om brugeren er på vej ud af programmet
-
     quitMenu();
+    
   } else if (create) { //tjekker om brugeren er ved at lave et nyt objekt
 
     if (isPlaced) { //tjekker om placering af det ønskede objekt er valgt
@@ -212,11 +185,6 @@ void draw() {
         popMatrix();
       }
     }
-  }
-
-
-  if (sideMenu) { //tjekker om sidemenuen er åben
-    sideMenu();
   }
 }
 
@@ -314,32 +282,32 @@ void mousePressed() {
             }
             if (!textboxes.get(0).getText().equals("") && !textboxes.get(1).getText().equals("") &&
               !textboxes.get(3).getText().equals("")) {
-                
+
               if (float(textboxes.get(0).getText()) > 200) {
                 textboxes.get(0).setText("200");
               }
               if (float(textboxes.get(3).getText()) > 30) {
                 textboxes.get(3).setText("30");
               }
-              
+
               if (objectType.equals("planet")) {
-                planets.add(new Planet(float(textboxes.get(0).getText())*pow(10, float(textboxes.get(3).getText())), saveMouseX, saveMouseY, mToPixel(1000*float(textboxes.get(1).getText())), direction));
+                objects.add(new Planet(float(textboxes.get(0).getText())*pow(10, float(textboxes.get(3).getText())), saveMouseX, saveMouseY, mToPixel(1000*float(textboxes.get(1).getText())), direction));
                 closeCreateMenu();
               }
               if (objectType.equals("star")) {
-                stars.add(new Star(float(textboxes.get(0).getText())*pow(10, float(textboxes.get(3).getText())), saveMouseX, saveMouseY, mToPixel(1000*float(textboxes.get(1).getText())), direction));
+                objects.add(new Star(float(textboxes.get(0).getText())*pow(10, float(textboxes.get(3).getText())), saveMouseX, saveMouseY, mToPixel(1000*float(textboxes.get(1).getText())), direction));
                 closeCreateMenu();
               }
             } else  if (objectType.equals("black hole") && !textboxes.get(0).getText().equals("") && !textboxes.get(3).getText().equals("")) {
-              
+
               if (float(textboxes.get(0).getText()) > 200) {
                 textboxes.get(0).setText("200");
               }
               if (float(textboxes.get(3).getText()) > 30) {
                 textboxes.get(3).setText("30");
               }
-              
-              blackholes.add(new BlackHole(float(textboxes.get(0).getText())*pow(10, float(textboxes.get(3).getText())), saveMouseX, saveMouseY, direction));
+
+              objects.add(new BlackHole(float(textboxes.get(0).getText())*pow(10, float(textboxes.get(3).getText())), saveMouseX, saveMouseY, direction));
               closeCreateMenu();
             } else {
               infoNeeded = true;

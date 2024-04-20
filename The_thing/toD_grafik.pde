@@ -230,6 +230,16 @@ void sideMenu() {
     cam.setMouseControlled(true);
   }
 
+  count = 0;
+  for (Sidebar sidebar : sidebars) {
+    sidebar.drawBar(sui, count);
+    count++;
+  }
+  count = 0;
+
+  sui.fill(60);
+  sui.strokeWeight(10);
+  sui.stroke(51);
   sui.rect(0, 0, sideMenuWidth, 100);
   sui.textFont(font);
   sui.textSize(78);
@@ -239,5 +249,5 @@ void sideMenu() {
   image(sui, 0, 0);
 
   cam.endHUD();
-  hint(DISABLE_DEPTH_TEST); //https://stackoverflow.com/questions/66303006/drawing-2d-text-over-3d-objects-in-processing-3
+  hint(ENABLE_DEPTH_TEST); //https://stackoverflow.com/questions/66303006/drawing-2d-text-over-3d-objects-in-processing-3
 }
