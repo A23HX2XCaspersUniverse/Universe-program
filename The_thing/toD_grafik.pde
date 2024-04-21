@@ -206,6 +206,12 @@ void createMenu() {
     }
   }
 
+  if (!textboxes.get(1).getSelected()) {
+    if (float(textboxes.get(1).getText()) > 36000000) {
+      textboxes.get(1).setText("36000000");
+    }
+  }
+
   cui.endDraw();
   image(cui, width/2-createMenuWidth/2, height/2-createMenuHeight/2);
   cam.endHUD();
@@ -224,10 +230,12 @@ void sideMenu() {
   sui.stroke(51);
   sui.rect(0, 0, sideMenuWidth, height);
 
-  if (hoverOver(0, 0, sideMenuWidth, height)) {
+  if (hoverOver(-5, -5, sideMenuWidth, height+10)) {
     cam.setMouseControlled(false);
   } else {
-    cam.setMouseControlled(true);
+    if (!spaceIsPressed) {
+      cam.setMouseControlled(true);
+    }
   }
 
   count = 0;
@@ -244,7 +252,7 @@ void sideMenu() {
   sui.textFont(font);
   sui.textSize(78);
   sui.fill(255);
-  sui.text("OBJECTS", sideMenuWidth/2-sui.textWidth("OBJECTS")/2, 75);
+  sui.text("OBJECTS", sideMenuWidth/2-sui.textWidth("OBJECTS")/2, 70);
   sui.endDraw();
   image(sui, 0, 0);
 

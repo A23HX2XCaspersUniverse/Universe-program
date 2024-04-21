@@ -35,6 +35,7 @@ double cameraDistance = 0;
 float saveMouseX = 0;
 float saveMouseY = 0;
 float interval = 10;
+float barStart = 0;
 
 String objectType = "";
 
@@ -43,7 +44,6 @@ float [] cameraRotation = new float[0];
 float [] cameraLookAt = new float[0];
 float [] cameraLookAtUpdater = new float[0];
 
-PVector s1 = new PVector(0, 0);
 PVector lookAt = new PVector(0, 0, 0);
 PVector direction = new PVector();
 
@@ -72,7 +72,12 @@ void setup() {
   universe.setTexture(milkyWay);  //https://forum.processing.org/two/discussion/22593/how-to-fill-the-sphere-with-the-earth-image.html
 
   //Tilføjer Planet og stjerne
-  objects.add(new Star(2*pow(10, 30), 0, 0, mToPixel(14000000000L), s1));
+  objects.add(new Star(2*pow(10, 30), 0, 0, mToPixel(6963400000L*1.5), new PVector(0,0,0)));
+  objects.add(new Planet(3*pow(10, 23), mToPixel(68000000000L), 0, mToPixel(637100000L*3), new PVector(0,-0.69,0)));
+  objects.add(new Planet(5*pow(10, 24), mToPixel(108000000000L), 0, mToPixel(637100000L*3.5), new PVector(0,-0.56,0)));
+  objects.add(new Planet(6*pow(10, 24), mToPixel(150360000000L), 0, mToPixel(637100000L*4.5), new PVector(0,-0.47,0)));
+  objects.add(new Planet(6*pow(10, 23), mToPixel(228000000000L), 0, mToPixel(637100000L*4), new PVector(0,-0.384,0)));
+  objects.add(new Planet(6*pow(10, 23), mToPixel(484000000000L), 0, mToPixel(637100000L*4), new PVector(0,-0.384,0)));
 
   //initierer og deklarerer tekstbokse som senere bruges
   textboxes.add(new Textbox(50, 180, 100, 30));
@@ -148,7 +153,6 @@ void draw() {
     objectMenu();
   } else if (quit) { //tjekker om brugeren er på vej ud af programmet
     quitMenu();
-    
   } else if (create) { //tjekker om brugeren er ved at lave et nyt objekt
 
     if (isPlaced) { //tjekker om placering af det ønskede objekt er valgt
@@ -289,6 +293,9 @@ void mousePressed() {
               if (float(textboxes.get(3).getText()) > 30) {
                 textboxes.get(3).setText("30");
               }
+              if (float(textboxes.get(1).getText()) > 36000000) {
+                textboxes.get(1).setText("36000000");
+              }
 
               if (objectType.equals("planet")) {
                 objects.add(new Planet(float(textboxes.get(0).getText())*pow(10, float(textboxes.get(3).getText())), saveMouseX, saveMouseY, mToPixel(1000*float(textboxes.get(1).getText())), direction));
@@ -317,6 +324,23 @@ void mousePressed() {
           chooseDirection = false;
           cameraFreeze(true);
         }
+      }
+    }
+  }
+}
+
+void mouseWheel(MouseEvent event) {
+  println("W");
+  if (hoverOver(-5, 100, sideMenuWidth+5, height-95)) {
+    println("H");
+    if (event.getCount() > 0) {
+      println("U");
+      if (barStart > (-1)*sidebars.size()*170+height-100) {
+        barStart -= event.getCount()*6;
+      }
+    } else {
+      if (barStart < 0) {
+        barStart -= event.getCount()*6;
       }
     }
   }
