@@ -1,13 +1,17 @@
 class BlackHole extends Object{
   
-  BlackHole(float m, float x, float y, PVector p) {
+  BlackHole(float m, float x, float y, PVector p, String texture, String name) {
     mass = m;
     xPos = x;
     yPos = y;
     saveSpeed = p;
     ID = IDs;
     radius = mToPixel(2*6.674*pow(10, -11)*m/pow(300000000,2))*107290;
-    surface = loadImage("black.jpg");
+    if (name != "") {
+      surface = loadImage("Planet"+int(random(1, 5))+".jpg");
+    } else {
+      surface = loadImage(texture);
+    }
     globe = createShape(SPHERE, radius);
     globe.setTexture(surface);
     speed = new PVector(0,0,0);

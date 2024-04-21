@@ -72,12 +72,12 @@ void setup() {
   universe.setTexture(milkyWay);  //https://forum.processing.org/two/discussion/22593/how-to-fill-the-sphere-with-the-earth-image.html
 
   //Tilføjer Planet og stjerne
-  objects.add(new Star(2*pow(10, 30), 0, 0, mToPixel(6963400000L*1.5), new PVector(0,0,0)));
-  objects.add(new Planet(3*pow(10, 23), mToPixel(68000000000L), 0, mToPixel(637100000L*3), new PVector(0,-0.69,0)));
-  objects.add(new Planet(5*pow(10, 24), mToPixel(108000000000L), 0, mToPixel(637100000L*3.5), new PVector(0,-0.56,0)));
-  objects.add(new Planet(6*pow(10, 24), mToPixel(150360000000L), 0, mToPixel(637100000L*4.5), new PVector(0,-0.47,0)));
-  objects.add(new Planet(6*pow(10, 23), mToPixel(228000000000L), 0, mToPixel(637100000L*4), new PVector(0,-0.384,0)));
-  objects.add(new Planet(6*pow(10, 23), mToPixel(484000000000L), 0, mToPixel(637100000L*4), new PVector(0,-0.384,0)));
+  objects.add(new Star(2*pow(10, 30), 0, 0, mToPixel(6963400000L*1.5), new PVector(0,0,0), "", ""));
+  objects.add(new Planet(3*pow(10, 23), mToPixel(68000000000L), 0, mToPixel(637100000L*3), new PVector(0,-0.69,0), "Planet5.jpg", ""));
+  objects.add(new Planet(5*pow(10, 24), mToPixel(108000000000L), 0, mToPixel(637100000L*3.5), new PVector(0,-0.56,0), "Planet6.jpg", ""));
+  objects.add(new Planet(6*pow(10, 24), mToPixel(150360000000L), 0, mToPixel(637100000L*4.5), new PVector(0,-0.47,0), "Planet7.jpg", ""));
+  objects.add(new Planet(6*pow(10, 23), mToPixel(228000000000L), 0, mToPixel(637100000L*4), new PVector(0,-0.384,0), "Planet8.jpg", ""));
+  objects.add(new Planet(2*pow(10, 27), mToPixel(484000000000L), 0, mToPixel(637100000L*8), new PVector(0,-0.265,0), "Planet3.jpg", ""));
 
   //initierer og deklarerer tekstbokse som senere bruges
   textboxes.add(new Textbox(50, 180, 100, 30));
@@ -298,11 +298,11 @@ void mousePressed() {
               }
 
               if (objectType.equals("planet")) {
-                objects.add(new Planet(float(textboxes.get(0).getText())*pow(10, float(textboxes.get(3).getText())), saveMouseX, saveMouseY, mToPixel(1000*float(textboxes.get(1).getText())), direction));
+                objects.add(new Planet(float(textboxes.get(0).getText())*pow(10, float(textboxes.get(3).getText())), saveMouseX, saveMouseY, mToPixel(1000*float(textboxes.get(1).getText())), direction, "", ""));
                 closeCreateMenu();
               }
               if (objectType.equals("star")) {
-                objects.add(new Star(float(textboxes.get(0).getText())*pow(10, float(textboxes.get(3).getText())), saveMouseX, saveMouseY, mToPixel(1000*float(textboxes.get(1).getText())), direction));
+                objects.add(new Star(float(textboxes.get(0).getText())*pow(10, float(textboxes.get(3).getText())), saveMouseX, saveMouseY, mToPixel(1000*float(textboxes.get(1).getText())), direction, "", ""));
                 closeCreateMenu();
               }
             } else  if (objectType.equals("black hole") && !textboxes.get(0).getText().equals("") && !textboxes.get(3).getText().equals("")) {
@@ -314,7 +314,7 @@ void mousePressed() {
                 textboxes.get(3).setText("30");
               }
 
-              objects.add(new BlackHole(float(textboxes.get(0).getText())*pow(10, float(textboxes.get(3).getText())), saveMouseX, saveMouseY, direction));
+              objects.add(new BlackHole(float(textboxes.get(0).getText())*pow(10, float(textboxes.get(3).getText())), saveMouseX, saveMouseY, direction, "", ""));
               closeCreateMenu();
             } else {
               infoNeeded = true;

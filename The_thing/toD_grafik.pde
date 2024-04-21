@@ -233,7 +233,7 @@ void sideMenu() {
   if (hoverOver(-5, -5, sideMenuWidth, height+10)) {
     cam.setMouseControlled(false);
   } else {
-    if (!spaceIsPressed) {
+    if (!spaceIsPressed && !quit) {
       cam.setMouseControlled(true);
     }
   }
