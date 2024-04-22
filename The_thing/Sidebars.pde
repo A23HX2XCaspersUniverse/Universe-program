@@ -51,9 +51,12 @@ class Sidebar {
 
     g.textFont(font2);
     g.textSize(20);
-    g.text("Radius: "+pixelToM(objects.get(nr).getRadius())+" km", 140, y+70);
+    if (nr < objects.size()) {
+      g.text("Radius: "+pixelToM(objects.get(nr).getRadius())+" km", 140, y+70);
 
-    g.text("Mass: "+objects.get(nr).getMass()+" kg", 140, y+100);
+      g.text("Mass: "+objects.get(nr).getMass()+" kg", 140, y+100);
+    }
+    
     
     if (focus) {
       g.fill(90);
@@ -67,7 +70,7 @@ class Sidebar {
     g.rect(sideMenuWidth-260, y+130, 100, 30);
     g.fill(255);
     g.text("Delete", sideMenuWidth-80-g.textWidth("Delete")/2, y+151);
-    g.text("Edit", sideMenuWidth-210-g.textWidth("Edit")/2, y+151); 
+    g.text("Edit", sideMenuWidth-210-g.textWidth("Edit")/2, y+151);
 
     g.endDraw();
 

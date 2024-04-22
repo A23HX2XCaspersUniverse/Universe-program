@@ -129,7 +129,7 @@ void draw() {
   if (objectFocus) {
     for (Object object : objects) {
       if (object.getID() == objectOnFocus) {
-        cam.lookAt(object.getX(), object.getY(), 0,  animationSpeed);
+        cam.lookAt(object.getX(), object.getY(), 0, animationSpeed);
         break;
       }
       count++;
@@ -351,14 +351,23 @@ void mousePressed() {
       if (hoverOver(-5, -5, sideMenuWidth, height+10)) {
         for (Sidebar sidebar : sidebars) {
           if (mouseY > sidebar.getY() && mouseY < sidebar.getY()+sidebar.getH() && mouseY > 100) {
-            objectFocus = true;
-            objectOnFocus = sidebar.getID();
-            sidebar.setFocus(true);
+            if (hoverOver(sideMenuWidth-130, sidebar.getY()+130, 100, 30)) {
+              for (int i = 0; i < objects.size(); i++) {
+                if (objects.get(i).getID() == sidebar.getID()) {
+                  objects.remove(i);
+                }
+              }
+              sidebars.remove(sidebar);
+              break;
+            } else {
+              objectFocus = true;
+              objectOnFocus = sidebar.getID();
+              sidebar.setFocus(true);
+            }
           } else {
             sidebar.setFocus(false);
           }
         }
-      } else {
       }
     }
   }
@@ -387,12 +396,12 @@ void keyPressed() {
     }
   } else if (key == DELETE) {
     exit();
-  } else if(key == 'q'){
+  } else if (key == 'q') {
     objectFocus = false;
     for (Sidebar sidebar : sidebars) {
       sidebar.setFocus(false);
     }
-  }else if (key == TAB && !create && !quit) {
+  } else if (key == TAB && !create && !quit) {
     if (!tabIsPressed) {
       freezeMovement = true;
       tabIsPressed = true;
