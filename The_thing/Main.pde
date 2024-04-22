@@ -21,6 +21,7 @@ boolean chooseDirection = false;
 boolean infoNeeded = false;
 boolean sideMenu = true;
 boolean deleted = false;
+boolean objectFocus = false;
 
 int objektMenuWidth = 125;
 int objektMenuHeight = 189;
@@ -29,13 +30,18 @@ int createMenuHeight = 530;
 int sideMenuWidth = 400;
 int count = 0;
 int IDs = 1;
+int sizeInterval = 3;
+int objectOnFocus = 0;
 
 double cameraDistance = 0;
 
+long animationSpeed = 0;
+
 float saveMouseX = 0;
 float saveMouseY = 0;
-float interval = 10;
+float interval = 20;
 float barStart = 0;
+float speedInterval = 1/1.2;
 
 String objectType = "";
 
@@ -58,7 +64,7 @@ void setup() {
   //
   fullScreen(P3D);
   noStroke();
-  frameRate(60);
+  frameRate(200);
 
   //initiering af kameraet
   cam = new PeasyCam(this, 100); //http://wiki.bk.tudelft.nl/toi-pedia/Processing_3D_Navigation
@@ -72,12 +78,16 @@ void setup() {
   universe.setTexture(milkyWay);  //https://forum.processing.org/two/discussion/22593/how-to-fill-the-sphere-with-the-earth-image.html
 
   //Tilføjer Planet og stjerne
-  objects.add(new Star(2*pow(10, 30), 0, 0, mToPixel(6963400000L*1.5), new PVector(0,0,0), "", ""));
-  objects.add(new Planet(3*pow(10, 23), mToPixel(68000000000L), 0, mToPixel(637100000L*3), new PVector(0,-0.69,0), "Planet5.jpg", ""));
-  objects.add(new Planet(5*pow(10, 24), mToPixel(108000000000L), 0, mToPixel(637100000L*3.5), new PVector(0,-0.56,0), "Planet6.jpg", ""));
-  objects.add(new Planet(6*pow(10, 24), mToPixel(150360000000L), 0, mToPixel(637100000L*4.5), new PVector(0,-0.47,0), "Planet7.jpg", ""));
-  objects.add(new Planet(6*pow(10, 23), mToPixel(228000000000L), 0, mToPixel(637100000L*4), new PVector(0,-0.384,0), "Planet8.jpg", ""));
-  objects.add(new Planet(2*pow(10, 27), mToPixel(484000000000L), 0, mToPixel(637100000L*8), new PVector(0,-0.265,0), "Planet3.jpg", ""));
+  objects.add(new Star(2*pow(10, 30), 0, 0, mToPixel(6963400000L*1.5*sizeInterval), new PVector(0, 0, 0), "", "sun"));
+  objects.add(new Planet(3*pow(10, 23), mToPixel(68000000000L), 0, mToPixel(637100000L*2.5*sizeInterval), new PVector(0, -0.69*speedInterval, 0), "Planet5.jpg", "mercury", false));
+  objects.add(new Planet(5*pow(10, 24), 0, mToPixel(-108000000000L), mToPixel(637100000L*3*sizeInterval), new PVector(-0.55*speedInterval, 0, 0), "Planet6.jpg", "venus", false));
+  objects.add(new Planet(6*pow(10, 24), mToPixel(-150360000000L), 0, mToPixel(637100000L*4.5*sizeInterval), new PVector(0, 0.47*speedInterval, 0), "Planet7.jpg", "earth", false));
+  objects.add(new Planet(6*pow(10, 23), 0, mToPixel(228000000000L), mToPixel(637100000L*4*sizeInterval), new PVector(0.384*speedInterval, 0, 0), "Planet8.jpg", "mars", false));
+  objects.add(new Planet(2*pow(10, 27), 0, mToPixel(-484000000000L), mToPixel(637100000L*8*sizeInterval), new PVector(-0.265*speedInterval, 0, 0), "Planet3.jpg", "jupiter", false));
+  objects.add(new Planet(6*pow(10, 26), mToPixel(-750000000000L), 0, mToPixel(637100000L*8*sizeInterval), new PVector(0, 0.21*speedInterval, 0), "Planet10.jpg", "saturn", true));
+  objects.add(new Planet(9*pow(10, 25), 0, mToPixel(1000000000000L), mToPixel(637100000L*6.5*sizeInterval), new PVector(0.185*speedInterval, 0, 0), "Planet11.jpg", "uranus", false));
+  objects.add(new Planet(1*pow(10, 26), mToPixel(1300000000000L), 0, mToPixel(637100000L*7*sizeInterval), new PVector(0, -0.165*speedInterval, 0), "Planet12.jpg", "neptune", false));
+  objects.add(new Planet(1*pow(10, 22), 0, mToPixel(-1600000000000L), mToPixel(637100000L*sizeInterval), new PVector(-0.145*speedInterval, 0, 0), "Planet13.jpg", "pluto", false));
 
   //initierer og deklarerer tekstbokse som senere bruges
   textboxes.add(new Textbox(50, 180, 100, 30));
@@ -115,6 +125,17 @@ void draw() {
   translate(lookAt.x, lookAt.y, lookAt.z);
   shape(universe);
   popMatrix();
+
+  if (objectFocus) {
+    for (Object object : objects) {
+      if (object.getID() == objectOnFocus) {
+        cam.lookAt(object.getX(), object.getY(), 0,  animationSpeed);
+        break;
+      }
+      count++;
+    }
+  }
+  count = 0;
 
 
   if (!freezeMovement) { //tjekker om planeternes bevægelse er stoppet
@@ -219,6 +240,7 @@ void mousePressed() {
 
         //åbner objekt menuen samt musens kontrol over det 3 dimensionelle univers
         objectMenu = true;
+        objectFocus = false;
         cam.setMouseControlled(false);
       }
     }
@@ -298,7 +320,7 @@ void mousePressed() {
               }
 
               if (objectType.equals("planet")) {
-                objects.add(new Planet(float(textboxes.get(0).getText())*pow(10, float(textboxes.get(3).getText())), saveMouseX, saveMouseY, mToPixel(1000*float(textboxes.get(1).getText())), direction, "", ""));
+                objects.add(new Planet(float(textboxes.get(0).getText())*pow(10, float(textboxes.get(3).getText())), saveMouseX, saveMouseY, mToPixel(1000*float(textboxes.get(1).getText())), direction, "", "", false));
                 closeCreateMenu();
               }
               if (objectType.equals("star")) {
@@ -325,22 +347,32 @@ void mousePressed() {
           cameraFreeze(true);
         }
       }
+    } else {
+      if (hoverOver(-5, -5, sideMenuWidth, height+10)) {
+        for (Sidebar sidebar : sidebars) {
+          if (mouseY > sidebar.getY() && mouseY < sidebar.getY()+sidebar.getH() && mouseY > 100) {
+            objectFocus = true;
+            objectOnFocus = sidebar.getID();
+            sidebar.setFocus(true);
+          } else {
+            sidebar.setFocus(false);
+          }
+        }
+      } else {
+      }
     }
   }
 }
 
 void mouseWheel(MouseEvent event) {
-  println("W");
   if (hoverOver(-5, 100, sideMenuWidth+5, height-95)) {
-    println("H");
     if (event.getCount() > 0) {
-      println("U");
       if (barStart > (-1)*sidebars.size()*170+height-100) {
-        barStart -= event.getCount()*6;
+        barStart -= event.getCount()*30;
       }
     } else {
       if (barStart < 0) {
-        barStart -= event.getCount()*6;
+        barStart -= event.getCount()*30;
       }
     }
   }
@@ -355,7 +387,12 @@ void keyPressed() {
     }
   } else if (key == DELETE) {
     exit();
-  } else if (key == TAB && !create && !quit) {
+  } else if(key == 'q'){
+    objectFocus = false;
+    for (Sidebar sidebar : sidebars) {
+      sidebar.setFocus(false);
+    }
+  }else if (key == TAB && !create && !quit) {
     if (!tabIsPressed) {
       freezeMovement = true;
       tabIsPressed = true;
@@ -423,12 +460,12 @@ float forceDistributionY(float x1, float x2, float y1, float y2, float kraft) {
 
 //omsætter meter til pixels
 float mToPixel(float distance) {
-  return distance*300/(1499*pow(10, 8));
+  return distance*100/(1499*pow(10, 8));
 }
 
 //omsætter pixels til meter
 float pixelToM(float distance) {
-  return distance*(1499*pow(10, 8))/300;
+  return distance*(1499*pow(10, 8))/100;
 }
 
 //kamerahåndtagning

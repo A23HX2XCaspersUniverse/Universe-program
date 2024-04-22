@@ -1,14 +1,14 @@
 class Planet extends Object {
 
-  Planet(float m, float x, float y, float r, PVector p, String texture, String name) {
+  Planet(float m, float x, float y, float r, PVector p, String texture, String str, boolean b) {
     mass = m;
     xPos = x;
     yPos = y;
     radius = r;
     saveSpeed = p;
     ID = IDs;
-    if (name != "") {
-      surface = loadImage("Planet"+int(random(1, 5))+".jpg");
+    if (texture.equals("")) {
+      surface = loadImage("Planet"+int(random(1, 14))+".jpg");
     } else {
       surface = loadImage(texture);
     }
@@ -16,9 +16,14 @@ class Planet extends Object {
     globe.setTexture(surface);
     speed = new PVector(0, 0, 0);
     pickColor = random(80, 180);
+    name = str;
     type = "planet";
-    sidebars.add(new Sidebar(ID));
+    if (b) {
+      ring = loadImage("rings.png");
+      square = createShape(BOX, int(radius*5), int(radius*5), 0);
+      square.setTexture(ring);
+    }
+    sidebars.add(new Sidebar(ID, surface));
     IDs++;
-    println(ID);
   }
 }
