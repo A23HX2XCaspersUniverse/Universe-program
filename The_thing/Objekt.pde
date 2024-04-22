@@ -92,7 +92,7 @@ class Object {
     }
     rotateX(PI/2);
     shape(globe);
-    
+
     popMatrix();
   }
 
@@ -165,6 +165,16 @@ class Object {
 
   void setTexture(String str) {
     globe.setTexture(loadImage(str));
+  }
+
+  void setRadius(float r) {
+    if (type.equals("black hole")) {
+      radius = r;
+    }
+  }
+  
+  void setObjectName(String str) {
+    name = str;
   }
 
   PVector collisionSpeed(float x1, float x2, float y1, float y2, float m1, float m2) {

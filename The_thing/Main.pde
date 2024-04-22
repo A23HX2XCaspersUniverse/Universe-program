@@ -22,6 +22,7 @@ boolean infoNeeded = false;
 boolean sideMenu = true;
 boolean deleted = false;
 boolean objectFocus = false;
+boolean editMode = false;
 
 int objektMenuWidth = 125;
 int objektMenuHeight = 189;
@@ -32,6 +33,7 @@ int count = 0;
 int IDs = 1;
 int sizeInterval = 3;
 int objectOnFocus = 0;
+int editID = 0;
 
 double cameraDistance = 0;
 
@@ -91,14 +93,17 @@ void setup() {
 
   //initierer og deklarerer tekstbokse som senere bruges
   textboxes.add(new Textbox(50, 180, 100, 30));
-  textboxes.add(new Textbox(50, 330, 200, 30));
+  textboxes.add(new Textbox(50, 370, 200, 30));
   textboxes.add(new Textbox(createMenuWidth-280, 180, 200, 30));
-  textboxes.add(new Textbox(155+64, 180, 35, 30));
+  textboxes.add(new Textbox(155+64, 180, 50, 30));
+  textboxes.add(new Textbox(createMenuWidth-280, 370, 200, 30));
 
   //sørger for at tekstboksene kun kan indeholde tal
   for (Textbox textbox : textboxes) {
     textbox.setToNumbersOnly(true);
   }
+
+  textboxes.get(4).setToNumbersOnly(false);
 
   //Deklarerer alle grafiske flader (Menuerne)
   oui = createGraphics(objektMenuWidth, objektMenuHeight, P2D);
@@ -282,6 +287,7 @@ void mousePressed() {
         saveMouseX = (mouseX-width/2)*3.20987654;
         saveMouseY = (mouseY-height/2)*3.20987654;
         isPlaced = true;
+        editMode = false;
       } else {
 
         if (!chooseDirection) {//tjekker om brugeren er ved at bestemme retning for startbevægelsen
@@ -300,8 +306,8 @@ void mousePressed() {
             closeCreateMenu();
           } else if (hoverOver(width/2-createMenuWidth/2+createMenuWidth-300, height/2-createMenuHeight/2+createMenuHeight-70, 100, 30)) {
             if (!textboxes.get(2).getText().equals("")) {
-              direction.x *= float(textboxes.get(2).getText());
-              direction.y *= float(textboxes.get(2).getText());
+              direction.x *= float(textboxes.get(2).getText())/2000;
+              direction.y *= float(textboxes.get(2).getText())/2000;
             } else {
               direction.x = 0;
               direction.y = 0;
@@ -311,32 +317,64 @@ void mousePressed() {
 
               if (float(textboxes.get(0).getText()) > 200) {
                 textboxes.get(0).setText("200");
+              } else if (float(textboxes.get(0).getText()) < -200) {
+                textboxes.get(0).setText("-200");
               }
               if (float(textboxes.get(3).getText()) > 30) {
                 textboxes.get(3).setText("30");
+              } else if (float(textboxes.get(3).getText()) < -30) {
+                textboxes.get(3).setText("-30");
               }
               if (float(textboxes.get(1).getText()) > 36000000) {
                 textboxes.get(1).setText("36000000");
+              } else if (float(textboxes.get(1).getText()) < -36000000) {
+                textboxes.get(1).setText("-36000000");
               }
 
-              if (objectType.equals("planet")) {
-                objects.add(new Planet(float(textboxes.get(0).getText())*pow(10, float(textboxes.get(3).getText())), saveMouseX, saveMouseY, mToPixel(1000*float(textboxes.get(1).getText())), direction, "", "", false));
-                closeCreateMenu();
+              if (!editMode) {
+                if (objectType.equals("planet")) {
+                  objects.add(new Planet(float(textboxes.get(0).getText())*pow(10, float(textboxes.get(3).getText())), saveMouseX, saveMouseY, mToPixel(1000*float(textboxes.get(1).getText())), direction, "", textboxes.get(4).getText(), false));
+                } else if (objectType.equals("star")) {
+                  objects.add(new Star(float(textboxes.get(0).getText())*pow(10, float(textboxes.get(3).getText())), saveMouseX, saveMouseY, mToPixel(1000*float(textboxes.get(1).getText())), direction, "", textboxes.get(4).getText()));
+                }
+              } else {
+                for (Object object : objects) {
+                  if (object.getID() == editID) {
+                    object.setMass(float(textboxes.get(0).getText())*pow(10, float(textboxes.get(3).getText())));
+                    object.setRadius(mToPixel(1000*float(textboxes.get(1).getText())));
+                    object.setObjectName(textboxes.get(4).getText());
+
+                    break;
+                  }
+                }
               }
-              if (objectType.equals("star")) {
-                objects.add(new Star(float(textboxes.get(0).getText())*pow(10, float(textboxes.get(3).getText())), saveMouseX, saveMouseY, mToPixel(1000*float(textboxes.get(1).getText())), direction, "", ""));
-                closeCreateMenu();
-              }
+              closeCreateMenu();
             } else  if (objectType.equals("black hole") && !textboxes.get(0).getText().equals("") && !textboxes.get(3).getText().equals("")) {
 
               if (float(textboxes.get(0).getText()) > 200) {
                 textboxes.get(0).setText("200");
+              } else if (float(textboxes.get(0).getText()) < -200) {
+                textboxes.get(0).setText("-200");
               }
               if (float(textboxes.get(3).getText()) > 30) {
                 textboxes.get(3).setText("30");
+              } else if (float(textboxes.get(3).getText()) < -30) {
+                textboxes.get(3).setText("-30");
               }
 
-              objects.add(new BlackHole(float(textboxes.get(0).getText())*pow(10, float(textboxes.get(3).getText())), saveMouseX, saveMouseY, direction, "", ""));
+              if (!editMode) {
+                objects.add(new BlackHole(float(textboxes.get(0).getText())*pow(10, float(textboxes.get(3).getText())), saveMouseX, saveMouseY, direction, "", textboxes.get(4).getText()));
+              } else {
+                for (Object object : objects) {
+                  if (object.getID() == editID) {
+                    object.setMass(float(textboxes.get(0).getText())*pow(10, float(textboxes.get(3).getText())));
+                    object.setRadius(mToPixel(1000*float(textboxes.get(1).getText())));
+                    object.setObjectName(textboxes.get(4).getText());
+
+                    break;
+                  }
+                }
+              }
               closeCreateMenu();
             } else {
               infoNeeded = true;
@@ -363,6 +401,25 @@ void mousePressed() {
               objectFocus = true;
               objectOnFocus = sidebar.getID();
               sidebar.setFocus(true);
+              if (hoverOver(sideMenuWidth-260, sidebar.getY()+130, 100, 30)) {
+                for (Object object : objects) {
+                  if (object.getID() == sidebar.getID()) {
+                    if (object.getType().equals("planet")) {
+                      count = 1;
+                    } else if (object.getType().equals("star")) {
+                      count = 2;
+                    } else if (object.getType().equals("black hole")) {
+                      count = 3;
+                    }
+                  }
+                }
+                editID = sidebar.getID();
+                editMode = true;
+                createMenuSetup(count);
+                isPlaced = true;
+                sideMenu = false;
+                count = 0;
+              }
             }
           } else {
             sidebar.setFocus(false);
@@ -510,17 +567,47 @@ boolean hoverOver(float x, float y, float l, float h) {
   return (mouseX > x && mouseX < x+l && mouseY > y && mouseY < y+h);
 }
 
-void createMenuSetup(int object) {
+void createMenuSetup(int i) {
   objectMenu = false;
   create = true;
   cameraFreeze(true);
   freezeMovement = true;
-  if (object == 1) {
+  if (i == 1) {
     objectType = "planet";
-  } else if (object == 2) {
+  } else if (i == 2) {
     objectType = "star";
-  } else if (object == 3) {
+  } else if (i == 3) {
     objectType = "black hole";
+  }
+
+  if (editMode) {
+    for (Object object : objects) {
+      if (object.getID() == editID) {
+        count = 0;
+        if (object.getMass() > 0) {
+          for (int n = -30; true; n++) {
+            if (object.getMass()/(pow(10, n)) < 1) {
+              count = n-1;
+              break;
+            }
+          }
+        } else {
+          for (int n = -30; true; n++) {
+            if (object.getMass()/(pow(10, n)) > -1) {
+              count = n-1;
+              break;
+            }
+          }
+        }
+        textboxes.get(0).setText(String.valueOf(object.getMass()/pow(10, count)));
+        textboxes.get(1).setText(String.valueOf(pixelToM(object.getRadius())/1000));
+        textboxes.get(3).setText(String.valueOf(count));
+        textboxes.get(4).setText(object.getObjectName());
+
+        count = 0;
+        break;
+      }
+    }
   }
 }
 
@@ -535,4 +622,5 @@ void closeCreateMenu() {
   }
   infoNeeded = false;
   sideMenu = true;
+  editMode = false;
 }

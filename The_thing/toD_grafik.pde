@@ -144,20 +144,27 @@ void createMenu() {
 
   cui.textFont(font);
   cui.textSize(50);
-  cui.text("CREATE "+objectType.toUpperCase(), createMenuWidth/2-cui.textWidth("CREATE "+objectType.toUpperCase())/2, 50);
+  if (!editMode) {
+    cui.text("CREATE "+objectType.toUpperCase(), createMenuWidth/2-cui.textWidth("CREATE "+objectType.toUpperCase())/2, 50);
+  } else {
+    cui.text("EDIT "+objectType.toUpperCase(), createMenuWidth/2-cui.textWidth("EDIT "+objectType.toUpperCase())/2, 50);
+  }
 
   cui.textFont(font2);
   cui.textSize(24);
   cui.text("Mass of "+objectType+":", 53, 170);
   if (!objectType.equals("black hole")) {
-    cui.text("Size of "+objectType+":", 53, 320);
-    cui.text("km", 255, 330+30-30/10*2);
+    cui.text("Size of "+objectType+":", 53, 360);
+    cui.text("km", 255, 370+30-30/10*2);
   }
+  
+  cui.text("Name of "+objectType+":", createMenuWidth-277, 360);
+  
   cui.text("Speed of "+objectType+":", createMenuWidth-277, 170);
-  cui.text("m/s", createMenuWidth-75, 180+30-30/10*2);
+  cui.text("km/s", createMenuWidth-75, 180+30-30/10*2);
 
   cui.text("x 10^", 155, 180+30-30/10*2);
-  cui.text("kg", 160+64+35, 180+30-30/10*2);
+  cui.text("kg", 160+64+50, 180+30-30/10*2);
 
   if (hoverOver(width/2-createMenuWidth/2+createMenuWidth-260, height/2-createMenuHeight/2+240, 160, 50)) {
     cui.fill(80);
@@ -197,18 +204,24 @@ void createMenu() {
   if (!textboxes.get(0).getSelected()) {
     if (float(textboxes.get(0).getText()) > 200) {
       textboxes.get(0).setText("200");
+    } else if (float(textboxes.get(0).getText()) < -200) {
+      textboxes.get(0).setText("-200");
     }
   }
 
   if (!textboxes.get(3).getSelected()) {
     if (float(textboxes.get(3).getText()) > 30) {
       textboxes.get(3).setText("30");
+    } else if (float(textboxes.get(3).getText()) < -30) {
+      textboxes.get(3).setText("-30");
     }
   }
 
   if (!textboxes.get(1).getSelected()) {
-    if (float(textboxes.get(1).getText()) > 36000000) {
-      textboxes.get(1).setText("36000000");
+    if (float(textboxes.get(1).getText()) > 72000000) {
+      textboxes.get(1).setText("72000000");
+    } else if (float(textboxes.get(1).getText()) < -72000000) {
+      textboxes.get(1).setText("-72000000");
     }
   }
 

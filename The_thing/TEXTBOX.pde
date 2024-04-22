@@ -50,6 +50,10 @@ class Textbox {
             } else if (b > 48 && b < 58) {
               text += c;
             }
+          } else if (c == '-'){
+            if (text.equals("")) {
+              text += c;
+            }
           }
         } else {
           text += c;
