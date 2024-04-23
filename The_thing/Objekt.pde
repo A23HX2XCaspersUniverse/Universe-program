@@ -25,29 +25,39 @@ class Object {
 
   //beregning af tyngdekraft
   void gravity() {
-    for (Object planet : objects) {
+    for (Object object : objects) {
 
       //Tjek afstanden til den valgte planet i ArrayListen
-      distance = sqrt(pow(planet.getX()-xPos, 2)+pow(planet.getY()-yPos, 2));
+      distance = sqrt(pow(object.getX()-xPos, 2)+pow(object.getY()-yPos, 2));
 
       //hvis afstanden er 0, betyder det at den har tjekket afstanden til den selv
       if (distance != 0) {
 
         if (type.equals("black hole")) {
-          println(radius);
-          if (abs(distance) <= planet.getRadius()+radius) {
-            delete = true;
-            deleteNr = planet.getNr();
+          if (abs(distance) <= object.getRadius()+radius) {
+            if (object.getMass() < mass) {
+              delete = true;
+              deleteNr = object.getNr();
+            }
+          }
+        } else if (type.equals("star")) {
+          if (abs(distance) <= object.getRadius()+radius) {
+            if (object.getMass() < mass) {
+              if (!object.getType().equals("black hole")) {
+                delete = true;
+                deleteNr = object.getNr();
+              }
+            }
           }
         }
 
         distance = pixelToM(distance);
         massCalculation = 0.00000000006674 * mass;
         force = massCalculation/pow(distance, 2);
-        force *= planet.getMass();
+        force *= object.getMass();
 
-        changes = new PVector(forceDistributionX(xPos, planet.getX(), yPos, planet.getY(), force)/mass*0.016666*interval,
-          forceDistributionY(xPos, planet.getX(), yPos, planet.getY(), force)/mass*0.016666*interval, 0);
+        changes = new PVector(forceDistributionX(xPos, object.getX(), yPos, object.getY(), force)/mass*0.016666*interval,
+          forceDistributionY(xPos, object.getX(), yPos, object.getY(), force)/mass*0.016666*interval, 0);
 
         saveSpeed.add(changes);
 
@@ -58,9 +68,11 @@ class Object {
     if (delete) {
       speed = collisionSpeed(speed.x, objects.get(deleteNr).getSpeedX(), speed.y, objects.get(deleteNr).getSpeedY(), mass, objects.get(deleteNr).getMass() );
       mass = objects.get(deleteNr).getMass()+mass;
-      radius = mToPixel(2*6.674*pow(10, -11)*mass/pow(300000000, 2))*107290;
-      globe = createShape(SPHERE, radius);
-      globe.setTexture(surface);
+      if (type.equals("black hole")) {
+        radius = mToPixel(2*6.674*pow(10, -11)*mass/pow(300000000, 2))*107290;
+        globe = createShape(SPHERE, radius);
+        globe.setTexture(surface);
+      }
       for (int i = 0; i < sidebars.size(); i++) {
         if (objects.get(deleteNr).getID() == sidebars.get(i).getID()) {
           sidebars.remove(i);
@@ -150,6 +162,13 @@ class Object {
   String getObjectName() {
     return name;
   }
+  
+  boolean ifRings() {
+    if (ring != null) {
+      return true;
+    }
+    return false;
+  }
 
   void setSpeed(PVector s) {
     speed = s;
@@ -172,15 +191,26 @@ class Object {
       radius = r;
     }
   }
-  
+
   void setObjectName(String str) {
     name = str;
   }
+  
+  void setRings(boolean b) {
+    if (b) {
+      ring = loadImage("rings.png");
+      square = createShape(BOX, int(radius*5), int(radius*5), 0);
+      square.setTexture(ring);
+    } else {
+      ring = null;
+      square = null;
+    }
+}
 
   PVector collisionSpeed(float x1, float x2, float y1, float y2, float m1, float m2) {
     return new PVector((x1*m1+x2*m2)/(m1+m2), (y1*m1+y2*m2)/(m1+m2), 0);
   }
-  
+
   void collision() {
   }
 }

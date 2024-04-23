@@ -154,8 +154,8 @@ void createMenu() {
   cui.textSize(24);
   cui.text("Mass of "+objectType+":", 53, 170);
   if (!objectType.equals("black hole")) {
-    cui.text("Size of "+objectType+":", 53, 360);
-    cui.text("km", 255, 370+30-30/10*2);
+    cui.text("Size of "+objectType+":", 53, 310);
+    cui.text("km", 255, 320+30-30/10*2);
   }
   
   cui.text("Name of "+objectType+":", createMenuWidth-277, 360);
@@ -165,6 +165,17 @@ void createMenu() {
 
   cui.text("x 10^", 155, 180+30-30/10*2);
   cui.text("kg", 160+64+50, 180+30-30/10*2);
+  
+  cui.text("Rings", 53, 400);
+  
+  cui.strokeWeight(3);
+  if (ringsAdded) {
+    cui.fill(255);
+  } else {
+    cui.fill(70);
+  }
+  cui.circle(73, 430, 20);
+  
 
   if (hoverOver(width/2-createMenuWidth/2+createMenuWidth-260, height/2-createMenuHeight/2+240, 160, 50)) {
     cui.fill(80);
@@ -178,6 +189,7 @@ void createMenu() {
   cui.text("Set the direction", createMenuWidth-260+80-cui.textWidth("Set the direction")/2, 240+25+7);
 
   cui.line(0, 70, createMenuWidth, 70);
+  
 
   if (hoverOver(width/2-createMenuWidth/2+createMenuWidth-150, height/2-createMenuHeight/2+createMenuHeight-70, 100, 30)) {
     cui.fill(80);
