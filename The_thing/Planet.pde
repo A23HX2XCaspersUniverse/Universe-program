@@ -7,6 +7,7 @@ class Planet extends Object {
     radius = r;
     saveSpeed = p;
     ID = IDs;
+    fill(255);
     if (texture.equals("")) {
       surface = loadImage("Planet"+int(random(1, 14))+".jpg");
     } else {

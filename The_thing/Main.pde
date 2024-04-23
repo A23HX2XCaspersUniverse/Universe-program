@@ -116,6 +116,8 @@ void setup() {
   font2 = createFont("Roboto-Bold.ttf", 100);
 }
 
+
+
 void draw() {
   background(0); //resetter canvassen
 
@@ -217,6 +219,9 @@ void draw() {
     }
   }
 }
+
+
+
 
 
 

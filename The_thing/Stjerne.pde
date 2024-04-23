@@ -7,6 +7,7 @@ class Star extends Object{
     radius = r;
     saveSpeed = p;
     ID = IDs;
+    fill(255);
     if (texture.equals("")) {
       surface = loadImage("Stjerne"+int(random(1, 5))+".jpg");
     } else {
