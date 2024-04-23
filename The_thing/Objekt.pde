@@ -180,4 +180,7 @@ class Object {
   PVector collisionSpeed(float x1, float x2, float y1, float y2, float m1, float m2) {
     return new PVector((x1*m1+x2*m2)/(m1+m2), (y1*m1+y2*m2)/(m1+m2), 0);
   }
+  
+  void collision() {
+  }
 }
