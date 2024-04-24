@@ -12,7 +12,6 @@ class BlackHole extends Object {
     globe = createShape(SPHERE, radius);
     globe.setTexture(surface);
     speed = new PVector(0, 0, 0);
-    pickColor = random(80, 180);
     name = str;
     type = "black hole";
     sidebars.add(new Sidebar(ID, surface));

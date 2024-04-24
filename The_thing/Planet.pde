@@ -16,13 +16,13 @@ class Planet extends Object {
     globe = createShape(SPHERE, radius);
     globe.setTexture(surface);
     speed = new PVector(0, 0, 0);
-    pickColor = random(80, 180);
     name = str;
     type = "planet";
+    ring = loadImage("rings.png");
+    square = createShape(BOX, int(radius*5), int(radius*5), 0);
+    square.setTexture(ring);
     if (b) {
-      ring = loadImage("rings.png");
-      square = createShape(BOX, int(radius*5), int(radius*5), 0);
-      square.setTexture(ring);
+      ringsOn = true;
     }
     sidebars.add(new Sidebar(ID, surface));
     IDs++;

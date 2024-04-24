@@ -1,9 +1,9 @@
 class Object {
-  float mass, xPos, yPos, radius, distance, force, massCalculation, pickColor;
+  float mass, xPos, yPos, radius, distance, force, massCalculation;
   PVector speed, saveSpeed, changes;
   PShape globe, square, cone;
   String type, name;
-  boolean delete;
+  boolean delete, ringsOn;
   int deleteNr, nr, ID;
   PImage surface, ring;
   int[] trailX = new int[0];
@@ -99,7 +99,8 @@ class Object {
     noFill();
     noStroke();
     translate(xPos, yPos, 0);
-    if (square != null) {
+    if (ringsOn) {
+      println("D");
       shape(square);
     }
     rotateX(PI/2);
@@ -164,10 +165,7 @@ class Object {
   }
   
   boolean ifRings() {
-    if (ring != null) {
-      return true;
-    }
-    return false;
+    return ringsOn;
   }
 
   void setSpeed(PVector s) {
@@ -197,14 +195,7 @@ class Object {
   }
   
   void setRings(boolean b) {
-    if (b) {
-      ring = loadImage("rings.png");
-      square = createShape(BOX, int(radius*5), int(radius*5), 0);
-      square.setTexture(ring);
-    } else {
-      ring = null;
-      square = null;
-    }
+    ringsOn = b;
 }
 
   PVector collisionSpeed(float x1, float x2, float y1, float y2, float m1, float m2) {

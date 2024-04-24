@@ -264,10 +264,12 @@ void mousePressed() {
             chooseDirectionMode = true;
           } else if (hoverOver(width/2-createMenuWidth/2+createMenuWidth-150, height/2-createMenuHeight/2+createMenuHeight-70, 100, 30)) {
             closeCreateMenu();
-          } else if (hoverOverCircle(createMenuWidth+73, createMenuHeight+430, 20)){
+          } else if (hoverOverCircle(width/2-createMenuWidth/2+73, height/2-createMenuHeight/2+430, 20) && objectType.equals("planet")){
             if (ringsAdded) {
+              println("ADD");
               ringsAdded = false;
             } else {
+              println("REMOVE");
               ringsAdded = true;
             }
           } else if (hoverOver(width/2-createMenuWidth/2+createMenuWidth-300, height/2-createMenuHeight/2+createMenuHeight-70, 100, 30)) {
@@ -537,7 +539,6 @@ boolean hoverOver(float x, float y, float l, float h) {
 }
 
 boolean hoverOverCircle(float x, float y, float r) {
-  println(sqrt(pow(mouseX-x, 2) + pow(mouseY-y, 2)));
   return (sqrt(pow(mouseX-x, 2) + pow(mouseY-y, 2)) < r);
 }
 
