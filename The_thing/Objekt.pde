@@ -4,18 +4,25 @@ class Object {
   PShape globe, square, cone;
   String type, name;
   boolean delete, ringsOn;
-  int deleteNr, nr, ID;
+  int deleteNr, nr, ID, cyklus;
   PImage surface, ring;
   int[] trailX = new int[0];
   int[] trailY = new int[0];
 
   //opdaterer planetens position
   void update() {
-    trailX = append(trailX, int(xPos));
-    trailY = append(trailY, int(yPos));
-    if (trailX.length > 300) {
+    if (cyklus > 1) {
+      trailX = append(trailX, int(xPos));
+      trailY = append(trailY, int(yPos));
+    }
+    if (trailX.length > 50) {
       trailX = subset(trailX, 1);
       trailY = subset(trailY, 1);
+    }
+    if (cyklus > 1) {
+      cyklus = 0;
+    } else {
+      cyklus++;
     }
     speed.add(saveSpeed);
     xPos+=speed.x;
@@ -90,7 +97,7 @@ class Object {
     pushMatrix();
     count = 0;
     for (int i = 0; i < trailX.length-1; i++) {
-      strokeWeight(2+(count/60));
+      strokeWeight(2+(count/20));
       stroke(255, 90);
       line(trailX[i], trailY[i], 0, trailX[i+1], trailY[i+1], 0);
       count++;
@@ -163,7 +170,7 @@ class Object {
   String getObjectName() {
     return name;
   }
-  
+
   boolean ifRings() {
     return ringsOn;
   }
@@ -193,10 +200,10 @@ class Object {
   void setObjectName(String str) {
     name = str;
   }
-  
+
   void setRings(boolean b) {
     ringsOn = b;
-}
+  }
 
   PVector collisionSpeed(float x1, float x2, float y1, float y2, float m1, float m2) {
     return new PVector((x1*m1+x2*m2)/(m1+m2), (y1*m1+y2*m2)/(m1+m2), 0);

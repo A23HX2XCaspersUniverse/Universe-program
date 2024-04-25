@@ -82,7 +82,7 @@ void setup() {
 
   //Tilføjer det virkelige solsystem
   objects.add(new Star(2*pow(10, 30), 0, 0, mToPixel(6963400000L*1.5*sizeInterval), new PVector(0, 0, 0), "", "sun"));
-  //objects.add(new Planet(3*pow(10, 23), mToPixel(68000000000L), 0, mToPixel(637100000L*2.5*sizeInterval), new PVector(0, -0.69*speedInterval, 0), "Planet5.jpg", "mercury", false));
+  objects.add(new Planet(3*pow(10, 23), mToPixel(68000000000L), 0, mToPixel(637100000L*2.5*sizeInterval), new PVector(0, -0.69*speedInterval, 0), "Planet5.jpg", "mercury", false));
   objects.add(new Planet(5*pow(10, 24), 0, mToPixel(-108000000000L), mToPixel(637100000L*3*sizeInterval), new PVector(-0.55*speedInterval, 0, 0), "Planet6.jpg", "venus", false));
   objects.add(new Planet(6*pow(10, 24), mToPixel(-150360000000L), 0, mToPixel(637100000L*4.5*sizeInterval), new PVector(0, 0.47*speedInterval, 0), "Planet7.jpg", "earth", false));
   objects.add(new Planet(6*pow(10, 23), 0, mToPixel(228000000000L), mToPixel(637100000L*4*sizeInterval), new PVector(0.384*speedInterval, 0, 0), "Planet8.jpg", "mars", false));
@@ -91,9 +91,6 @@ void setup() {
   objects.add(new Planet(9*pow(10, 25), 0, mToPixel(1000000000000L), mToPixel(637100000L*6.5*sizeInterval), new PVector(0.185*speedInterval, 0, 0), "Planet11.jpg", "uranus", false));
   objects.add(new Planet(1*pow(10, 26), mToPixel(1300000000000L), 0, mToPixel(637100000L*7*sizeInterval), new PVector(0, -0.165*speedInterval, 0), "Planet12.jpg", "neptune", false));
   objects.add(new Planet(1*pow(10, 22), 0, mToPixel(-1600000000000L), mToPixel(637100000L*sizeInterval), new PVector(-0.145*speedInterval, 0, 0), "Planet13.jpg", "pluto", false));
-  
-  objects.add(new Planet(3*pow(10, 23), mToPixel(108000000000L), 0, mToPixel(637100000L*2.5*sizeInterval), new PVector(-0.145*speedInterval, 0, 0), "Planet5.jpg", "mercury", false));
-  objects.add(new Fragment(mToPixel(108000000000L), 0, mToPixel(637100000L*2.5*sizeInterval), new PVector(-0.145*speedInterval, 0, 0), loadImage("Planet5.jpg")));
   
   //initierer og deklarerer tekstbokse som senere bruges
   textboxes.add(new Textbox(50, 180, 100, 30));
