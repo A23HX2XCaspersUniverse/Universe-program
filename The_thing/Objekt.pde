@@ -1,9 +1,9 @@
 class Object {
   float mass, xPos, yPos, radius, distance, force, massCalculation, dens;
-  PVector speed, saveSpeed, changes;
+  PVector speed, saveSpeed, changes, ekstraSpeed;
   PShape globe, square, cone;
   String type, name;
-  boolean delete, ringsOn;
+  boolean delete, ringsOn, collision;
   int deleteNr, nr, ID, cyklus;
   PImage surface, ring;
   int[] trailX = new int[0];
@@ -24,6 +24,11 @@ class Object {
     } else {
       cyklus++;
     }
+    if (collision) {
+      speed.x = ekstraSpeed.x;
+      speed.y = ekstraSpeed.y;
+    }
+    collision = false;
     speed.add(saveSpeed);
     xPos+=speed.x;
     yPos+=speed.y;
@@ -54,6 +59,14 @@ class Object {
                 delete = true;
                 deleteNr = object.getNr();
               }
+            }
+          }
+        } else if (type.equals("planet")) {
+          if (object.getType().equals("planet")) {
+            if (abs(distance) <= object.getRadius()+radius) {
+              collision = true;
+              ekstraSpeed.x=(2*object.getMass()*object.getSpeedX()-object.getMass()*speed.x+mass*speed.x)/(mass+object.getMass());
+              ekstraSpeed.y=(2*object.getMass()*object.getSpeedY()-object.getMass()*speed.y+mass*speed.y)/(mass+object.getMass());
             }
           }
         }
@@ -152,6 +165,10 @@ class Object {
 
   float getSpeedY() {
     return speed.y;
+  }
+
+  PVector getSpeed() {
+    return speed;
   }
 
   int getID() {

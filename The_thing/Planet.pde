@@ -16,6 +16,7 @@ class Planet extends Object {
     globe = createShape(SPHERE, radius);
     globe.setTexture(surface);
     speed = new PVector(0, 0, 0);
+    ekstraSpeed = new PVector(0, 0, 0);
     name = str;
     type = "planet";
     ring = loadImage("rings.png");

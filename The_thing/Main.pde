@@ -291,10 +291,18 @@ void mousePressed() {
               } else if (float(textboxes.get(3).getText()) < -30) {
                 textboxes.get(3).setText("-30");
               }
-              if (float(textboxes.get(1).getText()) > 36000000) {
-                textboxes.get(1).setText("36000000");
-              } else if (float(textboxes.get(1).getText()) < -36000000) {
-                textboxes.get(1).setText("-36000000");
+              if (objectType.equals("star")) {
+                if (float(textboxes.get(1).getText()) > 6963400L*7.5*sizeInterval) {
+                  textboxes.get(1).setText("160000000");
+                } else if (float(textboxes.get(1).getText()) < 6963400L*1.5*sizeInterval) {
+                  textboxes.get(1).setText(String.valueOf(6963400L*1.5*sizeInterval));
+                }
+              } else {
+                if (float(textboxes.get(1).getText()) > 6963400L*1.3*sizeInterval) {
+                  textboxes.get(1).setText("27000000");
+                } else if (float(textboxes.get(1).getText()) < 0) {
+                  textboxes.get(1).setText("0");
+                }
               }
 
               if (!editMode) {
