@@ -231,11 +231,21 @@ void createMenu() {
     }
   }
 
-  if (!textboxes.get(1).getSelected()) {
-    if (float(textboxes.get(1).getText()) > 72000000) {
-      textboxes.get(1).setText("72000000");
-    } else if (float(textboxes.get(1).getText()) < -72000000) {
-      textboxes.get(1).setText("-72000000");
+  if (objectType.equals("star")) {
+    if (!textboxes.get(1).getSelected()) {
+      if (float(textboxes.get(1).getText()) > 6963400L*7.5*sizeInterval) {
+        textboxes.get(1).setText("160000000");
+      } else if (float(textboxes.get(1).getText()) < 6963400L*1.5*sizeInterval) {
+        textboxes.get(1).setText(String.valueOf(6963400L*1.5*sizeInterval));
+      }
+    }
+  } else {
+    if (!textboxes.get(1).getSelected()) {
+      if (float(textboxes.get(1).getText()) > 6963400L*1.3*sizeInterval) {
+        textboxes.get(1).setText("27000000");
+      } else if (float(textboxes.get(1).getText()) < 0) {
+        textboxes.get(1).setText("0");
+      }
     }
   }
 

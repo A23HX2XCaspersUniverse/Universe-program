@@ -52,7 +52,7 @@ class Sidebar {
     g.textFont(font2);
     g.textSize(20);
     if (nr < objects.size()) {
-      g.text("Radius: "+pixelToM(objects.get(nr).getRadius())+" km", 140, y+70);
+      g.text("Radius: "+pixelToM(objects.get(nr).getRadius())/1000+" km", 140, y+70);
 
       g.text("Mass: "+objects.get(nr).getMass()+" kg", 140, y+100);
     }

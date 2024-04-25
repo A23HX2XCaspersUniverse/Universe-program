@@ -1,5 +1,5 @@
 class Object {
-  float mass, xPos, yPos, radius, distance, force, massCalculation;
+  float mass, xPos, yPos, radius, distance, force, massCalculation, dens;
   PVector speed, saveSpeed, changes;
   PShape globe, square, cone;
   String type, name;
@@ -48,7 +48,7 @@ class Object {
             }
           }
         } else if (type.equals("star")) {
-          if (abs(distance) <= object.getRadius()+radius) {
+          if (abs(distance) <= object.getRadius()/3+radius) {
             if (object.getMass() < mass) {
               if (!object.getType().equals("black hole")) {
                 delete = true;
@@ -74,12 +74,16 @@ class Object {
     }
     if (delete) {
       speed = collisionSpeed(speed.x, objects.get(deleteNr).getSpeedX(), speed.y, objects.get(deleteNr).getSpeedY(), mass, objects.get(deleteNr).getMass() );
-      mass = objects.get(deleteNr).getMass()+mass;
       if (type.equals("black hole")) {
+        mass = objects.get(deleteNr).getMass()+mass;
         radius = mToPixel(2*6.674*pow(10, -11)*mass/pow(300000000, 2))*107290;
-        globe = createShape(SPHERE, radius);
-        globe.setTexture(surface);
+      } else {
+        dens = mass/(4*PI*pow(radius, 2));
+        mass = objects.get(deleteNr).getMass()+mass;
+        radius = sqrt(mass/(dens*4*PI));
       }
+      globe = createShape(SPHERE, radius);
+      globe.setTexture(surface);
       for (int i = 0; i < sidebars.size(); i++) {
         if (objects.get(deleteNr).getID() == sidebars.get(i).getID()) {
           sidebars.remove(i);
@@ -107,7 +111,6 @@ class Object {
     noStroke();
     translate(xPos, yPos, 0);
     if (ringsOn) {
-      println("D");
       shape(square);
     }
     rotateX(PI/2);
@@ -192,9 +195,11 @@ class Object {
   }
 
   void setRadius(float r) {
-    if (type.equals("black hole")) {
+    println(r);
+    if (!type.equals("black hole")) {
       radius = r;
     }
+    println(pixelToM(radius));
   }
 
   void setObjectName(String str) {
@@ -203,6 +208,11 @@ class Object {
 
   void setRings(boolean b) {
     ringsOn = b;
+  }
+
+  void resetGlobe() {
+    globe = createShape(SPHERE, radius);
+    globe.setTexture(surface);
   }
 
   PVector collisionSpeed(float x1, float x2, float y1, float y2, float m1, float m2) {

@@ -91,7 +91,7 @@ void setup() {
   objects.add(new Planet(9*pow(10, 25), 0, mToPixel(1000000000000L), mToPixel(637100000L*6.5*sizeInterval), new PVector(0.185*speedInterval, 0, 0), "Planet11.jpg", "uranus", false));
   objects.add(new Planet(1*pow(10, 26), mToPixel(1300000000000L), 0, mToPixel(637100000L*7*sizeInterval), new PVector(0, -0.165*speedInterval, 0), "Planet12.jpg", "neptune", false));
   objects.add(new Planet(1*pow(10, 22), 0, mToPixel(-1600000000000L), mToPixel(637100000L*sizeInterval), new PVector(-0.145*speedInterval, 0, 0), "Planet13.jpg", "pluto", false));
-  
+
   //initierer og deklarerer tekstbokse som senere bruges
   textboxes.add(new Textbox(50, 180, 100, 30));
   textboxes.add(new Textbox(50, 320, 200, 30));
@@ -264,12 +264,10 @@ void mousePressed() {
             chooseDirectionMode = true;
           } else if (hoverOver(width/2-createMenuWidth/2+createMenuWidth-150, height/2-createMenuHeight/2+createMenuHeight-70, 100, 30)) {
             closeCreateMenu();
-          } else if (hoverOverCircle(width/2-createMenuWidth/2+73, height/2-createMenuHeight/2+430, 20) && objectType.equals("planet")){
+          } else if (hoverOverCircle(width/2-createMenuWidth/2+73, height/2-createMenuHeight/2+430, 20) && objectType.equals("planet")) {
             if (ringsAdded) {
-              println("ADD");
               ringsAdded = false;
             } else {
-              println("REMOVE");
               ringsAdded = true;
             }
           } else if (hoverOver(width/2-createMenuWidth/2+createMenuWidth-300, height/2-createMenuHeight/2+createMenuHeight-70, 100, 30)) {
@@ -309,11 +307,13 @@ void mousePressed() {
                 for (Object object : objects) {
                   if (object.getID() == editID) {
                     object.setMass(float(textboxes.get(0).getText())*pow(10, float(textboxes.get(3).getText())));
+                    println(textboxes.get(1).getText());
                     object.setRadius(mToPixel(1000*float(textboxes.get(1).getText())));
                     object.setObjectName(textboxes.get(4).getText());
                     if (objectType.equals("planet")) {
                       object.setRings(ringsAdded);
                     }
+                    object.resetGlobe();
 
                     break;
                   }
