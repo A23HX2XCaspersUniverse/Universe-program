@@ -1,5 +1,4 @@
 import peasy.*;
-import javax.swing.JFrame;
 
 PeasyCam cam;
 PShape universe; //https://forum.processing.org/two/discussion/22593/how-to-fill-the-sphere-with-the-earth-image.html
@@ -446,8 +445,13 @@ void keyPressed() {
       tabIsPressed = false;
     }
   } else if (create) {
-    if (key == ESC) {
+    if (key == ESC && !chooseDirectionMode) {
       closeCreateMenu();
+    } else if (key == ESC && chooseDirectionMode) {
+      chooseDirectionMode = false;
+      cameraFreeze(true);
+      direction.x = 0;
+      direction.y = 0;
     } else {
       for (Textbox textbox : textboxes) {
         if (textbox.getSelected()) {
