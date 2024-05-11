@@ -9,7 +9,7 @@ class Star extends Object{
     ID = IDs;
     fill(255);
     if (texture.equals("")) {
-      surface = loadImage("Stjerne"+int(random(1, 5))+".jpg");
+      surface = loadImage("textures/Stjerne"+int(random(1, 5))+".jpg");
     } else {
       surface = loadImage(texture);
     }

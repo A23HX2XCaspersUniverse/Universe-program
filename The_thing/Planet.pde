@@ -9,7 +9,7 @@ class Planet extends Object {
     ID = IDs;
     fill(255);
     if (texture.equals("")) {
-      surface = loadImage("Planet"+int(random(1, 14))+".jpg");
+      surface = loadImage("textures/Planet"+int(random(1, 14))+".jpg");
     } else {
       surface = loadImage(texture);
     }
@@ -19,7 +19,7 @@ class Planet extends Object {
     ekstraSpeed = new PVector(0, 0, 0);
     name = str;
     type = "planet";
-    ring = loadImage("rings.png");
+    ring = loadImage("textures/rings.png");
     square = createShape(BOX, int(radius*5), int(radius*5), 0);
     square.setTexture(ring);
     if (b) {
