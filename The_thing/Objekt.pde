@@ -47,7 +47,12 @@ class Object {
 
         if (type.equals("black hole")) {
           if (abs(distance) <= object.getRadius()+radius) {
-            if (object.getMass() < mass) {
+            if (object.getType().equals("black hole")) {
+              if (object.getMass() < mass) {
+                delete = true;
+                deleteNr = object.getNr();
+              }
+            } else {
               delete = true;
               deleteNr = object.getNr();
             }
@@ -212,11 +217,9 @@ class Object {
   }
 
   void setRadius(float r) {
-    println(r);
     if (!type.equals("black hole")) {
       radius = r;
     }
-    println(pixelToM(radius));
   }
 
   void setObjectName(String str) {

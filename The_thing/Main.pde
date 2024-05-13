@@ -63,7 +63,6 @@ PGraphics sui;
 PFont font, font2;
 
 void setup() {
-  //
   fullScreen(P3D);
   noStroke();
   frameRate(200);
@@ -254,22 +253,29 @@ void mousePressed() {
             if (hoverOver(textbox.getX()+width/2-createMenuWidth/2, textbox.getY()+height/2-createMenuHeight/2,
               textbox.getWidth(), textbox.getHeight())) { //tjekker om musen er over en tekstboks
 
-              textbox.setSelected(true);
+              textbox.setSelected(true); //setter den valgte tekstboks til "selected"
             } else {
-              textbox.setSelected(false);
+              textbox.setSelected(false); //setter alle de andre tekstbokse til "not selected"
             }
           }
-          if (hoverOver(width/2-createMenuWidth/2+createMenuWidth-260, height/2-createMenuHeight/2+240, 160, 50)) {
-            chooseDirectionMode = true;
-          } else if (hoverOver(width/2-createMenuWidth/2+createMenuWidth-150, height/2-createMenuHeight/2+createMenuHeight-70, 100, 30)) {
-            closeCreateMenu();
-          } else if (hoverOverCircle(width/2-createMenuWidth/2+73, height/2-createMenuHeight/2+430, 20) && objectType.equals("planet")) {
+
+          if (hoverOver(width/2-createMenuWidth/2+createMenuWidth-260, height/2-createMenuHeight/2+240, 160, 50)) { //tjekker om musen er over knappen til at vælge retning for starthastighed
+
+            chooseDirectionMode = true; //setter retningsvælgelse til sandt
+          } else if (hoverOver(width/2-createMenuWidth/2+createMenuWidth-150, height/2-createMenuHeight/2+createMenuHeight-70, 100, 30)) { //tjekker om musen er over "close" knappen
+
+            closeCreateMenu(); //lukker menuen
+          } else if (hoverOverCircle(width/2-createMenuWidth/2+73, height/2-createMenuHeight/2+430, 20) && objectType.equals("planet")) { //tjekker om musen er over knappen for ringe
+
+            //ændrer status om ringe alt efter hvilken status den allerede har
             if (ringsAdded) {
               ringsAdded = false;
             } else {
               ringsAdded = true;
             }
-          } else if (hoverOver(width/2-createMenuWidth/2+createMenuWidth-300, height/2-createMenuHeight/2+createMenuHeight-70, 100, 30)) {
+          } else if (hoverOver(width/2-createMenuWidth/2+createMenuWidth-300, height/2-createMenuHeight/2+createMenuHeight-70, 100, 30)) { //tjekker om musen er over "apply" knappen
+
+            //tjekker om der er angivet nogen hastighed og beregner x- og y-komposanterne for den angivede vektor
             if (!textboxes.get(2).getText().equals("")) {
               direction.x *= float(textboxes.get(2).getText())/2000;
               direction.y *= float(textboxes.get(2).getText())/2000;
@@ -277,88 +283,61 @@ void mousePressed() {
               direction.x = 0;
               direction.y = 0;
             }
+
             if (!textboxes.get(0).getText().equals("") && !textboxes.get(1).getText().equals("") &&
-              !textboxes.get(3).getText().equals("")) {
+              !textboxes.get(3).getText().equals("")) { //tjekker om de nødvendige informationer er givet, ved at tjekke indholdet i tekstboksene
 
-              if (float(textboxes.get(0).getText()) > 200) {
-                textboxes.get(0).setText("200");
-              } else if (float(textboxes.get(0).getText()) < -200) {
-                textboxes.get(0).setText("-200");
-              }
-              if (float(textboxes.get(3).getText()) > 30) {
-                textboxes.get(3).setText("30");
-              } else if (float(textboxes.get(3).getText()) < -30) {
-                textboxes.get(3).setText("-30");
-              }
-              if (objectType.equals("star")) {
-                if (float(textboxes.get(1).getText()) > 6963400L*7.5*sizeInterval) {
-                  textboxes.get(1).setText("160000000");
-                } else if (float(textboxes.get(1).getText()) < 6963400L*1.5*sizeInterval) {
-                  textboxes.get(1).setText(String.valueOf(6963400L*1.5*sizeInterval));
-                }
-              } else {
-                if (float(textboxes.get(1).getText()) > 6963400L*1.3*sizeInterval) {
-                  textboxes.get(1).setText("27000000");
-                } else if (float(textboxes.get(1).getText()) < 0) {
-                  textboxes.get(1).setText("0");
-                }
-              }
+              //tjekker om massen og størrelsen er inden for den tilladte grænse og ændrer dem derefter
+              checkForInfo(false);
 
-              if (!editMode) {
+              if (!editMode) { //Tjekker om brugeren er i gang med at ændre et objekt
+
+                //tilføjer nyt objekt alt efter objekt type
                 if (objectType.equals("planet")) {
                   objects.add(new Planet(float(textboxes.get(0).getText())*pow(10, float(textboxes.get(3).getText())), saveMouseX, saveMouseY, mToPixel(1000*float(textboxes.get(1).getText())), direction, "", textboxes.get(4).getText(), ringsAdded));
                 } else if (objectType.equals("star")) {
                   objects.add(new Star(float(textboxes.get(0).getText())*pow(10, float(textboxes.get(3).getText())), saveMouseX, saveMouseY, mToPixel(1000*float(textboxes.get(1).getText())), direction, "", textboxes.get(4).getText()));
                 }
               } else {
-                for (Object object : objects) {
-                  if (object.getID() == editID) {
-                    object.setMass(float(textboxes.get(0).getText())*pow(10, float(textboxes.get(3).getText())));
-                    println(textboxes.get(1).getText());
-                    object.setRadius(mToPixel(1000*float(textboxes.get(1).getText())));
-                    object.setObjectName(textboxes.get(4).getText());
-                    if (objectType.equals("planet")) {
-                      object.setRings(ringsAdded);
-                    }
-                    object.resetGlobe();
 
+                //ændrer informationerne på de valgte objekt
+                for (Object object : objects) {
+                  if (object.getID() == editID) { //finder objektet via. ID'et
+                    changeObject(object);
                     break;
                   }
                 }
               }
-              closeCreateMenu();
-            } else  if (objectType.equals("black hole") && !textboxes.get(0).getText().equals("") && !textboxes.get(3).getText().equals("")) {
 
-              if (float(textboxes.get(0).getText()) > 200) {
-                textboxes.get(0).setText("200");
-              } else if (float(textboxes.get(0).getText()) < -200) {
-                textboxes.get(0).setText("-200");
-              }
-              if (float(textboxes.get(3).getText()) > 30) {
-                textboxes.get(3).setText("30");
-              } else if (float(textboxes.get(3).getText()) < -30) {
-                textboxes.get(3).setText("-30");
-              }
+              closeCreateMenu(); //lukker menuen
+            } else  if (objectType.equals("black hole") && !textboxes.get(0).getText().equals("") && !textboxes.get(3).getText().equals("")) { //tjekker om objektet er et sort hul
 
-              if (!editMode) {
+              //tjekker om massen er inden for den tilladte grænse og ændrer dem derefter
+              checkForInfo(true);
+
+              if (!editMode) {//Tjekker om brugeren er i gang med at ændre et objekt
+
+                //Laver et nyt sort hul
                 objects.add(new BlackHole(float(textboxes.get(0).getText())*pow(10, float(textboxes.get(3).getText())), saveMouseX, saveMouseY, direction, "", textboxes.get(4).getText()));
               } else {
-                for (Object object : objects) {
-                  if (object.getID() == editID) {
-                    object.setMass(float(textboxes.get(0).getText())*pow(10, float(textboxes.get(3).getText())));
-                    object.setRadius(mToPixel(1000*float(textboxes.get(1).getText())));
-                    object.setObjectName(textboxes.get(4).getText());
 
+                //ændrer informationerne på de valgte objekt
+                for (Object object : objects) {
+                  if (object.getID() == editID) { //finder objektet via. ID'et
+                    changeObject(object);
                     break;
                   }
                 }
               }
-              closeCreateMenu();
+
+              closeCreateMenu(); //lukker menuen
             } else {
               infoNeeded = true;
             }
           }
         } else {
+
+          //stopper for muligheden for retningsvælgelse af starthastighed
           chooseDirectionMode = false;
           cameraFreeze(true);
         }
@@ -662,4 +641,43 @@ void objectMenuSetup() {
 void saveMousePostion(float x, float y) {
   saveMouseX = x;
   saveMouseY = y;
+}
+
+void checkForInfo(boolean b) {
+  if (float(textboxes.get(0).getText()) > 200) {
+    textboxes.get(0).setText("200");
+  } else if (float(textboxes.get(0).getText()) < -200) {
+    textboxes.get(0).setText("-200");
+  }
+  if (float(textboxes.get(3).getText()) > 30) {
+    textboxes.get(3).setText("30");
+  } else if (float(textboxes.get(3).getText()) < -30) {
+    textboxes.get(3).setText("-30");
+  }
+
+  if (!b) {
+    if (objectType.equals("star")) {
+      if (float(textboxes.get(1).getText()) > 6963400L*7.5*sizeInterval) {
+        textboxes.get(1).setText("160000000");
+      } else if (float(textboxes.get(1).getText()) < 6963400L*1*sizeInterval) {
+        textboxes.get(1).setText(String.valueOf(6963400L*1*sizeInterval));
+      }
+    } else {
+      if (float(textboxes.get(1).getText()) > 6963400L*1.3*sizeInterval) {
+        textboxes.get(1).setText("27000000");
+      } else if (float(textboxes.get(1).getText()) < 0) {
+        textboxes.get(1).setText("0");
+      }
+    }
+  }
+}
+
+void changeObject(Object object) {
+  object.setMass(float(textboxes.get(0).getText())*pow(10, float(textboxes.get(3).getText())));
+  object.setRadius(mToPixel(1000*float(textboxes.get(1).getText())));
+  object.setObjectName(textboxes.get(4).getText());
+  if (objectType.equals("planet")) {
+    object.setRings(ringsAdded);
+  }
+  object.resetGlobe();
 }

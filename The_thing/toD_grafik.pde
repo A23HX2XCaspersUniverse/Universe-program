@@ -215,38 +215,8 @@ void createMenu() {
     cui.text("Missing information!", createMenuWidth-315-cui.textWidth("Missing information!"), createMenuHeight-70+20);
   }
 
-  if (!textboxes.get(0).getSelected()) {
-    if (float(textboxes.get(0).getText()) > 200) {
-      textboxes.get(0).setText("200");
-    } else if (float(textboxes.get(0).getText()) < -200) {
-      textboxes.get(0).setText("-200");
-    }
-  }
-
-  if (!textboxes.get(3).getSelected()) {
-    if (float(textboxes.get(3).getText()) > 30) {
-      textboxes.get(3).setText("30");
-    } else if (float(textboxes.get(3).getText()) < -30) {
-      textboxes.get(3).setText("-30");
-    }
-  }
-
-  if (objectType.equals("star")) {
-    if (!textboxes.get(1).getSelected()) {
-      if (float(textboxes.get(1).getText()) > 6963400L*7.5*sizeInterval) {
-        textboxes.get(1).setText("160000000");
-      } else if (float(textboxes.get(1).getText()) < 6963400L*1.5*sizeInterval) {
-        textboxes.get(1).setText(String.valueOf(6963400L*1.5*sizeInterval));
-      }
-    }
-  } else {
-    if (!textboxes.get(1).getSelected()) {
-      if (float(textboxes.get(1).getText()) > 6963400L*1.3*sizeInterval) {
-        textboxes.get(1).setText("27000000");
-      } else if (float(textboxes.get(1).getText()) < 0) {
-        textboxes.get(1).setText("0");
-      }
-    }
+  if (!textboxes.get(0).getSelected() && !textboxes.get(3).getSelected() && !textboxes.get(1).getSelected()) {
+    checkForInfo(false);
   }
 
   cui.endDraw();
