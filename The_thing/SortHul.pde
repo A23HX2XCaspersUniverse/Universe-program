@@ -1,5 +1,6 @@
 class BlackHole extends Object {
-
+  
+  //konstruktør
   BlackHole(float m, float x, float y, PVector p, String texture, String str) {
     mass = m;
     xPos = x;

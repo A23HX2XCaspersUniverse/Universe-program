@@ -1,5 +1,6 @@
 class Planet extends Object {
-
+  
+  //konstruktør
   Planet(float m, float x, float y, float r, PVector p, String texture, String str, boolean b) {
     mass = m;
     xPos = x;

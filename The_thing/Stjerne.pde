@@ -1,5 +1,6 @@
 class Star extends Object{
   
+  //konstruktør
   Star(float m, float x, float y, float r, PVector p, String texture, String str) {
     mass = m;
     xPos = x;

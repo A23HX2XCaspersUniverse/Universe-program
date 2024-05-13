@@ -1,5 +1,7 @@
 import peasy.*;
 
+//deklarering af en massse variabler
+
 PeasyCam cam;
 PShape universe; //https://forum.processing.org/two/discussion/22593/how-to-fill-the-sphere-with-the-earth-image.html
 PImage milkyWay;
@@ -344,21 +346,30 @@ void mousePressed() {
       }
     } else {
       if (hoverOver(-5, -5, sideMenuWidth, height+10)) {
+
         for (Sidebar sidebar : sidebars) {
-          if (mouseY > sidebar.getY() && mouseY < sidebar.getY()+sidebar.getH() && mouseY > 100) {
-            if (hoverOver(sideMenuWidth-130, sidebar.getY()+130, 100, 30)) {
+          if (mouseY > sidebar.getY() && mouseY < sidebar.getY()+sidebar.getH() && mouseY > 100) { //tjekker om musen er over en "Sidebar"
+            if (hoverOver(sideMenuWidth-130, sidebar.getY()+130, 100, 30)) { //tjekker om musen er over "delete"-knappen
+
+              //finder objektet baseret på ID og sletter det
               for (int i = 0; i < objects.size(); i++) {
                 if (objects.get(i).getID() == sidebar.getID()) {
                   objects.remove(i);
                 }
               }
-              sidebars.remove(sidebar);
+
+              sidebars.remove(sidebar); //fjerner sidebar
               break;
             } else {
+
+              //setter objekt i fokus
               objectFocus = true;
               objectOnFocus = sidebar.getID();
               sidebar.setFocus(true);
-              if (hoverOver(sideMenuWidth-260, sidebar.getY()+130, 100, 30)) {
+
+              if (hoverOver(sideMenuWidth-260, sidebar.getY()+130, 100, 30)) { //tjekker om musen er over "edit"-knappen
+
+                //finder ud af hvilken objekt type det er
                 for (Object object : objects) {
                   if (object.getID() == sidebar.getID()) {
                     if (object.getType().equals("planet")) {
@@ -370,6 +381,8 @@ void mousePressed() {
                     }
                   }
                 }
+
+                //sætter gang i ændringen på objektet
                 editID = sidebar.getID();
                 editMode = true;
                 createMenuSetup(count);
@@ -379,6 +392,8 @@ void mousePressed() {
               }
             }
           } else {
+
+            //fjerner fokussset fra alle andre sidebare
             sidebar.setFocus(false);
           }
         }
@@ -387,35 +402,42 @@ void mousePressed() {
   }
 }
 
+//Bliver aktiveret ved mouseScroll
 void mouseWheel(MouseEvent event) {
-  if (hoverOver(-5, 100, sideMenuWidth+5, height-95)) {
-    if (event.getCount() > 0) {
-      if (barStart > (-1)*sidebars.size()*170+height-100) {
+
+  if (hoverOver(-5, 100, sideMenuWidth+5, height-95)) { //tjekker om musen er over sidebarene
+    if (event.getCount() > 0) { //tjekker om der bliver scrollet op eller ned
+      if (barStart > (-1)*sidebars.size()*170+height-100) { //tjekker om listen er lang nok til at blive flyttet opad
         barStart -= event.getCount()*30;
       }
     } else {
-      if (barStart < 0) {
+      if (barStart < 0) { //tjekker om listen er lang nok til at blive flyttet nedad
         barStart -= event.getCount()*30;
       }
     }
   }
 }
 
+//bliver aktiveret når en knap trykkes på
 void keyPressed() {
-  if (key == ' ' && !create && !quit) {
+  if (key == ' ' && !create && !quit) { //tjekker om knappen er space, og der ikke er nogen menuer åbne
+
+    //indstiller kameraet alt efter dens nuværende tilstand
     if (!spaceIsPressed) {
       cameraFreeze(true);
     } else {
       cameraFreeze(false);
     }
-  } else if (key == DELETE) {
-    exit();
-  } else if (key == 'q') {
+  } else if (key == 'q') { //tjekker om knappen der er trykket er q
+
+    //fjerner al fokus fra objekter i universet
     objectFocus = false;
     for (Sidebar sidebar : sidebars) {
       sidebar.setFocus(false);
     }
-  } else if (key == TAB && !create && !quit) {
+  } else if (key == TAB && !create && !quit) { //tjekker om knappen der er trykket er tab samt ingen menuer åbne
+
+    //Indstiller bevægelsen for objekterne alt efter hvad deres nuværende bevægelse er
     if (!tabIsPressed) {
       freezeMovement = true;
       tabIsPressed = true;
@@ -423,17 +445,25 @@ void keyPressed() {
       freezeMovement = false;
       tabIsPressed = false;
     }
-  } else if (create) {
-    if (key == ESC && !chooseDirectionMode) {
-      closeCreateMenu();
-    } else if (key == ESC && chooseDirectionMode) {
-      chooseDirectionMode = false;
-      cameraFreeze(true);
-      direction.x = 0;
-      direction.y = 0;
+  } else if (create) { //tjekker om brugeren er i gang med at lave et nyt objekt
+
+    if (key == ESC && !chooseDirectionMode) {//tjekker om knappen der er trykket på er escape
+    
+      if (!chooseDirectionMode) { //tjekker om brugeren er i gang med at vælge retning
+        closeCreateMenu();
+      } else {
+        chooseDirectionMode = false;
+        cameraFreeze(true);
+        direction.x = 0;
+        direction.y = 0;
+      }
+      
     } else {
+      
       for (Textbox textbox : textboxes) {
-        if (textbox.getSelected()) {
+        if (textbox.getSelected()) { //tjekker om tekstboksen er valgt
+          
+          //tilføjer/fjerner tegn i tekstboksen alt efter knap
           if (key == ENTER) {
             textbox.setSelected(false);
           } else if (key == BACKSPACE) {
@@ -444,7 +474,9 @@ void keyPressed() {
         }
       }
     }
-  } else if (quit) {
+  } else if (quit) { //tjekker om brugeren er på vej ud af programmet
+    
+    //lukker programmet/ fortsætter programmet alt efter knap trykket på
     if (key == ESC) {
       freezeMovement = false;
       quit = false;
@@ -452,21 +484,21 @@ void keyPressed() {
     } else if (key == ENTER) {
       exit();
     }
+    
   } else {
-    if (key == ESC) {
+    
+    if (key == ESC) { //tjekker omder er trykket på escape
+      
+      //stopper programmet og åbner quit-menue
       freezeMovement = true;
       quit = true;
       objectMenu = false;
       cam.setMouseControlled(false);
-    } else if (key == 'p') {
-      if (!freezeMovement) {
-        freezeMovement = true;
-      } else {
-        freezeMovement = false;
-      }
+      
     }
   }
-
+  
+  //stopper escape fra at lukke programmet ned
   //https://forum.processing.org/two/discussion/575/stop-escape-key-from-closing-app-in-new-window-g4p.html
   switch(key) {
   case ESC:
@@ -496,7 +528,7 @@ float pixelToM(float distance) {
   return distance*(1499*pow(10, 8))/100;
 }
 
-//kamerahåndtagning
+//kamerahåndtering
 void cameraFreeze(boolean ind) {
   if (ind) {
     //gemmer info, om kamera
@@ -524,21 +556,26 @@ void cameraFreeze(boolean ind) {
   }
 }
 
-//funktion for knap
+//funktion for firkantet knap
 boolean hoverOver(float x, float y, float l, float h) {
   return (mouseX > x && mouseX < x+l && mouseY > y && mouseY < y+h);
 }
 
+//funktion for cirkulær knap
 boolean hoverOverCircle(float x, float y, float r) {
   return (sqrt(pow(mouseX-x, 2) + pow(mouseY-y, 2)) < r);
 }
 
+//setup for create-menuen
 void createMenuSetup(int i) {
+  
   ringsAdded = false;
   objectMenu = false;
   create = true;
   cameraFreeze(true);
   freezeMovement = true;
+  
+  //sætter objekttypen alt efter integerens værdi
   if (i == 1) {
     objectType = "planet";
   } else if (i == 2) {
@@ -546,19 +583,26 @@ void createMenuSetup(int i) {
   } else if (i == 3) {
     objectType = "black hole";
   }
-
-  if (editMode) {
+  
+  if (editMode) { //tjekker om brugeren er ved at ændre på et eksisterende objekt
+    
+    //Indstiller alle infromationer om objektet
     for (Object object : objects) {
-      if (object.getID() == editID) {
+      if (object.getID() == editID) { //tjekker om objektet har det rette ID
         count = 0;
+        
+        //Henter informationer om objektets vægt
         if (object.getMass() > 0) {
+          
           for (int n = -30; true; n++) {
             if (object.getMass()/(pow(10, n)) < 1) {
               count = n-1;
               break;
             }
           }
+          
         } else {
+          
           for (int n = -30; true; n++) {
             if (object.getMass()/(pow(10, n)) > -1) {
               count = n-1;
@@ -566,6 +610,8 @@ void createMenuSetup(int i) {
             }
           }
         }
+        
+        //henter alle andre informationer om objektet
         textboxes.get(0).setText(String.valueOf(object.getMass()/pow(10, count)));
         textboxes.get(1).setText(String.valueOf(pixelToM(object.getRadius())/1000));
         textboxes.get(3).setText(String.valueOf(count));
@@ -579,6 +625,7 @@ void createMenuSetup(int i) {
   }
 }
 
+//funktion for at lukke menuen for et nyt objekt
 void closeCreateMenu() {
   create = false;
   cameraFreeze(false);
@@ -593,6 +640,7 @@ void closeCreateMenu() {
   editMode = false;
 }
 
+//Funktion for valg a retning på det nye objekts starthastighed
 void chooseDirection() {
   //opdaterer parametrer for direktionen af startbevægelsen
   direction.x = ((mouseX-width/2)*3.20987654-saveMouseX)/( abs((mouseX-width/2)*3.20987654-saveMouseX)+abs((mouseY-height/2)*3.20987654-saveMouseY));
@@ -638,12 +686,16 @@ void objectMenuSetup() {
   cam.setMouseControlled(false);
 }
 
+//funktion der gemmer musens position
 void saveMousePostion(float x, float y) {
   saveMouseX = x;
   saveMouseY = y;
 }
 
+//funktion der tjekker tekstboksenes indhold
 void checkForInfo(boolean b) {
+  
+  //sørger for at vægten den er inden for den tilladte grænse
   if (float(textboxes.get(0).getText()) > 200) {
     textboxes.get(0).setText("200");
   } else if (float(textboxes.get(0).getText()) < -200) {
@@ -654,7 +706,8 @@ void checkForInfo(boolean b) {
   } else if (float(textboxes.get(3).getText()) < -30) {
     textboxes.get(3).setText("-30");
   }
-
+  
+  //sørger for at radiussen er inden for den tilladte grænse
   if (!b) {
     if (objectType.equals("star")) {
       if (float(textboxes.get(1).getText()) > 6963400L*7.5*sizeInterval) {
@@ -672,6 +725,7 @@ void checkForInfo(boolean b) {
   }
 }
 
+//finktion for ændring af informationer på et objekt
 void changeObject(Object object) {
   object.setMass(float(textboxes.get(0).getText())*pow(10, float(textboxes.get(3).getText())));
   object.setRadius(mToPixel(1000*float(textboxes.get(1).getText())));
