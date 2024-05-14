@@ -90,8 +90,14 @@ class Sidebar {
     cam.endHUD();
     pushMatrix();
     p.beginDraw();
+    if (focus) { //tjekker om baren er i fokus
+      p.background(90);
+    } else {
+      p.background(60);
+    }
     p.noFill();
     p.translate(50, 50);
+    p.rotateY(PI/3000*rotation);
     p.shape(shape);
     p.endDraw();
     popMatrix();

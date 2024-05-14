@@ -36,6 +36,7 @@ int IDs = 1;
 int sizeInterval = 3;
 int objectOnFocus = 0;
 int editID = 0;
+int rotation = 0;
 
 double cameraDistance = 0;
 
