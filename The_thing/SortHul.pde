@@ -8,7 +8,7 @@ class BlackHole extends Object {
     saveSpeed = p;
     ID = IDs;
     fill(255);
-    radius = mToPixel(2*6.674*pow(10, -11)*m/pow(300000000, 2))*107290;
+    radius = mToPixel(2*6.674*pow(10, -11)*m/pow(300000000, 2))*107290/100;
     surface = loadImage("textures/black.jpg");
     globe = createShape(SPHERE, radius);
     globe.setTexture(surface);
@@ -17,5 +17,6 @@ class BlackHole extends Object {
     type = "black hole";
     sidebars.add(new Sidebar(ID, surface));
     IDs++;
+    println(radius);
   }
 }

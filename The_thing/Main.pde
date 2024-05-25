@@ -449,7 +449,7 @@ void keyPressed() {
   } else if (create) { //tjekker om brugeren er i gang med at lave et nyt objekt
 
     if (key == ESC && !chooseDirectionMode) {//tjekker om knappen der er trykket på er escape
-    
+
       if (!chooseDirectionMode) { //tjekker om brugeren er i gang med at vælge retning
         closeCreateMenu();
       } else {
@@ -458,12 +458,11 @@ void keyPressed() {
         direction.x = 0;
         direction.y = 0;
       }
-      
     } else {
-      
+
       for (Textbox textbox : textboxes) {
         if (textbox.getSelected()) { //tjekker om tekstboksen er valgt
-          
+
           //tilføjer/fjerner tegn i tekstboksen alt efter knap
           if (key == ENTER) {
             textbox.setSelected(false);
@@ -476,7 +475,7 @@ void keyPressed() {
       }
     }
   } else if (quit) { //tjekker om brugeren er på vej ud af programmet
-    
+
     //lukker programmet/ fortsætter programmet alt efter knap trykket på
     if (key == ESC) {
       freezeMovement = false;
@@ -485,20 +484,18 @@ void keyPressed() {
     } else if (key == ENTER) {
       exit();
     }
-    
   } else {
-    
+
     if (key == ESC) { //tjekker omder er trykket på escape
-      
+
       //stopper programmet og åbner quit-menue
       freezeMovement = true;
       quit = true;
       objectMenu = false;
       cam.setMouseControlled(false);
-      
     }
   }
-  
+
   //stopper escape fra at lukke programmet ned
   //https://forum.processing.org/two/discussion/575/stop-escape-key-from-closing-app-in-new-window-g4p.html
   switch(key) {
@@ -569,13 +566,13 @@ boolean hoverOverCircle(float x, float y, float r) {
 
 //setup for create-menuen
 void createMenuSetup(int i) {
-  
+
   ringsAdded = false;
   objectMenu = false;
   create = true;
   cameraFreeze(true);
   freezeMovement = true;
-  
+
   //sætter objekttypen alt efter integerens værdi
   if (i == 1) {
     objectType = "planet";
@@ -584,26 +581,25 @@ void createMenuSetup(int i) {
   } else if (i == 3) {
     objectType = "black hole";
   }
-  
+
   if (editMode) { //tjekker om brugeren er ved at ændre på et eksisterende objekt
-    
+
     //Indstiller alle infromationer om objektet
     for (Object object : objects) {
       if (object.getID() == editID) { //tjekker om objektet har det rette ID
         count = 0;
-        
+
         //Henter informationer om objektets vægt
         if (object.getMass() > 0) {
-          
+
           for (int n = -30; true; n++) {
             if (object.getMass()/(pow(10, n)) < 1) {
               count = n-1;
               break;
             }
           }
-          
         } else {
-          
+
           for (int n = -30; true; n++) {
             if (object.getMass()/(pow(10, n)) > -1) {
               count = n-1;
@@ -611,7 +607,7 @@ void createMenuSetup(int i) {
             }
           }
         }
-        
+
         //henter alle andre informationer om objektet
         textboxes.get(0).setText(String.valueOf(object.getMass()/pow(10, count)));
         textboxes.get(1).setText(String.valueOf(pixelToM(object.getRadius())/1000));
@@ -695,19 +691,32 @@ void saveMousePostion(float x, float y) {
 
 //funktion der tjekker tekstboksenes indhold
 void checkForInfo(boolean b) {
-  
+
   //sørger for at vægten den er inden for den tilladte grænse
-  if (float(textboxes.get(0).getText()) > 200) {
-    textboxes.get(0).setText("200");
-  } else if (float(textboxes.get(0).getText()) < -200) {
-    textboxes.get(0).setText("-200");
+  if (!objectType.equals("black hole")) {
+    if (float(textboxes.get(0).getText()) > 200) {
+      textboxes.get(0).setText("200");
+    } else if (float(textboxes.get(0).getText()) < -200) {
+      textboxes.get(0).setText("-200");
+    }
+    if (float(textboxes.get(3).getText()) > 30) {
+      textboxes.get(3).setText("30");
+    } else if (float(textboxes.get(3).getText()) < -30) {
+      textboxes.get(3).setText("-30");
+    }
+  } else {
+    if (float(textboxes.get(0).getText()) > 400) {
+      textboxes.get(0).setText("400");
+    } else if (float(textboxes.get(0).getText()) < -400) {
+      textboxes.get(0).setText("-400");
+    }
+    if (float(textboxes.get(3).getText()) > 33) {
+      textboxes.get(3).setText("33");
+    } else if (float(textboxes.get(3).getText()) < -33) {
+      textboxes.get(3).setText("-33");
+    }
   }
-  if (float(textboxes.get(3).getText()) > 30) {
-    textboxes.get(3).setText("30");
-  } else if (float(textboxes.get(3).getText()) < -30) {
-    textboxes.get(3).setText("-30");
-  }
-  
+
   //sørger for at radiussen er inden for den tilladte grænse
   if (!b) {
     if (objectType.equals("star")) {

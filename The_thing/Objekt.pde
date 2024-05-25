@@ -120,7 +120,7 @@ class Object {
       
         //omregner det sorte huls masse og radius
         mass = objects.get(deleteNr).getMass()+mass;
-        radius = mToPixel(2*6.674*pow(10, -11)*mass/pow(300000000, 2))*107290;
+        radius = mToPixel(2*6.674*pow(10, -11)*mass/pow(300000000, 2))*107290/100;
         
       } else {
         
